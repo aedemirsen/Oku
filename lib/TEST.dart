@@ -1,4 +1,4 @@
-import 'core/service/model/record.dart';
+import 'core/model/record.dart';
 
 class TEST {
   static List<Record> records() {
@@ -6,6 +6,7 @@ class TEST {
     Record r1 = Record();
     Record r2 = Record();
     r1.title = "Kurtuluş ve Kurtuluşta bir görev almak / 1";
+    r1.group = 'Kurtuluş ve Kurtuluşta bir görev almak';
     r1.body =
         'a) Kurtuluşun gerekliliğini bilmek ve idrak etmek; bu gerekliliği herkese öğretmek ve idrak ettirmek'
         'b) Kurtuluşun ancak kendi medeniyetimizde olduğu bilincine ermek ve erdirmek'

@@ -4,7 +4,7 @@ import 'package:yazilar/TEST.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/cubit/cubit_controller.dart';
 import 'package:yazilar/utility/page_router.dart';
-import 'package:yazilar/view/custom_widgets/filter_screen.dart';
+import 'package:yazilar/view/filter_screen.dart';
 
 import 'custom_widgets/elements_view.dart';
 
@@ -16,26 +16,17 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
-      appBar: appBar(context),
-      body: scaffoldBody(),
-      bottomNavigationBar: navigationBar(),
-    );
-  }
+      body: NestedScrollView(
+        floatHeaderSlivers: false,
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          sliverAppBar(context),
+        ],
+        body: mainPage(),
+      ),
 
-  BlocConsumer<CubitController, AppState> scaffoldBody() {
-    return BlocConsumer<CubitController, AppState>(
-      listener: (context, state) {
-        if (state is FilterScreenVisibility) {
-          state.isVisible
-              ? PageRouter.changePageWithAnimation(
-                  context, const FilterScreen(), PageRouter.downToUp)
-              : Navigator.pop(context);
-        }
-      },
-      builder: (context, state) {
-        return mainPage();
-      },
+      appBar: appBar(context),
+      backgroundColor: Colors.grey.shade200,
+      // body: mainPage(),
     );
   }
 
@@ -47,56 +38,31 @@ class HomePage extends StatelessWidget {
           style: Theme.of(context).textTheme.headline1,
         ),
       ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 20),
-          child: GestureDetector(
-            child: const Icon(Icons.settings),
-          ),
-        ),
-      ],
     );
   }
 
-  BottomNavigationBar navigationBar() {
-    return BottomNavigationBar(
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: "Ana Sayfa",
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.book),
-          label: "Kitaplığım",
-        ),
-      ],
+  SliverAppBar sliverAppBar(BuildContext context) {
+    return SliverAppBar(
+      backgroundColor: Colors.transparent,
+      toolbarHeight: 120,
+      title: Column(
+        children: [
+          searchAndFilter(context),
+          const Divider(),
+          sort(context),
+        ],
+      ),
     );
   }
 
   Padding mainPage() {
     return Padding(
       padding: const EdgeInsets.only(
-        top: 15.0,
-        bottom: 8.0,
         left: conf.mainFrameInset,
         right: conf.mainFrameInset,
       ),
-      child: BlocBuilder<CubitController, AppState>(
-        builder: (context, state) {
-          return Column(
-            children: [
-              //search and filter
-              searchAndFilter(context),
-              const Divider(),
-              sort(),
-              Expanded(
-                child: ElementsView(
-                  records: TEST.records(),
-                ),
-              ),
-            ],
-          );
-        },
+      child: ElementsView(
+        records: TEST.records(),
       ),
     );
   }
@@ -115,19 +81,14 @@ class HomePage extends StatelessWidget {
   Flexible filterIcon(BuildContext context) {
     return Flexible(
       child: Center(
-        child: BlocBuilder<CubitController, AppState>(
-          builder: (context, state) {
-            return GestureDetector(
-              onTap: () {
-                context
-                    .read<CubitController>()
-                    .changeFilterScreenVisibility(true);
-              },
-              child: const Icon(
-                conf.filterIcon,
-              ),
-            );
+        child: GestureDetector(
+          onTap: () {
+            PageRouter.changePageWithAnimation(
+                context,
+                const FilterScreen(title: conf.filterScreenTitle),
+                PageRouter.downToUp);
           },
+          child: conf.filterIcon,
         ),
       ),
     );
@@ -136,39 +97,43 @@ class HomePage extends StatelessWidget {
   Flexible searchBar() {
     return Flexible(
       flex: 8,
-      child: TextFormField(
-        //  controller: searchController,
-        keyboardType: TextInputType.emailAddress,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.zero,
-          prefixIcon: const Icon(
-            conf.searchIcon,
+      child: SizedBox(
+        height: 50,
+        child: TextFormField(
+          //  controller: searchController,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.zero,
+            prefixIcon: conf.searchIcon,
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            hintText: "Ara",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          hintText: "Ara",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          onChanged: (value) {},
         ),
-        onChanged: (value) {},
       ),
     );
   }
 
-  Padding sort() {
+  Padding sort(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 15.0),
       child: GestureDetector(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: const [
-            Padding(
+          children: [
+            const Padding(
               padding: EdgeInsets.all(5.0),
-              child: Icon(conf.orderBy),
+              child: conf.sortIcon,
             ),
-            Text('Sırala'),
+            Text(
+              conf.sortText,
+              style: Theme.of(context).textTheme.headline2,
+            ),
           ],
         ),
         onTap: () {},

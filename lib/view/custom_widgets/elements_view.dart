@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/core/service/model/record.dart';
+import 'package:yazilar/core/model/record.dart';
 import 'package:yazilar/view/custom_widgets/record_view.dart';
 
 class ElementsView extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:yazilar/core/service/model/record.dart';
+import 'package:yazilar/core/model/record.dart';
 import 'package:yazilar/config/config.dart' as conf;
 
 class RecordView extends StatelessWidget {
@@ -75,6 +75,35 @@ class RecordView extends StatelessWidget {
                         ),
                       ),
                       //category - group
+                      Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: conf.categoryBadgeColor,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Text(record.category ?? '-'),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          (record.group ?? '').isNotEmpty
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: conf.groupBadgeColor,
+                                  ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(5.0),
+                                    child: Text('Seri'),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                        ],
+                      ),
                       const Divider(),
                       //body
                       Padding(
@@ -89,25 +118,6 @@ class RecordView extends StatelessWidget {
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.only(top: 20.0, bottom: 10),
-              //   child: Text(
-              //     record.title ?? '-',
-              //     style: Theme.of(context).textTheme.headline3,
-              //   ),
-              // ),
-              // const Divider(),
-              // Expanded(
-              //   child: SingleChildScrollView(
-              //     child: Padding(
-              //       padding: const EdgeInsets.only(top: 10.0),
-              //       child: Text(
-              //         record.body ?? '-',
-              //         style: Theme.of(context).textTheme.headline4,
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -173,8 +183,9 @@ class RecordView extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(10),
+                      //border: Border.all(),
+                      color: conf.categoryBadgeColor,
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -184,6 +195,21 @@ class RecordView extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  (record.group ?? '').isNotEmpty
+                      ? Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: conf.groupBadgeColor,
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(5.0),
+                            child: Text('Seri'),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                   const Spacer(),
                   Text(
                     record.date ?? '-',
