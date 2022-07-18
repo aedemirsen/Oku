@@ -70,23 +70,25 @@ class RecordView extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0, bottom: 10),
                         child: Text(
-                          record.title ?? '-',
+                          (record.title ?? '-').toUpperCase(),
                           style: Theme.of(context).textTheme.headline3,
                         ),
                       ),
                       //category - group
                       Row(
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: conf.categoryBadgeColor,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Text(record.category ?? '-'),
-                            ),
-                          ),
+                          (record.category ?? '').isNotEmpty
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: conf.categoryBadgeColor,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Text(record.category ?? '-'),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
                           const SizedBox(
                             width: 15,
                           ),
@@ -102,6 +104,11 @@ class RecordView extends StatelessWidget {
                                   ),
                                 )
                               : const SizedBox.shrink(),
+                          const Spacer(),
+                          Text(
+                            record.dateMiladi ?? '-',
+                            style: Theme.of(context).textTheme.headline2,
+                          )
                         ],
                       ),
                       const Divider(),
@@ -178,23 +185,25 @@ class RecordView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //category and date
+              //category , group and date
               Row(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      //border: Border.all(),
-                      color: conf.categoryBadgeColor,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text(
-                        record.category ?? '-',
-                        style: Theme.of(context).textTheme.headline2,
-                      ),
-                    ),
-                  ),
+                  (record.category ?? '').isNotEmpty
+                      ? Container(
+                          decoration: BoxDecoration(
+                            //border: Border.all(),
+                            color: conf.categoryBadgeColor,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Text(
+                              record.category ?? '-',
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                   const SizedBox(
                     width: 15,
                   ),
@@ -212,7 +221,7 @@ class RecordView extends StatelessWidget {
                       : const SizedBox.shrink(),
                   const Spacer(),
                   Text(
-                    record.date ?? '-',
+                    record.dateMiladi ?? '-',
                     style: Theme.of(context).textTheme.headline2,
                   )
                 ],

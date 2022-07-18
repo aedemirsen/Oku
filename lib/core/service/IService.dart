@@ -9,4 +9,8 @@ abstract class IService {
   IService(this.dio);
 
   Future<List<Record>> getRecords({String params = ''});
+
+  Future<bool> deleteRecord(String id);
+
+  Future<String> postRecord(Record record);
 }

@@ -22,6 +22,9 @@ class AppTheme {
   );
 }
 
+//api
+const String baseUrl = "http://records.bilgimeclisi.com";
+
 //AppBar titles
 const String appTitle = "Yazılar";
 const String libTitle = "Kitaplığım";

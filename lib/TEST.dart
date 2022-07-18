@@ -44,13 +44,13 @@ class TEST {
         'a) Kurtuluşun gerekliliğini bilmek ve idrak etmek; bu gerekliliği herkese öğretmek ve idrak ettirmek'
         'Önce halimizin tespiti gerekir. Sonra konumumuza bakmamız gerekir.';
     r1.category = 'ekmekçilik';
-    r1.date = '12/06/2021';
+    r1.dateMiladi = '12/06/2021';
     r1.author = "aed";
     //
     r2.title = "Ekmek";
     r2.body = 'Boş yazı, çok ekmek yemeyin.';
     r2.category = 'ekmekçilik';
-    r2.date = '12/06/2021';
+    r2.dateMiladi = '12/06/2021';
     r2.author = "aed";
     records.add(r1);
     records.add(r2);

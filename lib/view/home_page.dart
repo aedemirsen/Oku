@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yazilar/TEST.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/cubit/cubit_controller.dart';
-import 'package:yazilar/utility/page_router.dart';
-import 'package:yazilar/view/filter_screen.dart';
 
 import 'custom_widgets/elements_view.dart';
 
@@ -16,14 +13,43 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        floatHeaderSlivers: false,
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          sliverAppBar(context),
-        ],
-        body: mainPage(),
+      body: BlocBuilder<CubitController, AppState>(
+        builder: (context, state) {
+          if (state is RecordsFail) {
+            return Center(
+              child: Text(
+                'Kayıt Bulunamadı!',
+                style: Theme.of(context).textTheme.headline3,
+              ),
+            );
+          } else {
+            return Stack(
+              children: [
+                Visibility(
+                  visible: !context.watch<CubitController>().recordsLoading,
+                  child: NestedScrollView(
+                    floatHeaderSlivers: false,
+                    headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                      sliverAppBar(context),
+                    ],
+                    body: mainPage(context),
+                  ),
+                ),
+                Visibility(
+                  visible: context.watch<CubitController>().recordsLoading,
+                  child: const Center(
+                    child: SizedBox(
+                      height: 60,
+                      width: 60,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+        },
       ),
-
       appBar: appBar(context),
       backgroundColor: Colors.grey.shade200,
       // body: mainPage(),
@@ -55,14 +81,14 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Padding mainPage() {
+  Padding mainPage(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
         left: conf.mainFrameInset,
         right: conf.mainFrameInset,
       ),
       child: ElementsView(
-        records: TEST.records(),
+        records: context.watch<CubitController>().records,
       ),
     );
   }
@@ -83,10 +109,11 @@ class HomePage extends StatelessWidget {
       child: Center(
         child: GestureDetector(
           onTap: () {
-            PageRouter.changePageWithAnimation(
-                context,
-                const FilterScreen(title: conf.filterScreenTitle),
-                PageRouter.downToUp);
+            context.read<CubitController>().getRecords();
+            // PageRouter.changePageWithAnimation(
+            //     context,
+            //     const FilterScreen(title: conf.filterScreenTitle),
+            //     PageRouter.downToUp);
           },
           child: conf.filterIcon,
         ),
