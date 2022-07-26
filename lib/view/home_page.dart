@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/cubit/cubit_controller.dart';
+import 'package:yazilar/utility/page_router.dart';
+import 'package:yazilar/view/filter_screen.dart';
 
 import 'custom_widgets/elements_view.dart';
 
@@ -15,44 +17,36 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: BlocBuilder<CubitController, AppState>(
         builder: (context, state) {
-          if (state is RecordsFail) {
-            return Center(
-              child: Text(
-                'Kayıt Bulunamadı!',
-                style: Theme.of(context).textTheme.headline3,
+          return Stack(
+            children: [
+              NestedScrollView(
+                floatHeaderSlivers: false,
+                headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                  sliverAppBar(context),
+                ],
+                body: context.watch<CubitController>().recordsLoading
+                    ? const Center(
+                        child: SizedBox(
+                          height: 60,
+                          width: 60,
+                          child: conf.indicator,
+                        ),
+                      )
+                    : (state is RecordsFail
+                        ? Center(
+                            child: Text(
+                              'Kayıt Bulunamadı!',
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
+                          )
+                        : mainPage(context)),
               ),
-            );
-          } else {
-            return Stack(
-              children: [
-                Visibility(
-                  visible: !context.watch<CubitController>().recordsLoading,
-                  child: NestedScrollView(
-                    floatHeaderSlivers: false,
-                    headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                      sliverAppBar(context),
-                    ],
-                    body: mainPage(context),
-                  ),
-                ),
-                Visibility(
-                  visible: context.watch<CubitController>().recordsLoading,
-                  child: const Center(
-                    child: SizedBox(
-                      height: 60,
-                      width: 60,
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }
+            ],
+          );
         },
       ),
       appBar: appBar(context),
       backgroundColor: Colors.grey.shade200,
-      // body: mainPage(),
     );
   }
 
@@ -109,11 +103,10 @@ class HomePage extends StatelessWidget {
       child: Center(
         child: GestureDetector(
           onTap: () {
-            context.read<CubitController>().getRecords();
-            // PageRouter.changePageWithAnimation(
-            //     context,
-            //     const FilterScreen(title: conf.filterScreenTitle),
-            //     PageRouter.downToUp);
+            PageRouter.changePageWithAnimation(
+                context,
+                const FilterScreen(title: conf.filterScreenTitle),
+                PageRouter.downToUp);
           },
           child: conf.filterIcon,
         ),
@@ -158,13 +151,95 @@ class HomePage extends StatelessWidget {
               child: conf.sortIcon,
             ),
             Text(
-              conf.sortText,
+              'Sırala',
               style: Theme.of(context).textTheme.headline2,
             ),
           ],
         ),
-        onTap: () {},
+        onTap: () {
+          showBottomSheet(context);
+        },
       ),
+    );
+  }
+
+  Future<void> showBottomSheet(BuildContext context) {
+    return showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: conf.AppConfig.screenHeight * 0.28,
+          color: Colors.white,
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 15.0, bottom: 15),
+                    child: Text(
+                      'Sırala',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                  ),
+                ),
+                const Divider(
+                  height: 0,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: SizedBox(
+                    height: conf.bottomSheetElementHeight,
+                    width: conf.AppConfig.screenWidth,
+                    child: TextButton(
+                      onPressed: (() {
+                        context.read<CubitController>().changeOrder();
+                        Navigator.pop(context);
+                      }),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Son yayınlanan önce',
+                          style:
+                              context.watch<CubitController>().orderBy == 'desc'
+                                  ? Theme.of(context).textTheme.headline6
+                                  : Theme.of(context).textTheme.headline4,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: SizedBox(
+                    height: conf.bottomSheetElementHeight,
+                    width: conf.AppConfig.screenWidth,
+                    child: TextButton(
+                      onPressed: (() {
+                        context.read<CubitController>().changeOrder();
+                        Navigator.pop(context);
+                      }),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'İlk yayınlanan önce',
+                          style:
+                              context.watch<CubitController>().orderBy == 'asc'
+                                  ? Theme.of(context).textTheme.headline6
+                                  : Theme.of(context).textTheme.headline4,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

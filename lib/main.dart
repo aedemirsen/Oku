@@ -12,7 +12,9 @@ import 'package:yazilar/config/config.dart' as conf;
 import 'core/service/service.dart';
 
 Future<void> main() async {
+  //initialize some configurations
   await initApp();
+
   runApp(
     BlocProvider(
       create: (context) => CubitController(
@@ -20,10 +22,6 @@ Future<void> main() async {
       ),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        // theme: ThemeData(
-        //   primarySwatch: Colors.blue,
-        //   fontFamily: "Trebuchet MS",
-        // ),
         home: const MyApp(),
         theme: ThemeData(
           primaryColor: Colors.lightBlue[800],
@@ -64,8 +62,11 @@ Future<String> _getDeviceId() async {
 Future<void> initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   //Certificate problemi çözülmeli
-  HttpOverrides.global = MyHttpOverrides();
+  //HttpOverrides.global = MyHttpOverrides();
   _getDeviceId();
+
+  //initialize scroll controller
+  Session.controller = ScrollController();
 }
 
 class MyHttpOverrides extends HttpOverrides {
@@ -76,3 +77,30 @@ class MyHttpOverrides extends HttpOverrides {
           (X509Certificate cert, String host, int port) => true;
   }
 }
+
+// class Initializer extends StatefulWidget {
+//   final Function onInit;
+//   final Widget child;
+//   final BuildContext context;
+
+//   const Initializer(
+//       {super.key,
+//       required this.onInit,
+//       required this.child,
+//       required this.context});
+//   @override
+//   State<Initializer> createState() => _InitializerState();
+// }
+
+// class _InitializerState extends State<Initializer> {
+//   @override
+//   void initState() {
+//     widget.onInit;
+//     super.initState();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return widget.child;
+//   }
+// }

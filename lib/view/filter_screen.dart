@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yazilar/config/config.dart' as conf;
+import 'package:yazilar/cubit/cubit_controller.dart';
 import 'package:yazilar/utility/page_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FilterScreen extends StatelessWidget {
   const FilterScreen({Key? key, required this.title}) : super(key: key);
@@ -132,8 +134,38 @@ class Category extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final categories = context.watch<CubitController>().categories;
     return Scaffold(
       appBar: appBar(context),
+      body: ListView.builder(
+        itemCount: categories.length,
+        itemBuilder: ((context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: SizedBox(
+              height: 50,
+              width: conf.AppConfig.screenWidth,
+              child: TextButton(
+                onPressed: (() {
+                  context
+                      .read<CubitController>()
+                      .changeSelectedCategory(categories.elementAt(index));
+                  Navigator.pop(context);
+                }),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    categories.elementAt(index) == ''
+                        ? '[Kategori Yok]'
+                        : categories.elementAt(index),
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
+      ),
     );
   }
 
@@ -154,8 +186,33 @@ class Group extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final groups = context.watch<CubitController>().groups;
     return Scaffold(
       appBar: appBar(context),
+      body: ListView.builder(
+        itemCount: groups.length,
+        itemBuilder: ((context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: SizedBox(
+              height: 50,
+              width: conf.AppConfig.screenWidth,
+              child: TextButton(
+                onPressed: (() {}),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    groups.elementAt(index) == ''
+                        ? '[Gruplandırılmamış]'
+                        : groups.elementAt(index),
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
+      ),
     );
   }
 

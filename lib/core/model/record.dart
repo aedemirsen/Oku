@@ -1,4 +1,5 @@
 class Record {
+  int? id;
   String? title;
   String? body;
   String? dateHicri;
@@ -8,7 +9,8 @@ class Record {
   String? group;
 
   Record(
-      {this.title,
+      {this.id,
+      this.title,
       this.body,
       this.dateHicri,
       this.dateMiladi,
@@ -17,6 +19,7 @@ class Record {
       this.group});
 
   Record.fromJson(Map<String, dynamic> json) {
+    id = int.parse(json['id']);
     title = json['title'];
     body = json['body'];
     dateHicri = json['dateHicri'];
@@ -28,6 +31,7 @@ class Record {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id.toString();
     data['title'] = title;
     data['body'] = body;
     data['dateHicri'] = dateHicri;

@@ -5,6 +5,12 @@ class AppConfig {
   static double screenWidth = -1, screenHeight = -1;
   static String device = '';
   static String deviceId = '';
+  static const int requestedDataQuantity = 15;
+}
+
+class Session {
+  //Scroll Controller
+  static ScrollController? controller;
 }
 
 class AppTheme {
@@ -17,13 +23,19 @@ class AppTheme {
     headline3: TextStyle(fontSize: 25, color: Colors.black),
     //body
     headline4: TextStyle(fontSize: 16, color: Colors.black),
+    headline6: TextStyle(
+        fontSize: 18, color: Colors.blue, fontWeight: FontWeight.bold),
     //filter elements text
     headline5: TextStyle(fontSize: 20, color: Colors.black),
   );
 }
 
 //api
-const String baseUrl = "http://records.bilgimeclisi.com";
+//const String baseUrl = "http://10.0.2.2:8080/api"; //android emulator
+const String baseUrl = "http://localhost:8080/api";
+//const String baseUrl = "https://articles-service.vercel.app/api";
+const String orderParam = '/order';
+const String filterParam = '/filter';
 
 //AppBar titles
 const String appTitle = "Yazılar";
@@ -33,6 +45,9 @@ const String filterScreenTitle = 'Filtrele';
 const String categoryTitle = 'Kategoriler';
 const String groupTitle = 'Seriler';
 
+//Progress indicator
+const CircularProgressIndicator indicator = CircularProgressIndicator();
+
 //icons
 const IconData homeIcon = Icons.home;
 const IconData libIcon = Icons.book;
@@ -41,6 +56,10 @@ const Icon sortIcon = Icon(
   Icons.sort,
   color: Colors.black,
 );
+const Map<String, String> sortOptions = {
+  'asc': 'İlk yayınlanan önce',
+  'desc': 'Son yayınlanan önce',
+};
 const Icon filterIcon = Icon(
   CupertinoIcons.slider_horizontal_3,
   color: Colors.black,
@@ -56,6 +75,8 @@ const String homePageLabel = 'Ana Sayfa';
 const String libPageLabel = 'Kitaplığım';
 const String settingsPageLabel = 'Ayarlar';
 const double mainFrameInset = 20;
+
+const double bottomSheetElementHeight = 50;
 
 //filter screen
 const String categoryText = 'Kategori';
