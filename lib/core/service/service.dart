@@ -8,10 +8,11 @@ class Service extends IService {
   Service(super.dio);
 
   @override
-  Future<List<Record>> getAllRecords() async {
+  Future<List<Record>> getRecords(Map<String, dynamic> params) async {
     try {
       final response = await dio.get(
-        endpoint,
+        "$endpoint/params",
+        queryParameters: params,
       );
       if (response.statusCode == HttpStatus.ok) {
         return (response.data as List)
@@ -19,55 +20,6 @@ class Service extends IService {
             .toList();
       }
     } on Exception {
-      return [];
-    }
-    return [];
-  }
-
-  @override
-  Future<List<Record>> getRecordsQueried(
-      String param, dynamic p1, dynamic p2, dynamic p3) async {
-    try {
-      String path = "$endpoint$param";
-      Map<String, dynamic> queryParams = {};
-      switch (param) {
-        case conf.orderParam:
-          if (p2 != null && p3 != null) {
-            queryParams = {
-              'orderby': p1.toString(),
-              'start': p2 as int,
-              'limit': p3 as int
-            };
-          } else if (p2 != null && p3 == null) {
-            queryParams = {
-              'orderby': p1.toString(),
-              'start': p2 as int,
-            };
-          } else if (p2 == null && p3 != null) {
-            queryParams = {
-              'orderby': p1.toString(),
-              'limit': p3 as int,
-            };
-          } else {
-            queryParams = {
-              'orderby': p1.toString(),
-            };
-          }
-          break;
-        case conf.filterParam:
-          queryParams = {'category': p1.toString(), 'group': p2.toString()};
-          break;
-      }
-      final response = await dio.get(
-        path,
-        queryParameters: queryParams,
-      );
-      if (response.statusCode == HttpStatus.ok) {
-        return (response.data as List)
-            .map((record) => Record.fromJson(record))
-            .toList();
-      }
-    } on Exception catch (e) {
       return [];
     }
     return [];

@@ -8,10 +8,7 @@ abstract class IService {
 
   IService(this.dio);
 
-  Future<List<Record>> getAllRecords();
-
-  Future<List<Record>> getRecordsQueried(
-      String param, dynamic p1, dynamic p2, dynamic p3);
+  Future<List<Record>> getRecords(Map<String, dynamic> params);
 
   Future<List> getAllCategories();
 

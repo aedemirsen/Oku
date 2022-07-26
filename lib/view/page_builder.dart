@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yazilar/config/config.dart';
 import 'package:yazilar/cubit/cubit_controller.dart';
 import 'package:yazilar/view/settings.dart';
 import 'package:yazilar/view/home_page.dart';
@@ -8,6 +9,8 @@ import 'package:yazilar/config/config.dart' as conf;
 
 class PageBuilder extends StatefulWidget {
   const PageBuilder({Key? key}) : super(key: key);
+
+  static const String route = '/';
 
   @override
   State<PageBuilder> createState() => _PageBuilderState();
@@ -30,8 +33,7 @@ class _PageBuilderState extends State<PageBuilder> {
       ),
     ];
     //get first 15 data from database and insert into local database for caching
-    context.read<CubitController>().getRecords(
-        conf.orderParam, 'desc', null, conf.AppConfig.requestedDataQuantity);
+    context.read<CubitController>().getRecords();
     //get all categories and groups
     context.read<CubitController>().getCategories();
     context.read<CubitController>().getGroups();
@@ -40,6 +42,10 @@ class _PageBuilderState extends State<PageBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    if (AppConfig.screenWidth == -1 || AppConfig.screenHeight == -1) {
+      AppConfig.screenWidth = MediaQuery.of(context).size.width;
+      AppConfig.screenHeight = MediaQuery.of(context).size.height;
+    }
     return Scaffold(
       backgroundColor: conf.backgroundColor,
       body: pages[context.watch<CubitController>().pageIndex],

@@ -103,10 +103,9 @@ class HomePage extends StatelessWidget {
       child: Center(
         child: GestureDetector(
           onTap: () {
+            // Navigator.pushNamed(context, FilterScreen.route);
             PageRouter.changePageWithAnimation(
-                context,
-                const FilterScreen(title: conf.filterScreenTitle),
-                PageRouter.downToUp);
+                context, const FilterScreen(), PageRouter.downToUp);
           },
           child: conf.filterIcon,
         ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yazilar/config/config.dart';
 import 'package:yazilar/cubit/cubit_controller.dart';
+import 'package:yazilar/view/filter_screen.dart';
 import 'package:yazilar/view/page_builder.dart';
 import 'package:yazilar/config/config.dart' as conf;
 
@@ -22,27 +23,22 @@ Future<void> main() async {
       ),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: const MyApp(),
         theme: ThemeData(
           primaryColor: Colors.lightBlue[800],
           primarySwatch: Colors.blue,
           fontFamily: "Trebuchet MS",
           textTheme: AppTheme.appTextTheme,
         ),
+        initialRoute: PageBuilder.route,
+        routes: {
+          PageBuilder.route: (context) => const PageBuilder(),
+          FilterScreen.route: (context) => const FilterScreen(),
+          Category.route: (context) => const Category(),
+          Group.route: (context) => const Group(),
+        },
       ),
     ),
   );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    AppConfig.screenWidth = MediaQuery.of(context).size.width;
-    AppConfig.screenHeight = MediaQuery.of(context).size.height;
-    return const PageBuilder();
-  }
 }
 
 Future<String> _getDeviceId() async {

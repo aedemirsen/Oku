@@ -81,6 +81,8 @@ const double bottomSheetElementHeight = 50;
 //filter screen
 const String categoryText = 'Kategori';
 const String groupText = 'Seri';
+const String cleanFilter = 'Filtreyi Temizle';
+const String cleanAllFilters = 'Tüm Filtreleri Temizle';
 const Color filterButtonColor = Colors.blue;
 final double filterScreenWidth = (AppConfig.screenWidth) * 0.9;
 final double filterScreenHeight = (AppConfig.screenHeight) * 0.5;
@@ -91,6 +93,7 @@ const double filterScreenRadius = 20;
 final Color filterScreenBackgroundColor = Colors.transparent.withOpacity(0.6);
 final double elementTextLeftInset = AppConfig.screenWidth * 0.1 / 2;
 const Icon forwardIcon = Icon(Icons.arrow_forward_ios, color: Colors.black);
+const Icon checkIcon = Icon(Icons.check, color: Colors.blue);
 
 //Records
 const double elevation = 3;

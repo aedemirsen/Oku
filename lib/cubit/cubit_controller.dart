@@ -8,29 +8,33 @@ class CubitController extends Cubit<AppState> {
   //service
   final IService service;
 
+  ///API related variables ----------------- ///
+
   //received data
   List<Record> records = [];
 
   ///categories
   List<String> categories = [];
 
-  ///filter selected
-  String selectedCategory = '';
-
-  String selectedGroup = '';
-
   ///groups
   List<String> groups = [];
 
-  //last reached data's id
-  int lastId = 0;
+  //filters
+  String? selectedCategory;
 
-  ///order by date
+  String? selectedGroup;
+
+  ///last reached data's id
+  int cursor = -1;
+
+  ///order by id - last records id is the biggest
   ///Default = last record show at first
   String orderBy = 'desc';
 
   ///is there any data left to get from server?
   bool hasMoreData = true;
+
+  ///---------END OF API RELATED VARIABLES---------///
 
   ///filter screen visibility
   bool isFilterScreenVisible = false;
@@ -51,20 +55,20 @@ class CubitController extends Cubit<AppState> {
     conf.Session.controller!.addListener(getRecordsOnScroll);
   }
 
-  //SERVICE CALLS
-  //get by order or filter
-  ///param = /order or /filter
-  ///p1 = orderby - category
-  ///p2 = start - group
-  ///p3 = limit - ''
-  Future<void> getRecords(
-      String param, dynamic p1, dynamic p2, dynamic p3) async {
+  ///SERVICE CALLS
+  Future<void> getRecords() async {
     changeRecordsLoading(true);
-    final data = await service.getRecordsQueried(param, p1, p2, p3);
+    final data = await service.getRecords({
+      'category': selectedCategory,
+      'group': selectedGroup,
+      'orderby': orderBy,
+      'start': cursor,
+      'limit': conf.AppConfig.requestedDataQuantity,
+    });
     changeRecordsLoading(false);
     if (data.isNotEmpty) {
       records.addAll(data);
-      lastId = records.last.id ?? 0;
+      cursor = records.last.id!;
       emit(RecordsSuccess(data));
       if (data.length < conf.AppConfig.requestedDataQuantity) {
         changeMoreDataStatus(false);
@@ -74,21 +78,23 @@ class CubitController extends Cubit<AppState> {
     }
   }
 
+  ///get records on scroll
   void getRecordsOnScroll() async {
     if (hasMoreData &&
         conf.Session.controller!.position.extentAfter < 300 &&
         recordsLoadingScroll == false) {
       changeRecordsScrollLoading(true);
-      final data = await service.getRecordsQueried(
-        conf.orderParam,
-        orderBy,
-        lastId,
-        conf.AppConfig.requestedDataQuantity,
-      );
+      final data = await service.getRecords({
+        'category': selectedCategory,
+        'group': selectedGroup,
+        'orderby': orderBy,
+        'start': cursor,
+        'limit': conf.AppConfig.requestedDataQuantity,
+      });
       changeRecordsScrollLoading(false);
       if (data.isNotEmpty) {
         records.addAll(data);
-        lastId = records.last.id ?? 0;
+        cursor = records.last.id ?? 0;
         emit(RecordsSuccess(data));
         if (data.length < conf.AppConfig.requestedDataQuantity) {
           changeMoreDataStatus(false);
@@ -113,6 +119,36 @@ class CubitController extends Cubit<AppState> {
     }
   }
 
+  ///search by filter
+  void searchByFilter() async {
+    cursor = -1;
+    records = [];
+    hasMoreData = true;
+    await getRecords();
+  }
+
+  ///change filter
+  void changeSelectedCategory(String? s) {
+    selectedCategory = s;
+    emit(FilterSelected());
+  }
+
+  void changeSelectedGroup(String? s) {
+    selectedGroup = s;
+    emit(FilterSelected());
+  }
+
+  ///change order
+  void changeOrder() async {
+    cursor = -1;
+    orderBy = orderBy == 'asc' ? 'desc' : 'asc';
+    records = [];
+    hasMoreData = true;
+    await getRecords();
+  }
+
+  ///SERVICE CALLS END
+
   ///delete
   Future<bool> deleteRecord(String id) {
     return service.deleteRecord(id);
@@ -127,33 +163,6 @@ class CubitController extends Cubit<AppState> {
   void changePage(int i) {
     pageIndex = i;
     emit(PageChangedState(pageIndex));
-  }
-
-  ///change filter
-  void changeSelectedCategory(String s) {
-    selectedCategory = s;
-    records = records
-        .where((element) => element.category == selectedCategory)
-        .toList();
-    emit(FilterSelected());
-  }
-
-  void changeSelectedGroup(String s) {
-    selectedGroup = s;
-    records =
-        records.where((element) => element.group == selectedGroup).toList();
-    emit(FilterSelected());
-  }
-
-  ///change order
-  void changeOrder() async {
-    orderBy = orderBy == 'asc' ? 'desc' : 'asc';
-    records = [];
-    hasMoreData = true;
-    await getRecords(
-        conf.orderParam, orderBy, null, conf.AppConfig.requestedDataQuantity);
-
-    emit(OrderChangedState(orderBy));
   }
 
   ///filter screen change visibility
