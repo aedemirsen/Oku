@@ -4,8 +4,11 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:yazilar/config/config.dart';
+import 'package:yazilar/core/model/article.dart';
 import 'package:yazilar/cubit/cubit_controller.dart';
+import 'package:yazilar/local_db/hive_controller.dart';
 import 'package:yazilar/view/filter_screen.dart';
 import 'package:yazilar/view/page_builder.dart';
 import 'package:yazilar/config/config.dart' as conf;
@@ -20,6 +23,7 @@ Future<void> main() async {
     BlocProvider(
       create: (context) => CubitController(
         service: Service(Dio(BaseOptions(baseUrl: conf.baseUrl))),
+        hive: HiveController(),
       ),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -59,10 +63,15 @@ Future<void> initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   //Certificate problemi çözülmeli
   //HttpOverrides.global = MyHttpOverrides();
-  _getDeviceId();
+  await _getDeviceId();
 
   //initialize scroll controller
   Session.controller = ScrollController();
+  //init hive
+  await Hive.initFlutter();
+  Hive.registerAdapter(ArticleAdapter());
+  //open box
+  await Hive.openBox<Article>('articles');
 }
 
 class MyHttpOverrides extends HttpOverrides {

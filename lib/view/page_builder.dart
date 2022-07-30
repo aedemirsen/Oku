@@ -32,10 +32,7 @@ class _PageBuilderState extends State<PageBuilder> {
         title: conf.settingsTitle,
       ),
     ];
-    //get first 15 data from database and insert into local database for caching
-    context.read<CubitController>().getRecords();
-    //get all categories and groups
-    context.read<CubitController>().getCategories();
+
     context.read<CubitController>().getGroups();
     super.initState();
   }

@@ -19,7 +19,7 @@ class AppTheme {
     headline1: TextStyle(fontSize: 40, color: Colors.black),
     //category - date
     headline2: TextStyle(fontSize: 15, color: Colors.black),
-    //record title
+    //article title
     headline3: TextStyle(fontSize: 25, color: Colors.black),
     //body
     headline4: TextStyle(fontSize: 16, color: Colors.black),
@@ -56,10 +56,6 @@ const Icon sortIcon = Icon(
   Icons.sort,
   color: Colors.black,
 );
-const Map<String, String> sortOptions = {
-  'asc': 'İlk yayınlanan önce',
-  'desc': 'Son yayınlanan önce',
-};
 const Icon filterIcon = Icon(
   CupertinoIcons.slider_horizontal_3,
   color: Colors.black,
@@ -83,6 +79,7 @@ const String categoryText = 'Kategori';
 const String groupText = 'Seri';
 const String cleanFilter = 'Filtreyi Temizle';
 const String cleanAllFilters = 'Tüm Filtreleri Temizle';
+const String filterCleanedText = 'Tüm Filtreler Temizlendi!';
 const Color filterButtonColor = Colors.blue;
 final double filterScreenWidth = (AppConfig.screenWidth) * 0.9;
 final double filterScreenHeight = (AppConfig.screenHeight) * 0.5;
@@ -95,10 +92,10 @@ final double elementTextLeftInset = AppConfig.screenWidth * 0.1 / 2;
 const Icon forwardIcon = Icon(Icons.arrow_forward_ios, color: Colors.black);
 const Icon checkIcon = Icon(Icons.check, color: Colors.blue);
 
-//Records
+//Articles
 const double elevation = 3;
-const double firstRecordHeight = 270;
-const double recordsHeight = 140;
+const double firstArticleHeight = 270;
+const double articlesHeight = 140;
 const double cardRadius = 15;
 const double backIconSize = 40;
 const IconData backIcon = Icons.arrow_back;

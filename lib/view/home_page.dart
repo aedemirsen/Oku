@@ -7,41 +7,53 @@ import 'package:yazilar/view/filter_screen.dart';
 
 import 'custom_widgets/elements_view.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    //get first 15 data from server to show in listview
+    if (context.read<CubitController>().articles.isEmpty) {
+      context.read<CubitController>().getArticles();
+    }
+    //get favorite articles from local db
+    context.read<CubitController>().getAllFavoriteArticles();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocBuilder<CubitController, AppState>(
         builder: (context, state) {
-          return Stack(
-            children: [
-              NestedScrollView(
-                floatHeaderSlivers: false,
-                headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                  sliverAppBar(context),
-                ],
-                body: context.watch<CubitController>().recordsLoading
-                    ? const Center(
-                        child: SizedBox(
-                          height: 60,
-                          width: 60,
-                          child: conf.indicator,
+          return NestedScrollView(
+            floatHeaderSlivers: false,
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              sliverAppBar(context),
+            ],
+            body: context.watch<CubitController>().articlesLoading
+                ? const Center(
+                    child: SizedBox(
+                      height: 60,
+                      width: 60,
+                      child: conf.indicator,
+                    ),
+                  )
+                : (state is ArticlesFail
+                    ? Center(
+                        child: Text(
+                          'Kayıt Bulunamadı!',
+                          style: Theme.of(context).textTheme.headline3,
                         ),
                       )
-                    : (state is RecordsFail
-                        ? Center(
-                            child: Text(
-                              'Kayıt Bulunamadı!',
-                              style: Theme.of(context).textTheme.headline3,
-                            ),
-                          )
-                        : mainPage(context)),
-              ),
-            ],
+                    : mainPage(context)),
           );
         },
       ),
@@ -54,7 +66,7 @@ class HomePage extends StatelessWidget {
     return AppBar(
       title: Center(
         child: Text(
-          title,
+          widget.title,
           style: Theme.of(context).textTheme.headline1,
         ),
       ),
@@ -82,7 +94,7 @@ class HomePage extends StatelessWidget {
         right: conf.mainFrameInset,
       ),
       child: ElementsView(
-        records: context.watch<CubitController>().records,
+        articles: context.watch<CubitController>().articles,
       ),
     );
   }

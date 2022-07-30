@@ -1,14 +1,26 @@
-class Record {
-  int? id;
-  String? title;
-  String? body;
-  String? dateHicri;
-  String? dateMiladi;
-  String? category;
-  String? author;
-  String? group;
+import 'package:hive/hive.dart';
+part 'article.g.dart';
 
-  Record(
+@HiveType(typeId: 1, adapterName: 'ArticleAdapter')
+class Article extends HiveObject {
+  @HiveField(0)
+  int? id;
+  @HiveField(1)
+  String? title;
+  @HiveField(2)
+  String? body;
+  @HiveField(3)
+  String? dateHicri;
+  @HiveField(4)
+  String? dateMiladi;
+  @HiveField(5)
+  String? category;
+  @HiveField(6)
+  String? author;
+  @HiveField(7)
+  String? group;
+  @HiveField(8)
+  Article(
       {this.id,
       this.title,
       this.body,
@@ -18,7 +30,7 @@ class Record {
       this.author,
       this.group});
 
-  Record.fromJson(Map<String, dynamic> json) {
+  Article.fromJson(Map<String, dynamic> json) {
     id = int.parse(json['id']);
     title = json['title'];
     body = json['body'];

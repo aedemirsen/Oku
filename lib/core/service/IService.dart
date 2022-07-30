@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:yazilar/core/model/record.dart';
+import 'package:yazilar/core/model/article.dart';
 
 abstract class IService {
   final Dio dio;
@@ -8,13 +8,13 @@ abstract class IService {
 
   IService(this.dio);
 
-  Future<List<Record>> getRecords(Map<String, dynamic> params);
+  Future<List<Article>> getArticles(Map<String, dynamic> params);
 
   Future<List> getAllCategories();
 
   Future<List> getAllGroups();
 
-  Future<bool> deleteRecord(String id);
+  Future<bool> deleteArticle(String id);
 
-  Future<String> postRecord(Record record);
+  Future<String> postArticle(Article article);
 }

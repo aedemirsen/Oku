@@ -1,18 +1,20 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:yazilar/core/model/record.dart';
 import 'package:yazilar/config/config.dart' as conf;
+import 'package:yazilar/core/model/article.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yazilar/cubit/cubit_controller.dart';
 
-class RecordView extends StatelessWidget {
-  const RecordView(this.index,
-      {Key? key, required this.height, this.elevation, required this.record})
+class ArticleView extends StatelessWidget {
+  const ArticleView(this.index,
+      {Key? key, this.elevation, required this.article, required this.library})
       : super(key: key);
 
   final int index;
-  final double height;
+  final bool library;
   final double? elevation;
-  final Record record;
+  final Article article;
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +52,12 @@ class RecordView extends StatelessWidget {
                 children: [
                   backIcon(context),
                   const Spacer(),
-                  like(),
+                  like(context),
                   const SizedBox(
                     width: 15,
                   ),
                   share(context,
-                      "${record.title?.toUpperCase()}\n\n${record.body}"),
+                      "${article.title?.toUpperCase()}\n\n${article.body}"),
                 ],
               ),
               const SizedBox(
@@ -70,14 +72,14 @@ class RecordView extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0, bottom: 10),
                         child: Text(
-                          (record.title ?? '-').toUpperCase(),
+                          (article.title ?? '-').toUpperCase(),
                           style: Theme.of(context).textTheme.headline3,
                         ),
                       ),
                       //category - group
                       Row(
                         children: [
-                          (record.category ?? '').isNotEmpty
+                          (article.category ?? '').isNotEmpty
                               ? Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
@@ -85,14 +87,14 @@ class RecordView extends StatelessWidget {
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(5.0),
-                                    child: Text(record.category ?? '-'),
+                                    child: Text(article.category ?? '-'),
                                   ),
                                 )
                               : const SizedBox.shrink(),
                           const SizedBox(
                             width: 15,
                           ),
-                          (record.group ?? '').isNotEmpty
+                          (article.group ?? '').isNotEmpty
                               ? Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
@@ -106,7 +108,7 @@ class RecordView extends StatelessWidget {
                               : const SizedBox.shrink(),
                           const Spacer(),
                           Text(
-                            record.dateMiladi ?? '-',
+                            article.dateMiladi ?? '-',
                             style: Theme.of(context).textTheme.headline2,
                           )
                         ],
@@ -115,10 +117,27 @@ class RecordView extends StatelessWidget {
                       //body
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
-                        child: SelectableText(
-                          record.body ?? '-',
-                          style: Theme.of(context).textTheme.headline4,
-                          textAlign: TextAlign.justify,
+                        child: Column(
+                          children: [
+                            SelectableText(
+                              '${article.body}',
+                              style: Theme.of(context).textTheme.headline4,
+                              textAlign: TextAlign.justify,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                '${article.author}',
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -132,13 +151,20 @@ class RecordView extends StatelessWidget {
     );
   }
 
-  GestureDetector like() {
+  GestureDetector like(BuildContext context) {
     return GestureDetector(
-      child: const Icon(
-        conf.favDisabledIcon,
+      child: Icon(
+        context.watch<CubitController>().favorites.containsKey(article.id)
+            ? conf.favEnabledIcon
+            : conf.favDisabledIcon,
         color: conf.favColor,
         size: conf.favIconSize,
       ),
+      onTap: () {
+        context.read<CubitController>().favorites.containsKey(article.id)
+            ? context.read<CubitController>().removeFromFavorites(article.id)
+            : context.read<CubitController>().addToFavorites(article);
+      },
     );
   }
 
@@ -174,7 +200,9 @@ class RecordView extends StatelessWidget {
 
   SizedBox closedView(BuildContext context) {
     return SizedBox(
-      height: height,
+      height: index != 0
+          ? conf.articlesHeight
+          : (library ? conf.articlesHeight : conf.firstArticleHeight),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(conf.cardRadius),
@@ -188,7 +216,7 @@ class RecordView extends StatelessWidget {
               //category , group and date
               Row(
                 children: [
-                  (record.category ?? '').isNotEmpty
+                  (article.category ?? '').isNotEmpty
                       ? Container(
                           decoration: BoxDecoration(
                             //border: Border.all(),
@@ -198,7 +226,7 @@ class RecordView extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Text(
-                              record.category ?? '-',
+                              article.category ?? '-',
                               style: Theme.of(context).textTheme.headline2,
                             ),
                           ),
@@ -207,7 +235,7 @@ class RecordView extends StatelessWidget {
                   const SizedBox(
                     width: 15,
                   ),
-                  (record.group ?? '').isNotEmpty
+                  (article.group ?? '').isNotEmpty
                       ? Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
@@ -221,7 +249,7 @@ class RecordView extends StatelessWidget {
                       : const SizedBox.shrink(),
                   const Spacer(),
                   Text(
-                    record.dateMiladi ?? '-',
+                    article.dateMiladi ?? '-',
                     style: Theme.of(context).textTheme.headline2,
                   )
                 ],
@@ -229,17 +257,17 @@ class RecordView extends StatelessWidget {
               const Divider(),
               //title
               Text(
-                record.title ?? "-",
+                article.title ?? "-",
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
                 style: Theme.of(context).textTheme.headline3,
               ),
               //body
-              index == 0
+              index == 0 && !library
                   ? Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        record.body ?? "-",
+                        article.body ?? "-",
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.justify,
                         maxLines: 6,

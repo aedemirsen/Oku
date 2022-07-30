@@ -1,14 +1,12 @@
 import 'dart:io';
-
-import 'package:yazilar/core/model/record.dart';
+import 'package:yazilar/core/model/article.dart';
 import 'IService.dart';
-import 'package:yazilar/config/config.dart' as conf;
 
 class Service extends IService {
   Service(super.dio);
 
   @override
-  Future<List<Record>> getRecords(Map<String, dynamic> params) async {
+  Future<List<Article>> getArticles(Map<String, dynamic> params) async {
     try {
       final response = await dio.get(
         "$endpoint/params",
@@ -16,7 +14,7 @@ class Service extends IService {
       );
       if (response.statusCode == HttpStatus.ok) {
         return (response.data as List)
-            .map((record) => Record.fromJson(record))
+            .map((article) => Article.fromJson(article))
             .toList();
       }
     } on Exception {
@@ -33,7 +31,7 @@ class Service extends IService {
       );
       if (response.statusCode == HttpStatus.ok) {
         return (response.data as List)
-            .map((record) => record.toString())
+            .map((article) => article.toString())
             .toList();
       }
     } on Exception {
@@ -50,7 +48,7 @@ class Service extends IService {
       );
       if (response.statusCode == HttpStatus.ok) {
         return (response.data as List)
-            .map((record) => record.toString())
+            .map((article) => article.toString())
             .toList();
       }
     } on Exception {
@@ -60,7 +58,7 @@ class Service extends IService {
   }
 
   @override
-  Future<bool> deleteRecord(String id) async {
+  Future<bool> deleteArticle(String id) async {
     final response = await dio.delete(
       "$endpoint/$id",
     );
@@ -71,8 +69,8 @@ class Service extends IService {
   }
 
   @override
-  Future<String> postRecord(Record record) async {
-    final response = await dio.post(endpoint, data: record);
+  Future<String> postArticle(Article article) async {
+    final response = await dio.post(endpoint, data: article);
     if (response.statusCode == HttpStatus.ok) {
       return response.data["id"];
     }

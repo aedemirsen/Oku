@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/config/config.dart';
-import 'package:yazilar/core/model/record.dart';
+import 'package:yazilar/core/model/article.dart';
 import 'package:yazilar/cubit/cubit_controller.dart';
-import 'package:yazilar/view/custom_widgets/record_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yazilar/view/custom_widgets/article_view.dart';
 
 class ElementsView extends StatefulWidget {
-  const ElementsView({Key? key, required this.records}) : super(key: key);
+  const ElementsView({Key? key, required this.articles}) : super(key: key);
 
-  final List<Record> records;
+  final List<Article> articles;
 
   @override
   State<ElementsView> createState() => _ElementsViewState();
@@ -28,24 +27,23 @@ class _ElementsViewState extends State<ElementsView> {
         Expanded(
           child: ListView.builder(
             controller: conf.Session.controller,
-            itemCount: widget.records.length,
+            itemCount: widget.articles.length,
             itemBuilder: ((context, index) {
               return Padding(
                 padding: EdgeInsets.only(
-                  bottom: (widget.records.length - 1 == index ? 15.0 : 0),
+                  bottom: (widget.articles.length - 1 == index ? 15.0 : 0),
                 ),
-                child: RecordView(
+                child: ArticleView(
                   index,
-                  record: widget.records.elementAt(index),
-                  height:
-                      index != 0 ? conf.recordsHeight : conf.firstRecordHeight,
+                  library: false,
+                  article: widget.articles.elementAt(index),
                   elevation: conf.elevation,
                 ),
               );
             }),
           ),
         ),
-        context.watch<CubitController>().recordsLoadingScroll
+        context.watch<CubitController>().articlesLoadingScroll
             ? const Padding(
                 padding: EdgeInsets.all(20.0),
                 child: conf.indicator,
