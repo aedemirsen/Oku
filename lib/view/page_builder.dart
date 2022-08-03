@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 import 'package:yazilar/config/config.dart';
 import 'package:yazilar/cubit/cubit_controller.dart';
 import 'package:yazilar/view/settings.dart';
@@ -22,9 +23,7 @@ class _PageBuilderState extends State<PageBuilder> {
   @override
   void initState() {
     pages = [
-      const HomePage(
-        title: conf.appTitle,
-      ),
+      const HomePage(),
       const MyLibrary(
         title: conf.libTitle,
       ),
@@ -32,8 +31,6 @@ class _PageBuilderState extends State<PageBuilder> {
         title: conf.settingsTitle,
       ),
     ];
-
-    context.read<CubitController>().getGroups();
     super.initState();
   }
 
@@ -43,6 +40,8 @@ class _PageBuilderState extends State<PageBuilder> {
       AppConfig.screenWidth = MediaQuery.of(context).size.width;
       AppConfig.screenHeight = MediaQuery.of(context).size.height;
     }
+    //init toast
+    ToastContext().init(context);
     return Scaffold(
       backgroundColor: conf.backgroundColor,
       body: pages[context.watch<CubitController>().pageIndex],
@@ -70,6 +69,7 @@ class _PageBuilderState extends State<PageBuilder> {
       onTap: (index) {
         context.read<CubitController>().changePage(index);
       },
+      fixedColor: Colors.black,
     );
   }
 }

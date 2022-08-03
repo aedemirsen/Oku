@@ -12,9 +12,10 @@ class MyLibrary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: conf.backgroundColor,
       appBar: appBar(context),
       body: Padding(
-        padding: const EdgeInsets.all(
+        padding: EdgeInsets.all(
           conf.mainFrameInset,
         ),
         child: context.watch<CubitController>().favorites.isEmpty
@@ -25,7 +26,6 @@ class MyLibrary extends StatelessWidget {
                 ),
               )
             : ListView.builder(
-                //controller: conf.Session.controller,
                 itemCount: context.watch<CubitController>().favorites.length,
                 itemBuilder: ((context, index) {
                   return Padding(
@@ -57,6 +57,7 @@ class MyLibrary extends StatelessWidget {
 
   AppBar appBar(BuildContext context) {
     return AppBar(
+      backgroundColor: conf.backgroundColor,
       title: Center(
         child: Text(
           title,

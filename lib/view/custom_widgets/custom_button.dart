@@ -3,32 +3,43 @@ import 'package:flutter/material.dart';
 import 'package:yazilar/config/config.dart' as conf;
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({Key? key, required this.title, required this.callback})
+  const CustomButton(
+      {Key? key,
+      required this.child,
+      required this.callback,
+      required this.color,
+      required this.borderColor})
       : super(key: key);
 
-  final String title;
+  final Widget child;
   final Function()? callback;
+  final Color color;
+  final Color borderColor;
   @override
   Widget build(BuildContext context) {
-    return conf.AppConfig.device == 'ios'
-        ? CupertinoButton(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            color: conf.filterButtonColor,
-            onPressed: callback,
-            child: Text(title),
-          )
-        : ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all(conf.filterButtonColor),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(color: borderColor),
+          borderRadius: BorderRadius.circular(conf.radius)),
+      child: conf.AppConfig.device == 'ios'
+          ? CupertinoButton(
+              borderRadius: BorderRadius.circular(conf.radius),
+              color: color,
+              onPressed: callback,
+              child: child,
+            )
+          : ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(color),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(conf.radius),
+                  ),
                 ),
               ),
+              onPressed: callback,
+              child: child,
             ),
-            onPressed: callback,
-            child: Text(title),
-          );
+    );
   }
 }

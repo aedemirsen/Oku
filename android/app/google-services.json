@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "771758996554",
+    "project_id": "flutter-articles-c10ce",
+    "storage_bucket": "flutter-articles-c10ce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771758996554:android:ac27ae7d80d595ed6c7ab3",
+        "android_client_info": {
+          "package_name": "com.example.yazilar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771758996554-g88cuhr4hddlb6bd82rk0d7hbbis772b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGFv8t1fdvK9Q3sm7_oP8WVwF-vyCDKE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "771758996554-g88cuhr4hddlb6bd82rk0d7hbbis772b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

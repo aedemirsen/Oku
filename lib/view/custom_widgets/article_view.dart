@@ -20,9 +20,9 @@ class ArticleView extends StatelessWidget {
   Widget build(BuildContext context) {
     return OpenContainer(
       closedShape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(conf.cardRadius))),
+          borderRadius: BorderRadius.all(Radius.circular(conf.radius))),
       openShape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(conf.cardRadius))),
+          borderRadius: BorderRadius.all(Radius.circular(conf.radius))),
       closedElevation: 0,
       openElevation: 0,
       closedColor: Colors.transparent,
@@ -43,7 +43,7 @@ class ArticleView extends StatelessWidget {
       child: Container(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.all(conf.mainFrameInset),
+          padding: EdgeInsets.all(conf.mainFrameInset),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -72,45 +72,51 @@ class ArticleView extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0, bottom: 10),
                         child: Text(
-                          (article.title ?? '-').toUpperCase(),
-                          style: Theme.of(context).textTheme.headline3,
+                          (article.title ?? '-'),
+                          style: Theme.of(context).textTheme.headline1,
                         ),
                       ),
-                      //category - group
-                      Row(
+                      //yazar
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '${article.author}',
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      //category - group - date
+                      Column(
                         children: [
-                          (article.category ?? '').isNotEmpty
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: conf.categoryBadgeColor,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Text(article.category ?? '-'),
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
-                          const SizedBox(
-                            width: 15,
+                          Row(
+                            children: [
+                              (article.category ?? '').isNotEmpty
+                                  ? categoryBadge()
+                                  : const SizedBox.shrink(),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              (article.group ?? '').isNotEmpty
+                                  ? groupBadge()
+                                  : const SizedBox.shrink(),
+                              const Spacer(),
+                              //date
+                              Text(
+                                article.dateMiladi ?? '-',
+                                style: Theme.of(context).textTheme.headline2,
+                              ),
+                            ],
                           ),
-                          (article.group ?? '').isNotEmpty
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: conf.groupBadgeColor,
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(5.0),
-                                    child: Text('Seri'),
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
-                          const Spacer(),
-                          Text(
-                            article.dateMiladi ?? '-',
-                            style: Theme.of(context).textTheme.headline2,
-                          )
+                          //hicri date
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              article.dateHicri ?? '-',
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                          ),
                         ],
                       ),
                       const Divider(),
@@ -127,16 +133,6 @@ class ArticleView extends StatelessWidget {
                             const SizedBox(
                               height: 20,
                             ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                '${article.author}',
-                                style: Theme.of(context).textTheme.headline5,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
                           ],
                         ),
                       ),
@@ -146,6 +142,41 @@ class ArticleView extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  GestureDetector groupBadge() {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(
+            color: conf.groupBorderColor,
+          ),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.all(5.0),
+          child: Text('Seri'),
+        ),
+      ),
+    );
+  }
+
+  GestureDetector categoryBadge() {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(color: conf.categoryBorderColor),
+          //color: conf.categoryBorderColor,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Text(article.category ?? '-'),
         ),
       ),
     );
@@ -176,11 +207,11 @@ class ArticleView extends StatelessWidget {
         size: conf.shareIconSize,
       ),
       onTap: () async {
-        final box = context.findRenderObject() as RenderBox?;
         await Share.share(
           text,
           subject: 'Yazıyı paylaş',
-          sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+          sharePositionOrigin: Rect.fromLTWH(0, 0, conf.AppConfig.screenWidth,
+              conf.AppConfig.screenHeight / 2),
         );
       },
     );
@@ -198,85 +229,79 @@ class ArticleView extends StatelessWidget {
     );
   }
 
-  SizedBox closedView(BuildContext context) {
-    return SizedBox(
-      height: index != 0
-          ? conf.articlesHeight
-          : (library ? conf.articlesHeight : conf.firstArticleHeight),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(conf.cardRadius),
-        ),
-        elevation: elevation ?? 1, //default 1
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //category , group and date
-              Row(
-                children: [
-                  (article.category ?? '').isNotEmpty
-                      ? Container(
-                          decoration: BoxDecoration(
-                            //border: Border.all(),
-                            color: conf.categoryBadgeColor,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Text(
-                              article.category ?? '-',
-                              style: Theme.of(context).textTheme.headline2,
+  Card closedView(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(conf.radius),
+      ),
+      elevation: elevation ?? 1, //default 1
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //category , group and date
+            Column(
+              children: [
+                Row(
+                  children: [
+                    //category
+                    (article.category ?? '').isNotEmpty
+                        ? Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: conf.categoryBorderColor,
+                              ),
+                              //color: conf.categoryBadgeColor,
+                              borderRadius: BorderRadius.circular(5),
                             ),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  (article.group ?? '').isNotEmpty
-                      ? Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: conf.groupBadgeColor,
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: Text('Seri'),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                  const Spacer(),
-                  Text(
-                    article.dateMiladi ?? '-',
-                    style: Theme.of(context).textTheme.headline2,
-                  )
-                ],
-              ),
-              const Divider(),
-              //title
-              Text(
-                article.title ?? "-",
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                style: Theme.of(context).textTheme.headline3,
-              ),
-              //body
-              index == 0 && !library
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        article.body ?? "-",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.justify,
-                        maxLines: 6,
-                        style: Theme.of(context).textTheme.headline4,
-                      ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Text(
+                                article.category ?? '-',
+                                style: Theme.of(context).textTheme.headline2,
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+
+                    const Spacer(),
+                    Text(
+                      article.dateMiladi ?? '-',
+                      style: Theme.of(context).textTheme.headline2,
                     )
-                  : const SizedBox.shrink(),
-            ],
-          ),
+                  ],
+                ),
+                //hicri date
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    article.dateHicri ?? '-',
+                    style: Theme.of(context).textTheme.headline2,
+                  ),
+                ),
+              ],
+            ),
+            const Divider(),
+            //title
+            Text(
+              article.title ?? "-",
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              style: Theme.of(context).textTheme.headline3,
+            ),
+            //body
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text(
+                article.body ?? "-",
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.justify,
+                maxLines: index == 0 && !library ? 10 : 3,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ),
+          ],
         ),
       ),
     );

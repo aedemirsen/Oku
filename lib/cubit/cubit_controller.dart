@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/core/service/IService.dart';
 import 'package:yazilar/local_db/IHiveController.dart';
+import 'package:yazilar/utility/toast.dart';
 
 import '../core/model/article.dart';
 
@@ -183,6 +184,7 @@ class CubitController extends Cubit<AppState> {
   void addToFavorites(Article article) {
     hive.addArticle(article);
     favorites.putIfAbsent(article.id, () => article);
+    showToastMessage(conf.addedToFav);
     emit(FavoritesUpdated());
   }
 
@@ -190,6 +192,7 @@ class CubitController extends Cubit<AppState> {
   void removeFromFavorites(int? id) {
     hive.deleteArticle(id!);
     favorites.remove(id);
+    showToastMessage(conf.removeFromFav);
     emit(FavoritesUpdated());
   }
 

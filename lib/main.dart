@@ -1,13 +1,17 @@
 import 'dart:io';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:yazilar/config/config.dart';
 import 'package:yazilar/core/model/article.dart';
 import 'package:yazilar/cubit/cubit_controller.dart';
+import 'package:yazilar/firebase_options.dart';
 import 'package:yazilar/local_db/hive_controller.dart';
 import 'package:yazilar/view/filter_screen.dart';
 import 'package:yazilar/view/page_builder.dart';
@@ -63,49 +67,47 @@ Future<void> initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   //Certificate problemi çözülmeli
   //HttpOverrides.global = MyHttpOverrides();
+
+  AwesomeNotifications().initialize(null, [
+    NotificationChannel(
+        channelKey: 'basic_channel',
+        channelName: 'Basic notifications',
+        channelDescription: 'Notification channel for basic tests',
+        defaultColor: Color(0xFF9D50DD),
+        ledColor: Colors.white)
+  ]);
+
+  ///init firebase
+  //await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  //subscribe to articles topic for firebase messaging(push notifications)
+  //when ever a new article is added to db, every user will receive a push notification
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // await FirebaseMessaging.instance.subscribeToTopic('articles');
+
+  ///Get device id, whether it is android or ios
   await _getDeviceId();
 
-  //initialize scroll controller
+  ///initialize scroll controller
   Session.controller = ScrollController();
-  //init hive
+
+  ///init hive - open box(table)
   await Hive.initFlutter();
   Hive.registerAdapter(ArticleAdapter());
-  //open box
   await Hive.openBox<Article>('articles');
 }
 
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
+void Notify() async {
+  // local notification
+  AwesomeNotifications().createNotification(
+      content: NotificationContent(
+    id: 10,
+    channelKey: 'basic_channel',
+    title: 'Simple Notification',
+    body: 'Simple body',
+  ));
 }
 
-// class Initializer extends StatefulWidget {
-//   final Function onInit;
-//   final Widget child;
-//   final BuildContext context;
-
-//   const Initializer(
-//       {super.key,
-//       required this.onInit,
-//       required this.child,
-//       required this.context});
-//   @override
-//   State<Initializer> createState() => _InitializerState();
-// }
-
-// class _InitializerState extends State<Initializer> {
-//   @override
-//   void initState() {
-//     widget.onInit;
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return widget.child;
-//   }
-// }
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+  AwesomeNotifications().createNotificationFromJsonData(message.data);
+}
