@@ -10,7 +10,7 @@ class SkeletonView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
+      padding: EdgeInsets.only(
         top: conf.appBarHeight + conf.sortFilterHeight - 10,
       ),
       child: ListView.builder(

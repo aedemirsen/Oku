@@ -29,6 +29,9 @@ class AppTheme {
         fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
     //filter elements text
     headline5: TextStyle(fontSize: 20, color: Colors.black),
+    //flexible header
+    subtitle1: TextStyle(
+        fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
   );
 }
 
@@ -64,14 +67,20 @@ const FaIcon sort9_1 = FaIcon(
 );
 const FaIcon filterIcon = FaIcon(
   FontAwesomeIcons.filter,
+  color: Colors.black,
 );
 const Icon searchIcon = Icon(
   FontAwesomeIcons.magnifyingGlass,
   color: Colors.black,
+);
+
+const Icon closeIcon = Icon(
+  FontAwesomeIcons.xmark,
+  color: Colors.black,
   size: 25,
 );
 
-const double appBarHeight = 110;
+final double appBarHeight = AppConfig.screenHeight / 10;
 const double sortFilterHeight = 40;
 final Color backgroundColor = Colors.grey.shade300;
 const String readListText = 'Okuma Listesi';
@@ -103,7 +112,7 @@ const Icon checkIcon = Icon(Icons.check, color: Colors.blue);
 
 //Articles
 const double elevation = 3;
-const double radius = 5;
+const double radius = 10;
 const double backIconSize = 40;
 const IconData backIcon = Icons.arrow_back;
 const Color groupBorderColor = Colors.blueGrey;

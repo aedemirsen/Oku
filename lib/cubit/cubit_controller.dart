@@ -32,11 +32,11 @@ class CubitController extends Cubit<AppState> {
   List<String> groups = [];
 
   //filters
-  String? selectedCategory;
+  List<String> selectedCategories = [];
 
-  String? selectedGroup;
+  List<String> selectedGroups = [];
 
-  ///last reached data's id
+  ///last reached data's id - for paging
   int cursor = -1;
 
   ///order by id - last articles id is the biggest
@@ -69,12 +69,15 @@ class CubitController extends Cubit<AppState> {
   ///scroll loading
   bool articlesLoadingScroll = false;
 
+  ///search bar visible
+  bool searchBarVisible = false;
+
   ///--------------SERVICE CALLS------------------
   Future<void> getArticles() async {
     changeArticlesLoading(true);
     final data = await service.getArticles({
-      'category': selectedCategory,
-      'group': selectedGroup,
+      'category': selectedCategories,
+      'group': selectedGroups,
       'orderby': orderBy,
       'start': cursor == 0 && orderBy == 'desc' ? -1 : cursor,
       'limit': conf.AppConfig.requestedDataQuantity,
@@ -99,8 +102,8 @@ class CubitController extends Cubit<AppState> {
         articlesLoadingScroll == false) {
       changeArticlesScrollLoading(true);
       final data = await service.getArticles({
-        'category': selectedCategory,
-        'group': selectedGroup,
+        'category': selectedCategories,
+        'group': selectedGroups,
         'orderby': orderBy,
         'start': cursor,
         'limit': conf.AppConfig.requestedDataQuantity,
@@ -145,15 +148,42 @@ class CubitController extends Cubit<AppState> {
     await getArticles();
   }
 
-  ///change filter
-  void changeSelectedCategory(String? s) {
-    selectedCategory = s;
-    emit(FilterSelected());
+  ///add selected category
+  void addSelectedCategories(String s) {
+    selectedCategories.contains(s)
+        ? removeCategory(s)
+        : selectedCategories.add(s);
+    emit(FilterUpdated());
   }
 
-  void changeSelectedGroup(String? s) {
-    selectedGroup = s;
-    emit(FilterSelected());
+  ///remove selected category
+  void removeCategory(String s) {
+    selectedCategories.remove(s);
+    emit(FilterUpdated());
+  }
+
+  ///add selected group
+  void addSelectedGroups(String s) {
+    selectedGroups.contains(s) ? removeGroup(s) : selectedGroups.add(s);
+    emit(FilterUpdated());
+  }
+
+  ///remove selected group
+  void removeGroup(String s) {
+    selectedGroups.remove(s);
+    emit(FilterUpdated());
+  }
+
+  ///clear categories
+  void clearCategories() {
+    selectedCategories.clear();
+    emit(FilterUpdated());
+  }
+
+  ///clear groups
+  void clearGroups() {
+    selectedGroups.clear();
+    emit(FilterUpdated());
   }
 
   ///change order
@@ -216,6 +246,12 @@ class CubitController extends Cubit<AppState> {
     emit(HasMoreData(hasMoreData));
   }
 
+  ///change search bar visibility
+  void changeSearchBarVisibility() {
+    searchBarVisible = !searchBarVisible;
+    emit(NotifyPipe());
+  }
+
   //article open state change
   void changeArticleState(bool b) {
     isArticleOpen = b;
@@ -268,7 +304,7 @@ class FilterScreenVisibility extends AppState {
 }
 
 ///Filter selected
-class FilterSelected extends AppState {}
+class FilterUpdated extends AppState {}
 
 ///article state
 class ArticleStateChanged extends AppState {

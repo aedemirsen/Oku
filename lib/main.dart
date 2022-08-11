@@ -13,7 +13,9 @@ import 'package:yazilar/core/model/article.dart';
 import 'package:yazilar/cubit/cubit_controller.dart';
 import 'package:yazilar/firebase_options.dart';
 import 'package:yazilar/local_db/hive_controller.dart';
-import 'package:yazilar/view/filter_screen.dart';
+import 'package:yazilar/view/filter/category.dart';
+import 'package:yazilar/view/filter/filter_screen.dart';
+import 'package:yazilar/view/filter/group.dart';
 import 'package:yazilar/view/page_builder.dart';
 import 'package:yazilar/config/config.dart' as conf;
 

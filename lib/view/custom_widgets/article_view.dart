@@ -287,7 +287,7 @@ class ArticleView extends StatelessWidget {
             Text(
               article.title ?? "-",
               overflow: TextOverflow.ellipsis,
-              maxLines: 2,
+              maxLines: 3,
               style: Theme.of(context).textTheme.headline3,
             ),
             //body

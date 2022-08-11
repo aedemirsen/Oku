@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
 import 'package:yazilar/config/config.dart';
 import 'package:yazilar/cubit/cubit_controller.dart';
-import 'package:yazilar/view/settings.dart';
+import 'package:yazilar/view/settings_page.dart';
 import 'package:yazilar/view/home_page.dart';
 import 'package:yazilar/view/my_library.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
