@@ -29,6 +29,7 @@ class FilterSortSliverHeader extends SliverPersistentHeaderDelegate {
               Container(
                 color: Colors.black,
                 width: 0.5,
+                height: conf.sortFilterHeight - 10,
               ),
               Expanded(child: filter(context)),
             ],
@@ -40,6 +41,7 @@ class FilterSortSliverHeader extends SliverPersistentHeaderDelegate {
 
   GestureDetector sort(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -63,8 +65,8 @@ class FilterSortSliverHeader extends SliverPersistentHeaderDelegate {
 
   GestureDetector filter(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
-        // Navigator.pushNamed(context, FilterScreen.route);
         PageRouter.changePageWithAnimation(
             context, const FilterScreen(), PageRouter.downToUp);
       },

@@ -128,8 +128,8 @@ class FilterScreen extends StatelessWidget {
         borderColor: Colors.black,
         color: conf.backgroundColor,
         callback: () {
-          context.read<CubitController>().selectedCategories != null ||
-                  context.read<CubitController>().selectedGroups != null
+          context.read<CubitController>().selectedCategories.isNotEmpty ||
+                  context.read<CubitController>().selectedGroups.isNotEmpty
               ? context.read<CubitController>().searchByFilter()
               : null;
           Navigator.pop(context);

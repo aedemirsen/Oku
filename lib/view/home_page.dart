@@ -120,16 +120,26 @@ class _HomePageState extends State<HomePage> {
       expandedHeight: conf.appBarHeight,
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: EdgeInsets.only(
-          top: conf.mainFrameInset,
+          bottom: conf.mainFrameInset / 2,
           left: conf.mainFrameInset,
+          right: conf.mainFrameInset,
         ),
         title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            conf.readListText,
-            style: Theme.of(context).textTheme.subtitle1,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+          alignment: Alignment.bottomLeft,
+          child: Row(
+            children: [
+              Text(
+                conf.readListText,
+                style: Theme.of(context).textTheme.subtitle1,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const Spacer(),
+              GestureDetector(
+                onTap: () {},
+                child: conf.searchIcon,
+              ),
+            ],
           ),
         ),
       ),

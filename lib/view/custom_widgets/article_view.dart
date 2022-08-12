@@ -210,8 +210,12 @@ class ArticleView extends StatelessWidget {
         await Share.share(
           text,
           subject: 'Yazıyı paylaş',
-          sharePositionOrigin: Rect.fromLTWH(0, 0, conf.AppConfig.screenWidth,
-              conf.AppConfig.screenHeight / 2),
+          sharePositionOrigin: Rect.fromLTWH(
+            0,
+            0,
+            conf.AppConfig.screenWidth,
+            conf.AppConfig.screenHeight / 2,
+          ),
         );
       },
     );

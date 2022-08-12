@@ -70,14 +70,18 @@ Future<void> initApp() async {
   //Certificate problemi çözülmeli
   //HttpOverrides.global = MyHttpOverrides();
 
-  AwesomeNotifications().initialize(null, [
-    NotificationChannel(
+  AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
         channelKey: 'basic_channel',
         channelName: 'Basic notifications',
         channelDescription: 'Notification channel for basic tests',
         defaultColor: Color(0xFF9D50DD),
-        ledColor: Colors.white)
-  ]);
+        ledColor: Colors.white,
+      )
+    ],
+  );
 
   ///init firebase
   //await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
