@@ -27,7 +27,7 @@ class _GroupState extends State<Group> {
     return Scaffold(
       backgroundColor: conf.backgroundColor,
       appBar: appBar(context),
-      body: context.watch<CubitController>().categoriesLoading
+      body: context.watch<CubitController>().groupsLoading
           ? const Center(
               child: SizedBox(
                 height: 60,
@@ -52,31 +52,31 @@ class _GroupState extends State<Group> {
                                     context
                                         .read<CubitController>()
                                         .addSelectedGroups(context
-                                            .watch<CubitController>()
+                                            .read<CubitController>()
                                             .groups
                                             .elementAt(index));
-                                    //Navigator.pop(context);
                                   }),
-                                  // child: Text(
-                                  //   groups.elementAt(index),
-                                  //   maxLines: 2,
-                                  //   overflow: TextOverflow.ellipsis,
-                                  //   style:
-                                  //       Theme.of(context).textTheme.headline5,
-                                  // ),
                                   child: Row(
                                     children: [
                                       Align(
                                         alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          context
-                                              .watch<CubitController>()
-                                              .groups
-                                              .elementAt(index),
-                                          overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5,
+                                        child: Container(
+                                          constraints: BoxConstraints(
+                                            maxWidth:
+                                                conf.AppConfig.screenWidth -
+                                                    100,
+                                          ),
+                                          child: Text(
+                                            context
+                                                .watch<CubitController>()
+                                                .groups
+                                                .elementAt(index),
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5,
+                                            maxLines: 3,
+                                          ),
                                         ),
                                       ),
                                       const Spacer(),

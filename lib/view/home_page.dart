@@ -60,7 +60,12 @@ class _HomePageState extends State<HomePage> {
                     : Visibility(
                         visible:
                             context.watch<CubitController>().articlesLoading,
-                        child: const SkeletonView(),
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: conf.appBarHeight + 45,
+                          ),
+                          child: const SkeletonView(),
+                        ),
                       ),
               ],
             ),

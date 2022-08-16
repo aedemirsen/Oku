@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/core/model/article.dart';
@@ -47,11 +48,15 @@ class ArticleView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //back - favorite - share
+              //back - font - favorite - share
               Row(
                 children: [
                   backIcon(context),
                   const Spacer(),
+                  font(context),
+                  const SizedBox(
+                    width: 15,
+                  ),
                   like(context),
                   const SizedBox(
                     width: 15,
@@ -69,12 +74,26 @@ class ArticleView extends StatelessWidget {
                   child: Column(
                     children: [
                       //title
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20.0, bottom: 10),
-                        child: Text(
-                          (article.title ?? '-'),
-                          style: Theme.of(context).textTheme.headline1,
-                        ),
+                      Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: [
+                          Opacity(
+                            opacity: context
+                                    .watch<CubitController>()
+                                    .fontSettingsVisible
+                                ? 0.2
+                                : 1,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 20.0, bottom: 10),
+                              child: Text(
+                                (article.title ?? '-'),
+                                style: Theme.of(context).textTheme.headline1,
+                              ),
+                            ),
+                          ),
+                          fontSettings(context),
+                        ],
                       ),
                       //yazar
                       Align(
@@ -93,7 +112,39 @@ class ArticleView extends StatelessWidget {
                           Row(
                             children: [
                               (article.category ?? '').isNotEmpty
-                                  ? categoryBadge()
+                                  ? Row(
+                                      children: article.category!
+                                          .split(',')
+                                          .map(
+                                            (e) => Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 5.0),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: conf
+                                                        .categoryBorderColor,
+                                                  ),
+                                                  //color: conf.categoryBadgeColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                    5.0,
+                                                  ),
+                                                  child: Text(
+                                                    e,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline2,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                    )
                                   : const SizedBox.shrink(),
                               const SizedBox(
                                 width: 15,
@@ -127,7 +178,12 @@ class ArticleView extends StatelessWidget {
                           children: [
                             SelectableText(
                               '${article.body}',
-                              style: Theme.of(context).textTheme.headline4,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: context
+                                    .watch<CubitController>()
+                                    .selectedFontSize,
+                              ),
                               textAlign: TextAlign.justify,
                             ),
                             const SizedBox(
@@ -142,6 +198,58 @@ class ArticleView extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Visibility fontSettings(BuildContext context) {
+    return Visibility(
+      visible: context.watch<CubitController>().fontSettingsVisible,
+      child: Container(
+        height: conf.AppConfig.screenHeight / 13,
+        width: conf.AppConfig.screenWidth / 2,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(width: 3),
+          borderRadius: BorderRadius.circular(conf.radius),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            GestureDetector(
+              child: FaIcon(
+                conf.font,
+                size: conf.fontLarge,
+                color: context.watch<CubitController>().selectedFontSize == 25
+                    ? conf.selectedFontColor
+                    : conf.defaultFontColor,
+              ),
+              onTap: () {
+                context.read<CubitController>().changeFontSize(25);
+              },
+            ),
+            GestureDetector(
+              child: FaIcon(
+                conf.font,
+                size: conf.fontMedium,
+                color: context.watch<CubitController>().selectedFontSize == 20
+                    ? conf.selectedFontColor
+                    : conf.defaultFontColor,
+              ),
+              onTap: () => context.read<CubitController>().changeFontSize(20),
+            ),
+            GestureDetector(
+              child: FaIcon(
+                conf.font,
+                size: conf.fontSmall,
+                color: context.watch<CubitController>().selectedFontSize == 16
+                    ? conf.selectedFontColor
+                    : conf.defaultFontColor,
+              ),
+              onTap: () => context.read<CubitController>().changeFontSize(16),
+            )
+          ],
         ),
       ),
     );
@@ -199,6 +307,15 @@ class ArticleView extends StatelessWidget {
     );
   }
 
+  GestureDetector font(BuildContext context) {
+    return GestureDetector(
+      child: conf.fontIcon,
+      onTap: () {
+        context.read<CubitController>().changeFontSettingsVisibility();
+      },
+    );
+  }
+
   GestureDetector share(BuildContext context, String text) {
     return GestureDetector(
       child: const Icon(
@@ -244,31 +361,42 @@ class ArticleView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //category , group and date
+            //categories, group and date
             Column(
               children: [
                 Row(
                   children: [
-                    //category
+                    //categories
                     (article.category ?? '').isNotEmpty
-                        ? Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: conf.categoryBorderColor,
-                              ),
-                              //color: conf.categoryBadgeColor,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Text(
-                                article.category ?? '-',
-                                style: Theme.of(context).textTheme.headline2,
-                              ),
-                            ),
+                        ? Row(
+                            children: article.category!
+                                .split(',')
+                                .map(
+                                  (e) => Padding(
+                                    padding: const EdgeInsets.only(right: 5.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: conf.categoryBorderColor,
+                                        ),
+                                        //color: conf.categoryBadgeColor,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Text(
+                                          e,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline2,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
                           )
                         : const SizedBox.shrink(),
-
                     const Spacer(),
                     Text(
                       article.dateMiladi ?? '-',

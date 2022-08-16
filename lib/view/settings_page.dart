@@ -17,6 +17,7 @@ class Settings extends StatelessWidget {
 
   AppBar appBar(BuildContext context) {
     return AppBar(
+      centerTitle: true,
       backgroundColor: conf.backgroundColor,
       title: Text(
         title,

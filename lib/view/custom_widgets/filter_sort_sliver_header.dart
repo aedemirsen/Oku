@@ -21,19 +21,16 @@ class FilterSortSliverHeader extends SliverPersistentHeaderDelegate {
           left: conf.mainFrameInset,
           right: conf.mainFrameInset,
         ),
-        child: SizedBox(
-          height: conf.sortFilterHeight,
-          child: Row(
-            children: [
-              Expanded(child: sort(context)),
-              Container(
-                color: Colors.black,
-                width: 0.5,
-                height: conf.sortFilterHeight - 10,
-              ),
-              Expanded(child: filter(context)),
-            ],
-          ),
+        child: Row(
+          children: [
+            Expanded(child: sort(context)),
+            Container(
+              color: Colors.black,
+              width: 0.5,
+              height: conf.sortFilterHeight - 10,
+            ),
+            Expanded(child: filter(context)),
+          ],
         ),
       ),
     );

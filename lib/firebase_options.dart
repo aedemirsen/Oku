@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -25,7 +28,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -43,41 +49,23 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyC71kU4l-wHoXGI85WFBgvCDDr7eFyX-Ng',
-    appId: '1:771758996554:web:b565c412444c95c26c7ab3',
-    messagingSenderId: '771758996554',
-    projectId: 'flutter-articles-c10ce',
-    authDomain: 'flutter-articles-c10ce.firebaseapp.com',
-    storageBucket: 'flutter-articles-c10ce.appspot.com',
-    measurementId: 'G-Q3HKJ0H5YN',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDGFv8t1fdvK9Q3sm7_oP8WVwF-vyCDKE0',
-    appId: '1:771758996554:android:ac27ae7d80d595ed6c7ab3',
-    messagingSenderId: '771758996554',
-    projectId: 'flutter-articles-c10ce',
-    storageBucket: 'flutter-articles-c10ce.appspot.com',
+    apiKey: 'AIzaSyAiSKf0ARTGfWvKeApt60GGt5cvqXvXEkM',
+    appId: '1:934812301533:android:352d3000a7bfe55bd80334',
+    messagingSenderId: '934812301533',
+    projectId: 'records-a819b',
+    databaseURL: 'https://records-a819b-default-rtdb.firebaseio.com',
+    storageBucket: 'records-a819b.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAydUeejd7iFYx1DXoyjyjgf1YVX4mKC-8',
-    appId: '1:771758996554:ios:42c4544b132aa3936c7ab3',
-    messagingSenderId: '771758996554',
-    projectId: 'flutter-articles-c10ce',
-    storageBucket: 'flutter-articles-c10ce.appspot.com',
-    iosClientId: '771758996554-6008uv58tp85trg9b9o1cap9dddr3k1c.apps.googleusercontent.com',
-    iosBundleId: 'com.example.yazilar',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAydUeejd7iFYx1DXoyjyjgf1YVX4mKC-8',
-    appId: '1:771758996554:ios:42c4544b132aa3936c7ab3',
-    messagingSenderId: '771758996554',
-    projectId: 'flutter-articles-c10ce',
-    storageBucket: 'flutter-articles-c10ce.appspot.com',
-    iosClientId: '771758996554-6008uv58tp85trg9b9o1cap9dddr3k1c.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCWZbqkV9AAMLQXprkSNH597rKb3dWvFUU',
+    appId: '1:934812301533:ios:345a2450cefaf363d80334',
+    messagingSenderId: '934812301533',
+    projectId: 'records-a819b',
+    databaseURL: 'https://records-a819b-default-rtdb.firebaseio.com',
+    storageBucket: 'records-a819b.appspot.com',
+    iosClientId: '934812301533-pikrgtkv9ddjtlunuhfdpmihu7b4gi0r.apps.googleusercontent.com',
     iosBundleId: 'com.example.yazilar',
   );
 }

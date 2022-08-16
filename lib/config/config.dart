@@ -37,8 +37,9 @@ class AppTheme {
 
 //api
 //const String baseUrl = "http://10.0.2.2:8080/api"; //android emulator
-const String baseUrl = "http://localhost:8080/api";
-//const String baseUrl = "https://articles-service.vercel.app/api";
+//const String baseUrl = "http://192.168.1.9:8080/api";
+//const String baseUrl = "http://localhost:8080/api";
+const String baseUrl = "https://articles-service.vercel.app/api";
 const String orderParam = '/order';
 const String filterParam = '/filter';
 
@@ -117,6 +118,23 @@ const double backIconSize = 40;
 const IconData backIcon = Icons.arrow_back;
 const Color groupBorderColor = Colors.blueGrey;
 const Color categoryBorderColor = Colors.black;
+//font icon
+const FaIcon fontIcon = FaIcon(
+  FontAwesomeIcons.textHeight,
+  color: Colors.black,
+  size: 30,
+);
+//font icon
+IconData font = FontAwesomeIcons.font;
+//font icon sized
+const double fontLarge = 50;
+const double fontMedium = 40;
+const double fontSmall = 30;
+//selected font color
+const Color selectedFontColor = Color.fromARGB(255, 33, 72, 243);
+//default font color
+const Color defaultFontColor = Colors.black;
+
 //favorite icon
 const IconData favEnabledIcon = Icons.favorite;
 const IconData favDisabledIcon = Icons.favorite_border_outlined;

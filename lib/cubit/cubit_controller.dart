@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/core/service/IService.dart';
 import 'package:yazilar/local_db/IHiveController.dart';
@@ -17,7 +18,7 @@ class CubitController extends Cubit<AppState> {
     conf.Session.controller!.addListener(getArticlesOnScroll);
   }
 
-  ///API related variables ----------------- ///
+  ///---------------- API related variables ----------------- ///
 
   //received data
   List<Article> articles = [];
@@ -46,7 +47,7 @@ class CubitController extends Cubit<AppState> {
   ///is there any data left to get from server?
   bool hasMoreData = true;
 
-  ///---------END OF API RELATED VARIABLES---------///
+  ///--------- END OF API RELATED VARIABLES ---------///
 
   ///filter screen visibility
   bool isFilterScreenVisible = false;
@@ -71,6 +72,15 @@ class CubitController extends Cubit<AppState> {
 
   ///search bar visible
   bool searchBarVisible = false;
+
+  ///font settings visible
+  bool fontSettingsVisible = false;
+
+  ///selected font size
+  double selectedFontSize = 16; // default small
+
+  ///selected font color
+  Color fontColor = conf.defaultFontColor;
 
   ///--------------SERVICE CALLS------------------
   Future<void> getArticles() async {
@@ -250,6 +260,18 @@ class CubitController extends Cubit<AppState> {
   void changeSearchBarVisibility() {
     searchBarVisible = !searchBarVisible;
     emit(NotifyPipe());
+  }
+
+  ///change font settings visibility
+  void changeFontSettingsVisibility() {
+    fontSettingsVisible = !fontSettingsVisible;
+    emit(NotifyPipe());
+  }
+
+  ///change font size
+  void changeFontSize(double size) {
+    selectedFontSize = size;
+    changeFontSettingsVisibility();
   }
 
   //article open state change
