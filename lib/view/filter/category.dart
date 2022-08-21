@@ -141,6 +141,7 @@ class _CategoryState extends State<Category> {
 
   AppBar appBar(BuildContext context) {
     return AppBar(
+      centerTitle: true,
       foregroundColor: Colors.black,
       backgroundColor: conf.backgroundColor,
       title: Text(

@@ -9,9 +9,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:yazilar/config/config.dart';
 import 'package:yazilar/core/model/article.dart';
+import 'package:yazilar/core/model/user.dart';
 import 'package:yazilar/cubit/cubit_controller.dart';
 import 'package:yazilar/firebase_options.dart';
-import 'package:yazilar/local_db/hive_controller.dart';
+import 'package:yazilar/caching/hive_controller.dart';
 import 'package:yazilar/view/filter/category.dart';
 import 'package:yazilar/view/filter/filter_screen.dart';
 import 'package:yazilar/view/filter/group.dart';
@@ -85,7 +86,7 @@ Future<String> _getDeviceId() async {
   } else if (Platform.isAndroid) {
     var androidDeviceInfo = await deviceInfo.androidInfo;
     conf.AppConfig.device = "android";
-    return androidDeviceInfo.androidId ?? "";
+    return androidDeviceInfo.id ?? "";
   }
   return "";
 }
@@ -96,7 +97,7 @@ Future<void> initApp() async {
   //HttpOverrides.global = MyHttpOverrides();
 
   ///Get device id, whether it is android or ios
-  await _getDeviceId();
+  AppConfig.deviceId = await _getDeviceId();
 
   ///initialize scroll controller
   Session.controller = ScrollController();
@@ -105,31 +106,32 @@ Future<void> initApp() async {
   await Hive.initFlutter();
   Hive.registerAdapter(ArticleAdapter());
   await Hive.openBox<Article>('articles');
+  await Hive.openBox<double>('constants');
 
   //initialize firebase for cloud messaging - notifications
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
 
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  // FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  NotificationSettings settings = await messaging.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
+  // NotificationSettings settings = await messaging.requestPermission(
+  //   alert: true,
+  //   announcement: false,
+  //   badge: true,
+  //   carPlay: false,
+  //   criticalAlert: false,
+  //   provisional: false,
+  //   sound: true,
+  // );
 
   //subscribe to topic
-  await messaging.subscribeToTopic('articles');
+  // await messaging.subscribeToTopic('articles');
 
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //TODO
-    //uygulama açıkken notification geldiğinde yapılması gereken.
-  });
+  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //   //TODO
+  //   //uygulama açıkken notification geldiğinde yapılması gereken.
+  // });
 
   //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 

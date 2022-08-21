@@ -16,39 +16,49 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
+    //get font size
+    context.read<CubitController>().getFontSize();
+    //get user notification settings, if the user does not exists add user to db.
+    context
+        .read<CubitController>()
+        .getUserNotificationPref(conf.AppConfig.deviceId);
+
     //get first 15 data from server to show in listview
     if (context.read<CubitController>().articles.isEmpty) {
       context.read<CubitController>().getArticles();
     }
-    //get favorite articles from local db
-    context.read<CubitController>().getAllFavoriteArticles();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: conf.backgroundColor,
-      body: BlocBuilder<CubitController, AppState>(
-        builder: (context, state) {
-          return SafeArea(
-            child: Stack(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: conf.backgroundColor,
+        body: BlocBuilder<CubitController, AppState>(
+          builder: (context, state) {
+            return Stack(
               children: [
-                CustomScrollView(
-                  controller: conf.Session.controller,
-                  slivers: <Widget>[
-                    sliverAppBar(context),
-                    SliverPersistentHeader(
-                      delegate: FilterSortSliverHeader(),
-                      pinned: true,
-                    ),
-                    const SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 15,
+                RefreshIndicator(
+                  onRefresh: () async {
+                    await context.read<CubitController>().getArticles();
+                  },
+                  child: CustomScrollView(
+                    controller: conf.Session.controller,
+                    slivers: <Widget>[
+                      sliverAppBar(context),
+                      SliverPersistentHeader(
+                        delegate: FilterSortSliverHeader(),
+                        pinned: true,
                       ),
-                    ),
-                    sliverList(context),
-                  ],
+                      const SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 15,
+                        ),
+                      ),
+                      sliverList(context),
+                    ],
+                  ),
                 ),
                 state is ArticlesFail
                     ? Center(
@@ -68,9 +78,9 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
               ],
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

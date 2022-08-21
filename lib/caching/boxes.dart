@@ -3,4 +3,5 @@ import 'package:yazilar/core/model/article.dart';
 
 class Boxes {
   static Box<Article> getArticles() => Hive.box<Article>('articles');
+  static Box<double> getConstants() => Hive.box<double>('constants');
 }

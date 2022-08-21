@@ -6,6 +6,7 @@ class AppConfig {
   static String device = '';
   static String deviceId = '';
   static const int requestedDataQuantity = 15;
+  static String version = "1.0";
 }
 
 class Session {
@@ -38,10 +39,8 @@ class AppTheme {
 //api
 //const String baseUrl = "http://10.0.2.2:8080/api"; //android emulator
 //const String baseUrl = "http://192.168.1.9:8080/api";
-//const String baseUrl = "http://localhost:8080/api";
-const String baseUrl = "https://articles-service.vercel.app/api";
-const String orderParam = '/order';
-const String filterParam = '/filter';
+const String baseUrl = "http://localhost:8080/api";
+//const String baseUrl = "https://articles-service.vercel.app/api";
 
 //AppBar titles
 const String appTitle = "Yazılar";
@@ -114,7 +113,7 @@ const Icon checkIcon = Icon(Icons.check, color: Colors.blue);
 //Articles
 const double elevation = 3;
 const double radius = 10;
-const double backIconSize = 40;
+const double backIconSize = 30;
 const IconData backIcon = Icons.arrow_back;
 const Color groupBorderColor = Colors.blueGrey;
 const Color categoryBorderColor = Colors.black;
@@ -122,7 +121,7 @@ const Color categoryBorderColor = Colors.black;
 const FaIcon fontIcon = FaIcon(
   FontAwesomeIcons.textHeight,
   color: Colors.black,
-  size: 30,
+  size: 20,
 );
 //font icon
 IconData font = FontAwesomeIcons.font;
@@ -139,8 +138,8 @@ const Color defaultFontColor = Colors.black;
 const IconData favEnabledIcon = Icons.favorite;
 const IconData favDisabledIcon = Icons.favorite_border_outlined;
 const Color favColor = Colors.red;
-const double favIconSize = 40;
+const double favIconSize = 30;
 //share icon
 const IconData shareIcon = Icons.share;
 const Color shareIconColor = Colors.black;
-const double shareIconSize = 40;
+const double shareIconSize = 30;

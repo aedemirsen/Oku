@@ -4,10 +4,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yazilar/cubit/cubit_controller.dart';
 import 'package:yazilar/view/custom_widgets/article_view.dart';
 
-class MyLibrary extends StatelessWidget {
+class MyLibrary extends StatefulWidget {
   const MyLibrary({Key? key, required this.title}) : super(key: key);
 
   final String title;
+
+  @override
+  State<MyLibrary> createState() => _MyLibraryState();
+}
+
+class _MyLibraryState extends State<MyLibrary> {
+  @override
+  void initState() {
+    //get favorite articles from local db
+    context.read<CubitController>().getAllFavoriteArticles();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +72,7 @@ class MyLibrary extends StatelessWidget {
       backgroundColor: conf.backgroundColor,
       title: Center(
         child: Text(
-          title,
+          widget.title,
           style: Theme.of(context).textTheme.headline1,
         ),
       ),

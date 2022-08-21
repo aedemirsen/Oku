@@ -7,7 +7,7 @@ import 'package:yazilar/core/model/article.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yazilar/cubit/cubit_controller.dart';
 
-class ArticleView extends StatelessWidget {
+class ArticleView extends StatefulWidget {
   const ArticleView(this.index,
       {Key? key, this.elevation, required this.article, required this.library})
       : super(key: key);
@@ -17,6 +17,11 @@ class ArticleView extends StatelessWidget {
   final double? elevation;
   final Article article;
 
+  @override
+  State<ArticleView> createState() => _ArticleViewState();
+}
+
+class _ArticleViewState extends State<ArticleView> {
   @override
   Widget build(BuildContext context) {
     return OpenContainer(
@@ -39,166 +44,162 @@ class ArticleView extends StatelessWidget {
     );
   }
 
-  SafeArea openedView(BuildContext context) {
+  openedView(BuildContext context) {
     return SafeArea(
-      child: Container(
-        color: Colors.white,
-        child: Padding(
-          padding: EdgeInsets.all(conf.mainFrameInset),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //back - font - favorite - share
-              Row(
+      child: Stack(
+        alignment: AlignmentDirectional.topCenter,
+        children: [
+          Container(
+            color: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.all(conf.mainFrameInset),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  backIcon(context),
-                  const Spacer(),
-                  font(context),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  like(context),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  share(context,
-                      "${article.title?.toUpperCase()}\n\n${article.body}"),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              //title, category, group and body
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
+                  //back - font - favorite - share
+                  Row(
                     children: [
-                      //title
-                      Stack(
-                        alignment: AlignmentDirectional.center,
+                      backIcon(context),
+                      const Spacer(),
+                      font(context),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      like(context),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      share(),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  //title, category, group and body
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
                         children: [
-                          Opacity(
-                            opacity: context
-                                    .watch<CubitController>()
-                                    .fontSettingsVisible
-                                ? 0.2
-                                : 1,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 20.0, bottom: 10),
-                              child: Text(
-                                (article.title ?? '-'),
-                                style: Theme.of(context).textTheme.headline1,
-                              ),
+                          //title
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 20.0, bottom: 10),
+                            child: Text(
+                              (widget.article.title ?? '-'),
+                              style: Theme.of(context).textTheme.headline1,
                             ),
                           ),
-                          fontSettings(context),
-                        ],
-                      ),
-                      //yazar
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          '${article.author}',
-                          style: Theme.of(context).textTheme.headline5,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      //category - group - date
-                      Column(
-                        children: [
-                          Row(
+                          //yazar
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '${widget.article.author}',
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          //category - group - date
+                          Column(
                             children: [
-                              (article.category ?? '').isNotEmpty
-                                  ? Row(
-                                      children: article.category!
-                                          .split(',')
-                                          .map(
-                                            (e) => Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 5.0),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color: conf
-                                                        .categoryBorderColor,
+                              Row(
+                                children: [
+                                  (widget.article.category ?? '').isNotEmpty
+                                      ? Row(
+                                          children: widget.article.category!
+                                              .split(',')
+                                              .map(
+                                                (e) => Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 5.0),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color: conf
+                                                            .categoryBorderColor,
+                                                      ),
+                                                      //color: conf.categoryBadgeColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                        5.0,
+                                                      ),
+                                                      child: Text(
+                                                        e,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline2,
+                                                      ),
+                                                    ),
                                                   ),
-                                                  //color: conf.categoryBadgeColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
                                                 ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                    5.0,
-                                                  ),
-                                                  child: Text(
-                                                    e,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline2,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
-                                    )
-                                  : const SizedBox.shrink(),
-                              const SizedBox(
-                                width: 15,
+                                              )
+                                              .toList(),
+                                        )
+                                      : const SizedBox.shrink(),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  (widget.article.group ?? '').isNotEmpty
+                                      ? groupBadge()
+                                      : const SizedBox.shrink(),
+                                  const Spacer(),
+                                  //date
+                                  Text(
+                                    widget.article.dateMiladi ?? '-',
+                                    style:
+                                        Theme.of(context).textTheme.headline2,
+                                  ),
+                                ],
                               ),
-                              (article.group ?? '').isNotEmpty
-                                  ? groupBadge()
-                                  : const SizedBox.shrink(),
-                              const Spacer(),
-                              //date
-                              Text(
-                                article.dateMiladi ?? '-',
-                                style: Theme.of(context).textTheme.headline2,
+                              //hicri date
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  widget.article.dateHicri ?? '-',
+                                  style: Theme.of(context).textTheme.headline2,
+                                ),
                               ),
                             ],
                           ),
-                          //hicri date
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              article.dateHicri ?? '-',
-                              style: Theme.of(context).textTheme.headline2,
+                          const Divider(),
+                          //body
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: Column(
+                              children: [
+                                SelectableText(
+                                  '${widget.article.body}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: context
+                                        .watch<CubitController>()
+                                        .selectedFontSize,
+                                  ),
+                                  textAlign: TextAlign.justify,
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                      const Divider(),
-                      //body
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Column(
-                          children: [
-                            SelectableText(
-                              '${article.body}',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: context
-                                    .watch<CubitController>()
-                                    .selectedFontSize,
-                              ),
-                              textAlign: TextAlign.justify,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.only(top: 80.0),
+            child: fontSettings(context),
+          ),
+        ],
       ),
     );
   }
@@ -207,48 +208,49 @@ class ArticleView extends StatelessWidget {
     return Visibility(
       visible: context.watch<CubitController>().fontSettingsVisible,
       child: Container(
-        height: conf.AppConfig.screenHeight / 13,
-        width: conf.AppConfig.screenWidth / 2,
+        height: conf.AppConfig.screenHeight / 12,
+        width: conf.AppConfig.screenWidth / 1.5,
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(width: 3),
+          border: Border.all(width: 2),
           borderRadius: BorderRadius.circular(conf.radius),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            GestureDetector(
-              child: FaIcon(
-                conf.font,
-                size: conf.fontLarge,
-                color: context.watch<CubitController>().selectedFontSize == 25
-                    ? conf.selectedFontColor
-                    : conf.defaultFontColor,
+            Expanded(
+              child: Slider(
+                thumbColor: Colors.black,
+                activeColor: Colors.black,
+                inactiveColor: Colors.grey,
+                value: context.watch<CubitController>().selectedFontSize,
+                label: context
+                    .watch<CubitController>()
+                    .selectedFontSize
+                    .round()
+                    .toString(),
+                divisions: 10,
+                onChanged: (double val) {
+                  context.read<CubitController>().changeFontSize(val);
+                },
+                min: 13,
+                max: 40,
               ),
+            ),
+            //close
+            GestureDetector(
               onTap: () {
-                context.read<CubitController>().changeFontSize(25);
+                context
+                    .read<CubitController>()
+                    .changeFontSettingsVisibility(false);
               },
-            ),
-            GestureDetector(
-              child: FaIcon(
-                conf.font,
-                size: conf.fontMedium,
-                color: context.watch<CubitController>().selectedFontSize == 20
-                    ? conf.selectedFontColor
-                    : conf.defaultFontColor,
+              child: const Padding(
+                padding: EdgeInsets.only(right: 20),
+                child: FaIcon(
+                  FontAwesomeIcons.xmark,
+                  size: conf.backIconSize,
+                ),
               ),
-              onTap: () => context.read<CubitController>().changeFontSize(20),
             ),
-            GestureDetector(
-              child: FaIcon(
-                conf.font,
-                size: conf.fontSmall,
-                color: context.watch<CubitController>().selectedFontSize == 16
-                    ? conf.selectedFontColor
-                    : conf.defaultFontColor,
-              ),
-              onTap: () => context.read<CubitController>().changeFontSize(16),
-            )
           ],
         ),
       ),
@@ -284,7 +286,7 @@ class ArticleView extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(5.0),
-          child: Text(article.category ?? '-'),
+          child: Text(widget.article.category ?? '-'),
         ),
       ),
     );
@@ -293,16 +295,21 @@ class ArticleView extends StatelessWidget {
   GestureDetector like(BuildContext context) {
     return GestureDetector(
       child: Icon(
-        context.watch<CubitController>().favorites.containsKey(article.id)
+        context
+                .watch<CubitController>()
+                .favorites
+                .containsKey(widget.article.id)
             ? conf.favEnabledIcon
             : conf.favDisabledIcon,
         color: conf.favColor,
         size: conf.favIconSize,
       ),
       onTap: () {
-        context.read<CubitController>().favorites.containsKey(article.id)
-            ? context.read<CubitController>().removeFromFavorites(article.id)
-            : context.read<CubitController>().addToFavorites(article);
+        context.read<CubitController>().favorites.containsKey(widget.article.id)
+            ? context
+                .read<CubitController>()
+                .removeFromFavorites(widget.article.id)
+            : context.read<CubitController>().addToFavorites(widget.article);
       },
     );
   }
@@ -311,12 +318,12 @@ class ArticleView extends StatelessWidget {
     return GestureDetector(
       child: conf.fontIcon,
       onTap: () {
-        context.read<CubitController>().changeFontSettingsVisibility();
+        context.read<CubitController>().changeFontSettingsVisibility(true);
       },
     );
   }
 
-  GestureDetector share(BuildContext context, String text) {
+  GestureDetector share() {
     return GestureDetector(
       child: const Icon(
         conf.shareIcon,
@@ -325,7 +332,7 @@ class ArticleView extends StatelessWidget {
       ),
       onTap: () async {
         await Share.share(
-          text,
+          "${widget.article.title?.toUpperCase()}\n\n${widget.article.body}",
           subject: 'Yazıyı paylaş',
           sharePositionOrigin: Rect.fromLTWH(
             0,
@@ -345,6 +352,7 @@ class ArticleView extends StatelessWidget {
         size: conf.backIconSize,
       ),
       onTap: () {
+        context.read<CubitController>().changeFontSettingsVisibility(false);
         Navigator.pop(context);
       },
     );
@@ -355,7 +363,7 @@ class ArticleView extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(conf.radius),
       ),
-      elevation: elevation ?? 1, //default 1
+      elevation: widget.elevation ?? 1, //default 1
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -367,9 +375,9 @@ class ArticleView extends StatelessWidget {
                 Row(
                   children: [
                     //categories
-                    (article.category ?? '').isNotEmpty
+                    (widget.article.category ?? '').isNotEmpty
                         ? Row(
-                            children: article.category!
+                            children: widget.article.category!
                                 .split(',')
                                 .map(
                                   (e) => Padding(
@@ -399,7 +407,7 @@ class ArticleView extends StatelessWidget {
                         : const SizedBox.shrink(),
                     const Spacer(),
                     Text(
-                      article.dateMiladi ?? '-',
+                      widget.article.dateMiladi ?? '-',
                       style: Theme.of(context).textTheme.headline2,
                     )
                   ],
@@ -408,7 +416,7 @@ class ArticleView extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    article.dateHicri ?? '-',
+                    widget.article.dateHicri ?? '-',
                     style: Theme.of(context).textTheme.headline2,
                   ),
                 ),
@@ -417,7 +425,7 @@ class ArticleView extends StatelessWidget {
             const Divider(),
             //title
             Text(
-              article.title ?? "-",
+              widget.article.title ?? "-",
               overflow: TextOverflow.ellipsis,
               maxLines: 3,
               style: Theme.of(context).textTheme.headline3,
@@ -426,10 +434,10 @@ class ArticleView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: Text(
-                article.body ?? "-",
+                widget.article.body ?? "-",
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.justify,
-                maxLines: index == 0 && !library ? 10 : 3,
+                maxLines: widget.index == 0 && !widget.library ? 10 : 3,
                 style: Theme.of(context).textTheme.headline4,
               ),
             ),

@@ -5,4 +5,6 @@ abstract class IHiveController {
   Article? getArticle(int id);
   bool addArticle(Article article);
   bool deleteArticle(int id);
+  bool addFontSize(double fontSize);
+  double? getFontSize();
 }

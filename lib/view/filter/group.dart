@@ -107,7 +107,7 @@ class _GroupState extends State<Group> {
                             width: conf.AppConfig.screenWidth,
                             height: conf.filterButtonHeight,
                             child: CustomButton(
-                              color: Colors.white,
+                              color: conf.backgroundColor,
                               borderColor: Colors.black,
                               child: const Text(
                                 conf.cleanFilter,
@@ -133,6 +133,7 @@ class _GroupState extends State<Group> {
 
   AppBar appBar(BuildContext context) {
     return AppBar(
+      centerTitle: true,
       foregroundColor: Colors.black,
       backgroundColor: conf.backgroundColor,
       title: Text(

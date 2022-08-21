@@ -1,8 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:yazilar/config/config.dart' as conf;
+import 'package:yazilar/config/config.dart';
+import 'package:yazilar/core/model/opinion.dart';
+import 'package:yazilar/core/model/user.dart';
 import 'package:yazilar/core/service/IService.dart';
-import 'package:yazilar/local_db/IHiveController.dart';
+import 'package:yazilar/caching/IHiveController.dart';
 import 'package:yazilar/utility/toast.dart';
 
 import '../core/model/article.dart';
@@ -49,6 +52,9 @@ class CubitController extends Cubit<AppState> {
 
   ///--------- END OF API RELATED VARIABLES ---------///
 
+  ///notifications on-off
+  bool notificationsOn = true;
+
   ///filter screen visibility
   bool isFilterScreenVisible = false;
 
@@ -60,6 +66,12 @@ class CubitController extends Cubit<AppState> {
 
   ///data loading
   bool articlesLoading = false;
+
+  ///opinion share loading
+  bool opinionLoading = false;
+
+  ///notification preference is loading
+  bool notificationSettingsLoading = false;
 
   ///categories loading
   bool categoriesLoading = false;
@@ -83,71 +95,117 @@ class CubitController extends Cubit<AppState> {
   Color fontColor = conf.defaultFontColor;
 
   ///--------------SERVICE CALLS------------------
-  Future<void> getArticles() async {
-    changeArticlesLoading(true);
-    final data = await service.getArticles({
-      'category': selectedCategories,
-      'group': selectedGroups,
-      'orderby': orderBy,
-      'start': cursor == 0 && orderBy == 'desc' ? -1 : cursor,
-      'limit': conf.AppConfig.requestedDataQuantity,
-    });
-    changeArticlesLoading(false);
-    if (data.isNotEmpty) {
-      articles.addAll(data);
-      cursor = articles.last.id!;
-      emit(ArticlesSuccess(data));
-      if (data.length < conf.AppConfig.requestedDataQuantity) {
-        changeMoreDataStatus(false);
+
+  ///get user
+  Future<void> getUserNotificationPref(String id) async {
+    //check connectivity
+    if (isConnected()) {
+      var data = await service.getUser(id);
+      if (data != null) {
+        //get notification preference
+        notificationsOn = data.notificationStatus!;
+        emit(NotifyPipe());
+      } else {
+        //user does not exists, then post user
+        await service.postUser(
+            User(id: conf.AppConfig.deviceId, notificationStatus: true));
       }
     } else {
-      emit(ArticlesFail());
+      emit(ConnectivityFail());
     }
   }
 
-  ///get articles on scroll
-  void getArticlesOnScroll() async {
-    if (hasMoreData &&
-        conf.Session.controller!.position.extentAfter < 300 &&
-        articlesLoadingScroll == false) {
-      changeArticlesScrollLoading(true);
+  ///get articles
+  Future<void> getArticles() async {
+    //check connectivity
+    if (isConnected()) {
+      changeArticlesLoading(true);
       final data = await service.getArticles({
         'category': selectedCategories,
         'group': selectedGroups,
         'orderby': orderBy,
-        'start': cursor,
+        'start': cursor == 0 && orderBy == 'desc' ? -1 : cursor,
         'limit': conf.AppConfig.requestedDataQuantity,
       });
-      changeArticlesScrollLoading(false);
+      changeArticlesLoading(false);
       if (data.isNotEmpty) {
         articles.addAll(data);
-        cursor = articles.last.id ?? 0;
+        cursor = articles.last.id!;
         emit(ArticlesSuccess(data));
         if (data.length < conf.AppConfig.requestedDataQuantity) {
           changeMoreDataStatus(false);
         }
+      } else {
+        emit(ArticlesFail());
       }
+    } else {
+      emit(ConnectivityFail());
     }
+  }
+
+  ///add opinion
+  Future<void> addOpinion(Opinion opinion) async {
+    if (isConnected()) {
+      changeOpinionLoadingState(true);
+      final data = await service.postOpinion(opinion);
+      if (data) {
+        showToastMessage(
+            "Geri bildiriminiz ve değerli görüşleriniz için teşekkür ederiz.");
+        emit(NotifyPipe());
+      }
+      changeOpinionLoadingState(false);
+    } else {}
+  }
+
+  ///get articles on scroll
+  void getArticlesOnScroll() async {
+    if (isConnected()) {
+      if (hasMoreData &&
+          conf.Session.controller!.position.extentAfter < 300 &&
+          articlesLoadingScroll == false) {
+        changeArticlesScrollLoading(true);
+        final data = await service.getArticles({
+          'category': selectedCategories,
+          'group': selectedGroups,
+          'orderby': orderBy,
+          'start': cursor,
+          'limit': conf.AppConfig.requestedDataQuantity,
+        });
+        changeArticlesScrollLoading(false);
+        if (data.isNotEmpty) {
+          articles.addAll(data);
+          cursor = articles.last.id ?? 0;
+          emit(ArticlesSuccess(data));
+          if (data.length < conf.AppConfig.requestedDataQuantity) {
+            changeMoreDataStatus(false);
+          }
+        }
+      }
+    } else {}
   }
 
   ///get all categories - run at startup
   Future<void> getCategories() async {
-    changeCategoriesLoading(true);
-    final data = await service.getAllCategories();
-    changeCategoriesLoading(false);
-    if (data.isNotEmpty) {
-      categories = data as List<String>;
-    }
+    if (isConnected()) {
+      changeCategoriesLoading(true);
+      final data = await service.getAllCategories();
+      changeCategoriesLoading(false);
+      if (data.isNotEmpty) {
+        categories = data as List<String>;
+      }
+    } else {}
   }
 
   ///get all groups - run at startup
   Future<void> getGroups() async {
-    changeGroupsLoading(true);
-    final data = await service.getAllGroups();
-    changeGroupsLoading(false);
-    if (data.isNotEmpty) {
-      groups = data as List<String>;
-    }
+    if (isConnected()) {
+      changeGroupsLoading(true);
+      final data = await service.getAllGroups();
+      changeGroupsLoading(false);
+      if (data.isNotEmpty) {
+        groups = data as List<String>;
+      }
+    } else {}
   }
 
   ///search by filter
@@ -158,6 +216,23 @@ class CubitController extends Cubit<AppState> {
     await getArticles();
   }
 
+  ///change order
+  void changeOrder() async {
+    cursor = -1;
+    orderBy = orderBy == 'asc' ? 'desc' : 'asc';
+    articles = [];
+    hasMoreData = true;
+    await getArticles();
+  }
+
+  ///check connectivity
+  bool isConnected() {
+    return true;
+  }
+
+  ///-------------- SERVICE CALLS END ------------------
+
+  /// ------------- GUI CHANGES -------------------
   ///add selected category
   void addSelectedCategories(String s) {
     selectedCategories.contains(s)
@@ -196,16 +271,7 @@ class CubitController extends Cubit<AppState> {
     emit(FilterUpdated());
   }
 
-  ///change order
-  void changeOrder() async {
-    cursor = -1;
-    orderBy = orderBy == 'asc' ? 'desc' : 'asc';
-    articles = [];
-    hasMoreData = true;
-    await getArticles();
-  }
-
-  ///-------------- SERVICE CALLS END ------------------
+  /// ------------- GUI CHANGES END-------------------
 
   ///-------------- HIVE OPERATIONS --------------------
   ///get all favorite articles
@@ -236,12 +302,37 @@ class CubitController extends Cubit<AppState> {
     emit(FavoritesUpdated());
   }
 
+  ///get font size
+  void getFontSize() {
+    selectedFontSize = hive.getFontSize() ?? 16;
+    emit(NotifyPipe());
+  }
+
+  ///add font size
+  void addFontSize(double fontSize) {
+    hive.addFontSize(fontSize);
+    emit(NotifyPipe());
+  }
+
   ///-------------- HIVE OPERATIONS END ------------------
 
   ///change page
   void changePage(int i) {
     pageIndex = i;
     emit(PageChangedState(pageIndex));
+  }
+
+  void changeNotificationOption(bool b) async {
+    changeNotificationSettingsLoading(true);
+    notificationsOn = await service
+        .updateUser(User(notificationStatus: b, id: AppConfig.deviceId));
+    notificationsOn
+        ? showToastMessage(
+            'Bildirimler aktifleştirildi. Yeni bir yazı eklendiğinde bildirim alacaksın.')
+        : showToastMessage(
+            'Bildirimler kapatıldı. Yeni bir yazı eklendiğinde bildirim almayacaksın.');
+    changeNotificationSettingsLoading(false);
+    emit(NotifyPipe());
   }
 
   ///filter screen change visibility
@@ -263,15 +354,16 @@ class CubitController extends Cubit<AppState> {
   }
 
   ///change font settings visibility
-  void changeFontSettingsVisibility() {
-    fontSettingsVisible = !fontSettingsVisible;
+  void changeFontSettingsVisibility(bool b) {
+    fontSettingsVisible = b;
     emit(NotifyPipe());
   }
 
   ///change font size
   void changeFontSize(double size) {
     selectedFontSize = size;
-    changeFontSettingsVisibility();
+    addFontSize(size);
+    emit(NotifyPipe());
   }
 
   //article open state change
@@ -284,6 +376,18 @@ class CubitController extends Cubit<AppState> {
   void changeArticlesLoading(bool b) {
     articlesLoading = b;
     emit(ArticlesLoadingState(articlesLoading));
+  }
+
+  ///article loading state change
+  void changeOpinionLoadingState(bool b) {
+    opinionLoading = b;
+    emit(NotifyPipe());
+  }
+
+  ///notification settings loading state change
+  void changeNotificationSettingsLoading(bool b) {
+    notificationSettingsLoading = b;
+    emit(NotifyPipe());
   }
 
   ///categories loading state change
@@ -308,6 +412,8 @@ class CubitController extends Cubit<AppState> {
 abstract class AppState {}
 
 class NotifyPipe extends AppState {}
+
+class ConnectivityFail extends AppState {}
 
 class InitState extends AppState {}
 

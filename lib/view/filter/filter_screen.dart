@@ -21,6 +21,7 @@ class FilterScreen extends StatelessWidget {
 
   AppBar appBar(BuildContext context) {
     return AppBar(
+      centerTitle: true,
       foregroundColor: Colors.black,
       backgroundColor: conf.backgroundColor,
       title: Text(
@@ -30,50 +31,78 @@ class FilterScreen extends StatelessWidget {
     );
   }
 
-  Center filterScreen(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          const Divider(),
-          categoryButton(context),
-          const Divider(),
-          groupButton(context),
-          const Divider(),
-          const SizedBox(
-            height: 20,
-          ),
-          //button
-          filterButton(context),
-          const SizedBox(
-            height: 20,
-          ),
-          //clean all filters
-          cleanFiltersButton(context),
-        ],
-      ),
+  filterScreen(BuildContext context) {
+    return Column(
+      children: [
+        const Divider(),
+        categoryButton(context),
+        const Divider(),
+        groupButton(context),
+        const Divider(),
+        const SizedBox(
+          height: 20,
+        ),
+
+        const Spacer(),
+        //button
+        filterButton(context),
+        const SizedBox(
+          height: 20,
+        ),
+        //clean all filters
+        cleanFiltersButton(context),
+        const SizedBox(
+          height: 50,
+        ),
+      ],
     );
   }
 
   SizedBox groupButton(BuildContext context) {
     return SizedBox(
-      height: conf.filterElementHeight,
+      //height: conf.filterElementHeight,
       width: conf.AppConfig.screenWidth,
       child: TextButton(
         onPressed: () {
           Navigator.pushNamed(context, Group.route);
-          // PageRouter.changePageWithAnimation(
-          //   context,
-          //   const Group(),
-          //   PageRouter.leftToRight,
-          // );
         },
         child: Row(
           children: [
             Padding(
               padding: EdgeInsets.only(left: conf.elementTextLeftInset),
-              child: Text(
-                conf.groupText,
-                style: Theme.of(context).textTheme.headline5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    conf.groupText,
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: context
+                        .watch<CubitController>()
+                        .selectedGroups
+                        .map(
+                          (e) => Container(
+                            constraints: BoxConstraints(
+                              maxWidth: conf.AppConfig.screenWidth - 100,
+                            ),
+                            child: Text(
+                              e,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  )
+                ],
               ),
             ),
             const Spacer(),
@@ -89,24 +118,49 @@ class FilterScreen extends StatelessWidget {
 
   SizedBox categoryButton(BuildContext context) {
     return SizedBox(
-      height: conf.filterElementHeight,
+      //height: conf.filterElementHeight,
       width: conf.AppConfig.screenWidth,
       child: TextButton(
         onPressed: () {
           Navigator.pushNamed(context, Category.route);
-          // PageRouter.changePageWithAnimation(
-          //   context,
-          //   const Category(),
-          //   PageRouter.leftToRight,
-          // );
         },
         child: Row(
           children: [
             Padding(
               padding: EdgeInsets.only(left: conf.elementTextLeftInset),
-              child: Text(
-                conf.categoryText,
-                style: Theme.of(context).textTheme.headline5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    conf.categoryText,
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: context
+                        .watch<CubitController>()
+                        .selectedCategories
+                        .map(
+                          (e) => Container(
+                            constraints: BoxConstraints(
+                              maxWidth: conf.AppConfig.screenWidth - 100,
+                            ),
+                            child: Text(
+                              e,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  )
+                ],
               ),
             ),
             const Spacer(),

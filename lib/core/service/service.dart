@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:yazilar/core/model/article.dart';
+import 'package:yazilar/core/model/opinion.dart';
+import 'package:yazilar/core/model/user.dart';
 import 'IService.dart';
 
 class Service extends IService {
@@ -75,5 +77,62 @@ class Service extends IService {
       return response.data["id"];
     }
     return "";
+  }
+
+  @override
+  Future<User?> getUser(String id) async {
+    try {
+      final response = await dio.get(
+        "$usersEndpoint/$id",
+      );
+      if (response.data != false) {
+        return User.fromJson((response.data));
+      }
+    } on Exception {
+      return null;
+    }
+    return null;
+  }
+
+  @override
+  Future<bool> postUser(User user) async {
+    try {
+      final response = await dio.post(usersEndpoint, data: user);
+      if (response.statusCode == HttpStatus.ok) {
+        return true;
+      }
+    } on Exception {
+      return false;
+    }
+    return false;
+  }
+
+  @override
+  Future<bool> updateUser(User user) async {
+    try {
+      final response = await dio.put('$usersEndpoint/params', queryParameters: {
+        'id': user.id,
+        'notificationStatus': user.notificationStatus
+      });
+      if (response.data == user.notificationStatus) {
+        return user.notificationStatus!;
+      }
+    } on Exception {
+      return false;
+    }
+    return false;
+  }
+
+  @override
+  Future<bool> postOpinion(Opinion opinion) async {
+    try {
+      final response = await dio.post(opinionsEndpoint, data: opinion);
+      if (response.statusCode == HttpStatus.ok) {
+        return true;
+      }
+    } on Exception {
+      return false;
+    }
+    return false;
   }
 }
