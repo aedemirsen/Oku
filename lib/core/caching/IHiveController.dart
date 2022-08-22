@@ -7,4 +7,6 @@ abstract class IHiveController {
   bool deleteArticle(int id);
   bool addFontSize(double fontSize);
   double? getFontSize();
+  bool setView(bool val);
+  bool getView();
 }

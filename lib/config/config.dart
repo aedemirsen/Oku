@@ -39,8 +39,8 @@ class AppTheme {
 //api
 //const String baseUrl = "http://10.0.2.2:8080/api"; //android emulator
 //const String baseUrl = "http://192.168.1.9:8080/api";
-const String baseUrl = "http://localhost:8080/api";
-//const String baseUrl = "https://articles-service.vercel.app/api";
+//const String baseUrl = "http://localhost:8080/api";
+const String baseUrl = "https://articles-service.vercel.app/api";
 
 //AppBar titles
 const String appTitle = "Yazılar";
@@ -49,6 +49,7 @@ const String settingsTitle = "Ayarlar";
 const String filterScreenTitle = 'Filtrele';
 const String categoryTitle = 'Kategoriler';
 const String groupTitle = 'Seriler';
+const String changeViewTitle = 'Görünüm';
 
 //Progress indicator
 const CircularProgressIndicator indicator = CircularProgressIndicator();
@@ -72,6 +73,20 @@ const FaIcon filterIcon = FaIcon(
 const Icon searchIcon = Icon(
   FontAwesomeIcons.magnifyingGlass,
   color: Colors.black,
+  size: 30,
+);
+const Icon searchIconOpened = Icon(
+  FontAwesomeIcons.magnifyingGlass,
+  color: Colors.black,
+  size: 25,
+);
+
+final double searchBarWidth = AppConfig.screenWidth / 2;
+
+const Icon closeIconOpened = Icon(
+  FontAwesomeIcons.xmark,
+  color: Colors.black,
+  size: 30,
 );
 
 const Icon closeIcon = Icon(

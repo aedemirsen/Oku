@@ -53,7 +53,7 @@ class ShareOpinion extends StatelessWidget {
               ),
             ),
             Text(
-              'Fikir',
+              'Fikir ve Görüşler',
               style: Theme.of(context).textTheme.headline5,
             ),
             Padding(
@@ -90,12 +90,45 @@ class ShareOpinion extends StatelessWidget {
                 borderColor: Colors.black,
                 color: conf.backgroundColor,
                 callback: () {
-                  context.read<CubitController>().addOpinion(Opinion(
-                      title: titleController.text, body: bodyController.text));
+                  if (titleController.text.isNotEmpty &&
+                      bodyController.text.isNotEmpty) {
+                    context.read<CubitController>().addOpinion(
+                          Opinion(
+                            title: titleController.text,
+                            body: bodyController.text,
+                          ),
+                        );
+                    _showMyDialog(context);
+                  }
                 },
-                child: const Text(
-                  'Paylaş',
-                  style: TextStyle(color: Colors.black),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Visibility(
+                      visible: context.watch<CubitController>().opinionLoading,
+                      child: const SizedBox(
+                        width: 15 + conf.filterButtonHeight / 2,
+                      ),
+                    ),
+                    const Text(
+                      'Paylaş',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    Visibility(
+                      visible: context.watch<CubitController>().opinionLoading,
+                      child: const SizedBox(
+                        width: 15,
+                      ),
+                    ),
+                    Visibility(
+                      visible: context.watch<CubitController>().opinionLoading,
+                      child: const SizedBox(
+                        height: conf.filterButtonHeight / 2,
+                        width: conf.filterButtonHeight / 2,
+                        child: conf.indicator,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -117,6 +150,38 @@ class ShareOpinion extends StatelessWidget {
         'Fikirlerini Paylaş',
         style: Theme.of(context).textTheme.headline1,
       ),
+    );
+  }
+
+  Future<void> _showMyDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(conf.radius),
+          ),
+          title: const Text('Bilgi'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text(
+                    'Geri bildiriminiz ve değerli görüşleriniz için teşekkür ederiz.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Tamam'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

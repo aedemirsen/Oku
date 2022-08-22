@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/cubit/cubit_controller.dart';
 import 'package:yazilar/utility/page_router.dart';
-import 'package:yazilar/view/share_opinion.dart';
+import 'package:yazilar/view/settings/change_view.dart';
+import 'package:yazilar/view/settings/share_opinion.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key, required this.title}) : super(key: key);
@@ -33,6 +36,7 @@ class _SettingsState extends State<Settings> {
         child: Column(
           children: [
             notifications(context),
+            changeView(context),
             shareApp(context),
             shareOpinion(context),
             const Spacer(),
@@ -62,16 +66,54 @@ class _SettingsState extends State<Settings> {
             SizedBox(
               width: conf.AppConfig.screenWidth - 100,
               child: Text(
-                'Uygulamayı Geliştirmek İçin Fikirlerini Paylaş',
+                'Uygulamanın Gelişmesi İçin Fikirlerini Bizimle Paylaş',
                 style: Theme.of(context).textTheme.headline5,
               ),
             ),
             const Spacer(),
             const Padding(
               padding: EdgeInsets.only(right: 20.0),
-              child: Icon(
-                Icons.navigate_next,
-                size: 40,
+              child: FaIcon(
+                FontAwesomeIcons.penToSquare,
+                size: 30,
+                color: Colors.black,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  TextButton changeView(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        PageRouter.changePageWithAnimation(
+          context,
+          const ChangeView(
+            title: conf.changeViewTitle,
+          ),
+          PageRouter.downToUp,
+        );
+      },
+      child: SizedBox(
+        height: 80,
+        width: conf.AppConfig.screenWidth,
+        child: Row(
+          children: [
+            SizedBox(
+              width: conf.AppConfig.screenWidth - 100,
+              child: Text(
+                'Görünümü Değiştir',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+            ),
+            const Spacer(),
+            const Padding(
+              padding: EdgeInsets.only(right: 25.0),
+              child: FaIcon(
+                FontAwesomeIcons.chevronRight,
+                size: 30,
                 color: Colors.black,
               ),
             )
@@ -83,7 +125,18 @@ class _SettingsState extends State<Settings> {
 
   shareApp(BuildContext context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () async {
+        await Share.share(
+          "X",
+          subject: 'Uygulamayı paylaş',
+          sharePositionOrigin: Rect.fromLTWH(
+            0,
+            0,
+            conf.AppConfig.screenWidth,
+            conf.AppConfig.screenHeight / 2,
+          ),
+        );
+      },
       child: SizedBox(
         height: 80,
         width: conf.AppConfig.screenWidth,
@@ -101,7 +154,7 @@ class _SettingsState extends State<Settings> {
               padding: EdgeInsets.only(right: 20.0),
               child: Icon(
                 Icons.share,
-                size: 40,
+                size: 30,
                 color: Colors.black,
               ),
             )

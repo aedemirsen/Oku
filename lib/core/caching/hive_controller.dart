@@ -1,6 +1,6 @@
+import 'package:yazilar/core/caching/IHiveController.dart';
+import 'package:yazilar/core/caching/boxes.dart';
 import 'package:yazilar/core/model/article.dart';
-import 'package:yazilar/caching/IHiveController.dart';
-import 'package:yazilar/caching/boxes.dart';
 
 class HiveController extends IHiveController {
   @override
@@ -19,7 +19,7 @@ class HiveController extends IHiveController {
       if (Boxes.getConstants().isEmpty) {
         addFontSize(16);
       }
-      return Boxes.getConstants().getAt(0);
+      return Boxes.getConstants().get('fontSize') as double;
     } on Exception {
       return null;
     }
@@ -60,6 +60,28 @@ class HiveController extends IHiveController {
       return Boxes.getArticles().toMap();
     } on Exception {
       return {};
+    }
+  }
+
+  @override
+  bool getView() {
+    try {
+      if (Boxes.getConstants().get('view') == null) {
+        setView(false);
+      }
+      return Boxes.getConstants().get('view') as bool;
+    } on Exception {
+      return false;
+    }
+  }
+
+  @override
+  bool setView(bool val) {
+    try {
+      Boxes.getConstants().put('view', val);
+      return true;
+    } on Exception {
+      return false;
     }
   }
 }

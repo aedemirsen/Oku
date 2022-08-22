@@ -2,10 +2,10 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/config/config.dart';
+import 'package:yazilar/core/caching/IHiveController.dart';
 import 'package:yazilar/core/model/opinion.dart';
 import 'package:yazilar/core/model/user.dart';
 import 'package:yazilar/core/service/IService.dart';
-import 'package:yazilar/caching/IHiveController.dart';
 import 'package:yazilar/utility/toast.dart';
 
 import '../core/model/article.dart';
@@ -94,6 +94,9 @@ class CubitController extends Cubit<AppState> {
   ///selected font color
   Color fontColor = conf.defaultFontColor;
 
+  ///selected view
+  bool onlyTitles = false;
+
   ///--------------SERVICE CALLS------------------
 
   ///get user
@@ -149,8 +152,6 @@ class CubitController extends Cubit<AppState> {
       changeOpinionLoadingState(true);
       final data = await service.postOpinion(opinion);
       if (data) {
-        showToastMessage(
-            "Geri bildiriminiz ve değerli görüşleriniz için teşekkür ederiz.");
         emit(NotifyPipe());
       }
       changeOpinionLoadingState(false);
@@ -314,6 +315,18 @@ class CubitController extends Cubit<AppState> {
     emit(NotifyPipe());
   }
 
+  ///add view option
+  void addViewOption(bool val) {
+    hive.setView(val);
+    emit(NotifyPipe());
+  }
+
+  ///get view option
+  void getViewOption() {
+    onlyTitles = hive.getView();
+    emit(NotifyPipe());
+  }
+
   ///-------------- HIVE OPERATIONS END ------------------
 
   ///change page
@@ -406,6 +419,13 @@ class CubitController extends Cubit<AppState> {
   void changeArticlesScrollLoading(bool b) {
     articlesLoadingScroll = b;
     emit(ArticlesLoadingScrollState(articlesLoadingScroll));
+  }
+
+  ///change view
+  void changeView(bool b) {
+    onlyTitles = b;
+    addViewOption(onlyTitles);
+    emit(NotifyPipe());
   }
 }
 

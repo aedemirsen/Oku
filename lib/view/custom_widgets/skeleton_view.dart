@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:yazilar/config/config.dart' as conf;
+import 'package:yazilar/cubit/cubit_controller.dart';
 
 class SkeletonView extends StatelessWidget {
   const SkeletonView({
@@ -20,7 +22,9 @@ class SkeletonView extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 15),
             child: SizedBox(
-              height: index == 0 ? 300 : 200,
+              height: !context.watch<CubitController>().onlyTitles
+                  ? (index == 0 ? 300 : 200)
+                  : 200,
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(conf.radius),
@@ -83,23 +87,25 @@ class SkeletonView extends StatelessWidget {
                         ),
                       ),
                       //body
-                      index == 0
-                          ? Padding(
-                              padding: const EdgeInsets.only(top: 10.0),
-                              child: SkeletonParagraph(
-                                style: SkeletonParagraphStyle(
-                                  lines: 7,
-                                  spacing: 5,
-                                  lineStyle: SkeletonLineStyle(
-                                    height: 10,
-                                    width: double.infinity,
-                                    borderRadius: BorderRadius.circular(
-                                      conf.radius,
+                      !context.watch<CubitController>().onlyTitles
+                          ? (index == 0
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 10.0),
+                                  child: SkeletonParagraph(
+                                    style: SkeletonParagraphStyle(
+                                      lines: 7,
+                                      spacing: 5,
+                                      lineStyle: SkeletonLineStyle(
+                                        height: 10,
+                                        width: double.infinity,
+                                        borderRadius: BorderRadius.circular(
+                                          conf.radius,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            )
+                                )
+                              : const SizedBox.shrink())
                           : const SizedBox.shrink(),
                     ],
                   ),

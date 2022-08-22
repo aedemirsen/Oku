@@ -431,16 +431,18 @@ class _ArticleViewState extends State<ArticleView> {
               style: Theme.of(context).textTheme.headline3,
             ),
             //body
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Text(
-                widget.article.body ?? "-",
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.justify,
-                maxLines: widget.index == 0 && !widget.library ? 10 : 3,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
+            !context.watch<CubitController>().onlyTitles
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      widget.article.body ?? "-",
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.justify,
+                      maxLines: widget.index == 0 && !widget.library ? 10 : 3,
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
       ),

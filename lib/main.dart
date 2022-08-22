@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:yazilar/config/config.dart';
+import 'package:yazilar/core/caching/hive_controller.dart';
 import 'package:yazilar/core/model/article.dart';
 import 'package:yazilar/core/model/user.dart';
 import 'package:yazilar/cubit/cubit_controller.dart';
 import 'package:yazilar/firebase_options.dart';
-import 'package:yazilar/caching/hive_controller.dart';
 import 'package:yazilar/view/filter/category.dart';
 import 'package:yazilar/view/filter/filter_screen.dart';
 import 'package:yazilar/view/filter/group.dart';
@@ -106,7 +106,7 @@ Future<void> initApp() async {
   await Hive.initFlutter();
   Hive.registerAdapter(ArticleAdapter());
   await Hive.openBox<Article>('articles');
-  await Hive.openBox<double>('constants');
+  await Hive.openBox<Object>('constants');
 
   //initialize firebase for cloud messaging - notifications
   // await Firebase.initializeApp(
