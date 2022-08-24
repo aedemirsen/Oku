@@ -13,6 +13,7 @@ import 'package:yazilar/core/model/article.dart';
 import 'package:yazilar/core/model/user.dart';
 import 'package:yazilar/cubit/cubit_controller.dart';
 import 'package:yazilar/firebase_options.dart';
+import 'package:yazilar/view/filter/author.dart';
 import 'package:yazilar/view/filter/category.dart';
 import 'package:yazilar/view/filter/filter_screen.dart';
 import 'package:yazilar/view/filter/group.dart';
@@ -71,6 +72,7 @@ Future<void> main() async {
           FilterScreen.route: (context) => const FilterScreen(),
           Category.route: (context) => const Category(),
           Group.route: (context) => const Group(),
+          Author.route: (context) => const Author(),
         },
       ),
     ),

@@ -39,8 +39,8 @@ class AppTheme {
 //api
 //const String baseUrl = "http://10.0.2.2:8080/api"; //android emulator
 //const String baseUrl = "http://192.168.1.9:8080/api";
-//const String baseUrl = "http://localhost:8080/api";
-const String baseUrl = "https://articles-service.vercel.app/api";
+const String baseUrl = "http://localhost:8080/api";
+//const String baseUrl = "https://articles-service.vercel.app/api";
 
 //AppBar titles
 const String appTitle = "Yazılar";
@@ -48,6 +48,7 @@ const String libTitle = "Kitaplığım";
 const String settingsTitle = "Ayarlar";
 const String filterScreenTitle = 'Filtrele';
 const String categoryTitle = 'Kategoriler';
+const String authorTitle = 'Yazarlar';
 const String groupTitle = 'Seriler';
 const String changeViewTitle = 'Görünüm';
 
@@ -111,6 +112,7 @@ const double bottomSheetElementHeight = 50;
 //filter screen
 const String categoryText = 'Kategori';
 const String groupText = 'Seri';
+const String authorText = 'Yazar';
 const String cleanFilter = 'Filtreyi Temizle';
 const String cleanAllFilters = 'Tüm Filtreleri Temizle';
 const String filterCleanedText = 'Tüm Filtreler Temizlendi!';

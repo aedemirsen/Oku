@@ -4,6 +4,7 @@ import 'package:yazilar/cubit/cubit_controller.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yazilar/utility/toast.dart';
 import 'package:yazilar/view/custom_widgets/custom_button.dart';
+import 'package:yazilar/view/filter/author.dart';
 import 'package:yazilar/view/filter/category.dart';
 import 'package:yazilar/view/filter/group.dart';
 
@@ -39,10 +40,11 @@ class FilterScreen extends StatelessWidget {
         const Divider(),
         groupButton(context),
         const Divider(),
+        authorButton(context),
+        const Divider(),
         const SizedBox(
           height: 20,
         ),
-
         const Spacer(),
         //button
         filterButton(context),
@@ -174,6 +176,64 @@ class FilterScreen extends StatelessWidget {
     );
   }
 
+  SizedBox authorButton(BuildContext context) {
+    return SizedBox(
+      //height: conf.filterElementHeight,
+      width: conf.AppConfig.screenWidth,
+      child: TextButton(
+        onPressed: () {
+          Navigator.pushNamed(context, Author.route);
+        },
+        child: Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: conf.elementTextLeftInset),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    conf.authorText,
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: context
+                        .watch<CubitController>()
+                        .selectedAuthors
+                        .map(
+                          (e) => Container(
+                            constraints: BoxConstraints(
+                              maxWidth: conf.AppConfig.screenWidth - 100,
+                            ),
+                            child: Text(
+                              e,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  )
+                ],
+              ),
+            ),
+            const Spacer(),
+            Padding(
+              padding: EdgeInsets.only(right: conf.elementTextLeftInset),
+              child: conf.forwardIcon,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   SizedBox filterButton(BuildContext context) {
     return SizedBox(
       height: conf.filterButtonHeight,
@@ -183,7 +243,8 @@ class FilterScreen extends StatelessWidget {
         color: conf.backgroundColor,
         callback: () {
           context.read<CubitController>().selectedCategories.isNotEmpty ||
-                  context.read<CubitController>().selectedGroups.isNotEmpty
+                  context.read<CubitController>().selectedGroups.isNotEmpty ||
+                  context.read<CubitController>().selectedAuthors.isNotEmpty
               ? context.read<CubitController>().searchByFilter()
               : null;
           Navigator.pop(context);

@@ -18,6 +18,8 @@ abstract class IService {
 
   Future<List> getAllGroups();
 
+  Future<List> getAllAuthors();
+
   Future<bool> deleteArticle(String id);
 
   Future<String> postArticle(Article article);

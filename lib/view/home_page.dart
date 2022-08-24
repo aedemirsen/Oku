@@ -22,8 +22,6 @@ class _HomePageState extends State<HomePage> {
     _searchController = TextEditingController();
     //get font size
     context.read<CubitController>().getFontSize();
-    //get view option
-    context.read<CubitController>().getViewOption();
     //get user notification settings, if the user does not exists add user to db.
     context
         .read<CubitController>()

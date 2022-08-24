@@ -22,9 +22,7 @@ class SkeletonView extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 15),
             child: SizedBox(
-              height: !context.watch<CubitController>().onlyTitles
-                  ? (index == 0 ? 300 : 200)
-                  : 200,
+              height: index == 0 ? 300 : 200,
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(conf.radius),
@@ -87,25 +85,23 @@ class SkeletonView extends StatelessWidget {
                         ),
                       ),
                       //body
-                      !context.watch<CubitController>().onlyTitles
-                          ? (index == 0
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 10.0),
-                                  child: SkeletonParagraph(
-                                    style: SkeletonParagraphStyle(
-                                      lines: 7,
-                                      spacing: 5,
-                                      lineStyle: SkeletonLineStyle(
-                                        height: 10,
-                                        width: double.infinity,
-                                        borderRadius: BorderRadius.circular(
-                                          conf.radius,
-                                        ),
-                                      ),
+                      index == 0
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: SkeletonParagraph(
+                                style: SkeletonParagraphStyle(
+                                  lines: 7,
+                                  spacing: 5,
+                                  lineStyle: SkeletonLineStyle(
+                                    height: 10,
+                                    width: double.infinity,
+                                    borderRadius: BorderRadius.circular(
+                                      conf.radius,
                                     ),
                                   ),
-                                )
-                              : const SizedBox.shrink())
+                                ),
+                              ),
+                            )
                           : const SizedBox.shrink(),
                     ],
                   ),

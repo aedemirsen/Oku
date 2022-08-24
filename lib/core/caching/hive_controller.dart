@@ -62,26 +62,4 @@ class HiveController extends IHiveController {
       return {};
     }
   }
-
-  @override
-  bool getView() {
-    try {
-      if (Boxes.getConstants().get('view') == null) {
-        setView(false);
-      }
-      return Boxes.getConstants().get('view') as bool;
-    } on Exception {
-      return false;
-    }
-  }
-
-  @override
-  bool setView(bool val) {
-    try {
-      Boxes.getConstants().put('view', val);
-      return true;
-    } on Exception {
-      return false;
-    }
-  }
 }

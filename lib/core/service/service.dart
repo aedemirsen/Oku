@@ -33,7 +33,24 @@ class Service extends IService {
       );
       if (response.statusCode == HttpStatus.ok) {
         return (response.data as List)
-            .map((article) => article.toString())
+            .map((category) => category.toString())
+            .toList();
+      }
+    } on Exception {
+      return [];
+    }
+    return [];
+  }
+
+  @override
+  Future<List> getAllAuthors() async {
+    try {
+      final response = await dio.get(
+        "$endpoint/authors",
+      );
+      if (response.statusCode == HttpStatus.ok) {
+        return (response.data as List)
+            .map((author) => author.toString())
             .toList();
       }
     } on Exception {
@@ -50,7 +67,7 @@ class Service extends IService {
       );
       if (response.statusCode == HttpStatus.ok) {
         return (response.data as List)
-            .map((article) => article.toString())
+            .map((group) => group.toString())
             .toList();
       }
     } on Exception {

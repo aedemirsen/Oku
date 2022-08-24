@@ -32,11 +32,16 @@ class CubitController extends Cubit<AppState> {
   ///categories
   List<String> categories = [];
 
+  ///authors
+  List<String> authors = [];
+
   ///groups
   List<String> groups = [];
 
   //filters
   List<String> selectedCategories = [];
+
+  List<String> selectedAuthors = [];
 
   List<String> selectedGroups = [];
 
@@ -76,6 +81,9 @@ class CubitController extends Cubit<AppState> {
   ///categories loading
   bool categoriesLoading = false;
 
+  ///authors loading
+  bool authorsLoading = false;
+
   ///groups loading
   bool groupsLoading = false;
 
@@ -93,9 +101,6 @@ class CubitController extends Cubit<AppState> {
 
   ///selected font color
   Color fontColor = conf.defaultFontColor;
-
-  ///selected view
-  bool onlyTitles = false;
 
   ///--------------SERVICE CALLS------------------
 
@@ -126,6 +131,7 @@ class CubitController extends Cubit<AppState> {
       final data = await service.getArticles({
         'category': selectedCategories,
         'group': selectedGroups,
+        'author': selectedAuthors,
         'orderby': orderBy,
         'start': cursor == 0 && orderBy == 'desc' ? -1 : cursor,
         'limit': conf.AppConfig.requestedDataQuantity,
@@ -168,6 +174,7 @@ class CubitController extends Cubit<AppState> {
         final data = await service.getArticles({
           'category': selectedCategories,
           'group': selectedGroups,
+          'author': selectedAuthors,
           'orderby': orderBy,
           'start': cursor,
           'limit': conf.AppConfig.requestedDataQuantity,
@@ -193,6 +200,18 @@ class CubitController extends Cubit<AppState> {
       changeCategoriesLoading(false);
       if (data.isNotEmpty) {
         categories = data as List<String>;
+      }
+    } else {}
+  }
+
+  ///get all authors - run at startup
+  Future<void> getAuthors() async {
+    if (isConnected()) {
+      changeAuthorsLoading(true);
+      final data = await service.getAllAuthors();
+      changeAuthorsLoading(false);
+      if (data.isNotEmpty) {
+        authors = data as List<String>;
       }
     } else {}
   }
@@ -242,9 +261,21 @@ class CubitController extends Cubit<AppState> {
     emit(FilterUpdated());
   }
 
+  ///add selected author
+  void addSelectedAuthors(String s) {
+    selectedAuthors.contains(s) ? removeAuthor(s) : selectedAuthors.add(s);
+    emit(FilterUpdated());
+  }
+
   ///remove selected category
   void removeCategory(String s) {
     selectedCategories.remove(s);
+    emit(FilterUpdated());
+  }
+
+  ///remove selected author
+  void removeAuthor(String s) {
+    selectedAuthors.remove(s);
     emit(FilterUpdated());
   }
 
@@ -263,6 +294,12 @@ class CubitController extends Cubit<AppState> {
   ///clear categories
   void clearCategories() {
     selectedCategories.clear();
+    emit(FilterUpdated());
+  }
+
+  ///clear authors
+  void clearAuthors() {
+    selectedAuthors.clear();
     emit(FilterUpdated());
   }
 
@@ -312,18 +349,6 @@ class CubitController extends Cubit<AppState> {
   ///add font size
   void addFontSize(double fontSize) {
     hive.addFontSize(fontSize);
-    emit(NotifyPipe());
-  }
-
-  ///add view option
-  void addViewOption(bool val) {
-    hive.setView(val);
-    emit(NotifyPipe());
-  }
-
-  ///get view option
-  void getViewOption() {
-    onlyTitles = hive.getView();
     emit(NotifyPipe());
   }
 
@@ -409,6 +434,12 @@ class CubitController extends Cubit<AppState> {
     emit(CategoriesLoadingState(categoriesLoading));
   }
 
+  ///authors loading state change
+  void changeAuthorsLoading(bool b) {
+    authorsLoading = b;
+    emit(CategoriesLoadingState(authorsLoading));
+  }
+
   ///groups loading state change
   void changeGroupsLoading(bool b) {
     groupsLoading = b;
@@ -419,13 +450,6 @@ class CubitController extends Cubit<AppState> {
   void changeArticlesScrollLoading(bool b) {
     articlesLoadingScroll = b;
     emit(ArticlesLoadingScrollState(articlesLoadingScroll));
-  }
-
-  ///change view
-  void changeView(bool b) {
-    onlyTitles = b;
-    addViewOption(onlyTitles);
-    emit(NotifyPipe());
   }
 }
 

@@ -5,7 +5,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/cubit/cubit_controller.dart';
 import 'package:yazilar/utility/page_router.dart';
-import 'package:yazilar/view/settings/change_view.dart';
 import 'package:yazilar/view/settings/share_opinion.dart';
 
 class Settings extends StatefulWidget {
@@ -88,13 +87,13 @@ class _SettingsState extends State<Settings> {
   TextButton changeView(BuildContext context) {
     return TextButton(
       onPressed: () {
-        PageRouter.changePageWithAnimation(
-          context,
-          const ChangeView(
-            title: conf.changeViewTitle,
-          ),
-          PageRouter.downToUp,
-        );
+        // PageRouter.changePageWithAnimation(
+        //   context,
+        //   const ChangeView(
+        //     title: conf.changeViewTitle,
+        //   ),
+        //   PageRouter.downToUp,
+        // );
       },
       child: SizedBox(
         height: 80,
@@ -104,7 +103,7 @@ class _SettingsState extends State<Settings> {
             SizedBox(
               width: conf.AppConfig.screenWidth - 100,
               child: Text(
-                'Görünümü Değiştir',
+                'Fihrist',
                 style: Theme.of(context).textTheme.headline5,
               ),
             ),
