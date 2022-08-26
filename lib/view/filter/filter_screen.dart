@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/cubit/cubit_controller.dart';
+import 'package:yazilar/core/cubit/cubit_controller.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yazilar/utility/toast.dart';
 import 'package:yazilar/view/custom_widgets/custom_button.dart';
@@ -245,7 +245,7 @@ class FilterScreen extends StatelessWidget {
           context.read<CubitController>().selectedCategories.isNotEmpty ||
                   context.read<CubitController>().selectedGroups.isNotEmpty ||
                   context.read<CubitController>().selectedAuthors.isNotEmpty
-              ? context.read<CubitController>().searchByFilter()
+              ? context.read<CubitController>().resetAndSearch()
               : null;
           Navigator.pop(context);
         },
@@ -273,7 +273,7 @@ class FilterScreen extends StatelessWidget {
               context.read<CubitController>().selectedGroups.isNotEmpty) {
             context.read<CubitController>().clearCategories();
             context.read<CubitController>().clearGroups();
-            context.read<CubitController>().searchByFilter();
+            context.read<CubitController>().resetAndSearch();
           }
           showToastMessage(conf.filterCleanedText);
           Navigator.pop(context);

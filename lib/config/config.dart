@@ -96,6 +96,12 @@ const Icon closeIcon = Icon(
   size: 25,
 );
 
+const Icon dashIcon = Icon(
+  FontAwesomeIcons.minus,
+  color: Colors.black,
+  size: 20,
+);
+
 final double appBarHeight = AppConfig.screenHeight / 10;
 const double sortFilterHeight = 40;
 final Color backgroundColor = Colors.grey.shade300;
@@ -104,7 +110,13 @@ const String homePageLabel = 'Ana Sayfa';
 const String libPageLabel = 'Kitaplığım';
 const String settingsPageLabel = 'Ayarlar';
 const String addedToFav = 'Yazı Kitaplığa Eklendi.';
+const String addedToReadArticles = 'Yazı Okunanlar Listesine Eklendi.';
 const String removeFromFav = 'Yazı Kitaplıktan Çıkarıldı.';
+const String removeFromReadArticles = 'Yazı Okunanlar Listesinden Çıkarıldı.';
+const String dontShowReadArticles =
+    'Okunmuş Yazılar Ana Sayfada Gösterilmeyecek.';
+const String showReadArticles = 'Okunmuş Yazılar Ana Sayfada Gösterilecek.';
+const String clearReadArticles = 'Okunanlar Listesini Temizle';
 final double mainFrameInset = AppConfig.screenWidth / 25;
 
 const double bottomSheetElementHeight = 50;
@@ -134,6 +146,9 @@ const double backIconSize = 30;
 const IconData backIcon = Icons.arrow_back;
 const Color groupBorderColor = Colors.blueGrey;
 const Color categoryBorderColor = Colors.black;
+const String signAsRead = 'Okundu Olarak İşaretle';
+const String removeFromRead = 'Okunanlardan Kaldır';
+const String alreadyRead = 'Okundu';
 //font icon
 const FaIcon fontIcon = FaIcon(
   FontAwesomeIcons.textHeight,

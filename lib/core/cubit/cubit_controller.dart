@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/config/config.dart';
 import 'package:yazilar/core/caching/IHiveController.dart';
+import 'package:yazilar/core/model/article.dart';
 import 'package:yazilar/core/model/opinion.dart';
 import 'package:yazilar/core/model/user.dart';
 import 'package:yazilar/core/service/IService.dart';
+import 'package:yazilar/utility/page_router.dart';
 import 'package:yazilar/utility/toast.dart';
-
-import '../core/model/article.dart';
+import 'package:yazilar/view/custom_widgets/opened_view.dart';
 
 class CubitController extends Cubit<AppState> {
   //service
@@ -26,8 +27,14 @@ class CubitController extends Cubit<AppState> {
   //received data
   List<Article> articles = [];
 
+  //selected read article
+  Article? selectedReadArticle;
+
   ///favorite articles (library)
   Map<dynamic, Article> favorites = {};
+
+  //read articles
+  Map<int, String> readArticles = {};
 
   ///categories
   List<String> categories = [];
@@ -72,6 +79,9 @@ class CubitController extends Cubit<AppState> {
   ///data loading
   bool articlesLoading = false;
 
+  ///read article loading
+  bool readArticleLoading = false;
+
   ///opinion share loading
   bool opinionLoading = false;
 
@@ -95,6 +105,9 @@ class CubitController extends Cubit<AppState> {
 
   ///font settings visible
   bool fontSettingsVisible = false;
+
+  ///show read articles
+  bool showReadArticles = true;
 
   ///selected font size
   double selectedFontSize = 16; // default small
@@ -144,6 +157,24 @@ class CubitController extends Cubit<AppState> {
         if (data.length < conf.AppConfig.requestedDataQuantity) {
           changeMoreDataStatus(false);
         }
+      } else {
+        emit(ArticlesFail());
+      }
+    } else {
+      emit(ConnectivityFail());
+    }
+  }
+
+  ///get specified article
+  Future<void> getArticle(int id) async {
+    //check connectivity
+    if (isConnected()) {
+      changeReadArticlesLoading(true);
+      final data = await service.getArticle(id);
+      changeReadArticlesLoading(false);
+      if (data != null) {
+        selectedReadArticle = data;
+        emit(ArticleGetSuccess(data));
       } else {
         emit(ArticlesFail());
       }
@@ -229,7 +260,7 @@ class CubitController extends Cubit<AppState> {
   }
 
   ///search by filter
-  void searchByFilter() async {
+  void resetAndSearch() async {
     cursor = -1;
     articles = [];
     hasMoreData = true;
@@ -352,6 +383,52 @@ class CubitController extends Cubit<AppState> {
     emit(NotifyPipe());
   }
 
+  ///get font size
+  void getReadArticlesVisibility() {
+    showReadArticles = hive.getReadArticlesVisibility();
+    emit(NotifyPipe());
+  }
+
+  ///add font size
+  void toggleReadArticlesVisibility() {
+    hive.toggleReadArticlesVisibility(!showReadArticles);
+    changeReadArticlesVisibility();
+    emit(NotifyPipe());
+  }
+
+  //add read article id
+  void addToReadArticles(int id, String title) {
+    hive.addReadArticle(id, title);
+    readArticles.putIfAbsent(id, () => title);
+    showToastMessage(conf.addedToReadArticles);
+    emit(NotifyPipe());
+  }
+
+  ///remove from read articles
+  void removeFromReadArticles(int id) {
+    hive.removeFromReadArticle(id);
+    readArticles.remove(id);
+    showToastMessage(conf.removeFromReadArticles);
+    emit(NotifyPipe());
+  }
+
+  ///get all read articles
+  void getAllReadArticles() {
+    readArticles.clear();
+    var readArticleTemp = hive.getReadArticles();
+    readArticles =
+        readArticleTemp.map((key, value) => MapEntry(key as int, value));
+    emit(NotifyPipe());
+  }
+
+  ///get all read articles
+  void clearReadArticles() {
+    readArticles.clear();
+    hive.clearReadArticles();
+    showToastMessage('Okunan Yazılar Listesi Temizlendi.');
+    emit(NotifyPipe());
+  }
+
   ///-------------- HIVE OPERATIONS END ------------------
 
   ///change page
@@ -391,6 +468,15 @@ class CubitController extends Cubit<AppState> {
     emit(NotifyPipe());
   }
 
+  ///change read articles visibility
+  void changeReadArticlesVisibility() {
+    showReadArticles = !showReadArticles;
+    showReadArticles
+        ? showToastMessage(conf.showReadArticles)
+        : showToastMessage(conf.dontShowReadArticles);
+    emit(NotifyPipe());
+  }
+
   ///change font settings visibility
   void changeFontSettingsVisibility(bool b) {
     fontSettingsVisible = b;
@@ -414,6 +500,12 @@ class CubitController extends Cubit<AppState> {
   void changeArticlesLoading(bool b) {
     articlesLoading = b;
     emit(ArticlesLoadingState(articlesLoading));
+  }
+
+  ///read article loading state change
+  void changeReadArticlesLoading(bool b) {
+    readArticleLoading = b;
+    emit(NotifyPipe());
   }
 
   ///article loading state change
@@ -518,6 +610,13 @@ class ArticlesSuccess extends AppState {
   final List<Article> articles;
 
   ArticlesSuccess(this.articles);
+}
+
+///article get success
+class ArticleGetSuccess extends AppState {
+  final Article article;
+
+  ArticleGetSuccess(this.article);
 }
 
 ///articles get fails

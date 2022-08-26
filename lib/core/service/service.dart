@@ -11,7 +11,7 @@ class Service extends IService {
   Future<List<Article>> getArticles(Map<String, dynamic> params) async {
     try {
       final response = await dio.get(
-        "$endpoint/params",
+        "$articlesEndpoint/params",
         queryParameters: params,
       );
       if (response.statusCode == HttpStatus.ok) {
@@ -29,7 +29,7 @@ class Service extends IService {
   Future<List> getAllCategories() async {
     try {
       final response = await dio.get(
-        "$endpoint/categories",
+        "$articlesEndpoint/categories",
       );
       if (response.statusCode == HttpStatus.ok) {
         return (response.data as List)
@@ -46,7 +46,7 @@ class Service extends IService {
   Future<List> getAllAuthors() async {
     try {
       final response = await dio.get(
-        "$endpoint/authors",
+        "$articlesEndpoint/authors",
       );
       if (response.statusCode == HttpStatus.ok) {
         return (response.data as List)
@@ -63,7 +63,7 @@ class Service extends IService {
   Future<List> getAllGroups() async {
     try {
       final response = await dio.get(
-        "$endpoint/groups",
+        "$articlesEndpoint/groups",
       );
       if (response.statusCode == HttpStatus.ok) {
         return (response.data as List)
@@ -79,7 +79,7 @@ class Service extends IService {
   @override
   Future<bool> deleteArticle(String id) async {
     final response = await dio.delete(
-      "$endpoint/$id",
+      "$articlesEndpoint/$id",
     );
     if (response.statusCode == HttpStatus.ok) {
       return true;
@@ -89,7 +89,7 @@ class Service extends IService {
 
   @override
   Future<String> postArticle(Article article) async {
-    final response = await dio.post(endpoint, data: article);
+    final response = await dio.post(articlesEndpoint, data: article);
     if (response.statusCode == HttpStatus.ok) {
       return response.data["id"];
     }
@@ -151,5 +151,20 @@ class Service extends IService {
       return false;
     }
     return false;
+  }
+
+  @override
+  Future<Article?> getArticle(int id) async {
+    try {
+      final response = await dio.get(
+        "$articlesEndpoint/$id",
+      );
+      if (response.data != false) {
+        return Article.fromJson((response.data));
+      }
+    } on Exception {
+      return null;
+    }
+    return null;
   }
 }

@@ -31,7 +31,7 @@ class Article extends HiveObject {
       this.group});
 
   Article.fromJson(Map<String, dynamic> json) {
-    id = int.parse(json['id']);
+    id = json['id'];
     title = json['title'];
     body = json['body'];
     dateHicri = json['dateHicri'];
@@ -43,7 +43,7 @@ class Article extends HiveObject {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id.toString();
+    data['id'] = id;
     data['title'] = title;
     data['body'] = body;
     data['dateHicri'] = dateHicri;

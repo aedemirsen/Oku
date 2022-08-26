@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
 import 'package:yazilar/config/config.dart';
-import 'package:yazilar/cubit/cubit_controller.dart';
+import 'package:yazilar/core/cubit/cubit_controller.dart';
 import 'package:yazilar/view/settings/settings_page.dart';
 import 'package:yazilar/view/home_page.dart';
-import 'package:yazilar/view/my_library.dart';
+import 'package:yazilar/view/library/my_library.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yazilar/config/config.dart' as conf;
 

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/cubit/cubit_controller.dart';
+import 'package:yazilar/core/cubit/cubit_controller.dart';
 import 'package:yazilar/utility/page_router.dart';
 import 'package:yazilar/view/settings/share_opinion.dart';
 
@@ -35,7 +35,8 @@ class _SettingsState extends State<Settings> {
         child: Column(
           children: [
             notifications(context),
-            changeView(context),
+            index(context),
+            changeViewOfRead(context),
             shareApp(context),
             shareOpinion(context),
             const Spacer(),
@@ -45,6 +46,40 @@ class _SettingsState extends State<Settings> {
             const SizedBox(
               height: 15,
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  TextButton changeViewOfRead(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        context.read<CubitController>().toggleReadArticlesVisibility();
+      },
+      child: SizedBox(
+        height: 80,
+        width: conf.AppConfig.screenWidth,
+        child: Row(
+          children: [
+            SizedBox(
+              width: conf.AppConfig.screenWidth - 100,
+              child: Text(
+                context.read<CubitController>().showReadArticles
+                    ? 'Okunan Yazıları Gösterme'
+                    : 'Okunan Yazıları Göster',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+            ),
+            const Spacer(),
+            const Padding(
+              padding: EdgeInsets.only(right: 25.0),
+              child: FaIcon(
+                FontAwesomeIcons.eye,
+                size: 30,
+                color: Colors.black,
+              ),
+            )
           ],
         ),
       ),
@@ -84,7 +119,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  TextButton changeView(BuildContext context) {
+  TextButton index(BuildContext context) {
     return TextButton(
       onPressed: () {
         // PageRouter.changePageWithAnimation(

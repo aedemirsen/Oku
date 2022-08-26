@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yazilar/config/config.dart' as conf;
+import 'package:yazilar/core/cubit/cubit_controller.dart';
 import 'package:yazilar/core/model/opinion.dart';
-import 'package:yazilar/cubit/cubit_controller.dart';
 import 'package:yazilar/view/custom_widgets/custom_button.dart';
 
 class ShareOpinion extends StatelessWidget {

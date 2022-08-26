@@ -6,13 +6,15 @@ import 'package:yazilar/core/model/user.dart';
 abstract class IService {
   final Dio dio;
 
-  final String endpoint = '/articles';
+  final String articlesEndpoint = '/articles';
   final String usersEndpoint = '/users';
   final String opinionsEndpoint = '/opinions';
 
   IService(this.dio);
 
   Future<List<Article>> getArticles(Map<String, dynamic> params);
+
+  Future<Article?> getArticle(int id);
 
   Future<List> getAllCategories();
 

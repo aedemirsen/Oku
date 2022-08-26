@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/cubit/cubit_controller.dart';
+import 'package:yazilar/core/cubit/cubit_controller.dart';
 import 'package:yazilar/view/custom_widgets/article_view.dart';
 import 'package:yazilar/view/custom_widgets/filter_sort_sliver_header.dart';
 import 'custom_widgets/skeleton_view.dart';
@@ -14,18 +14,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late bool _searchBarVisible;
-  late TextEditingController _searchController;
   @override
   void initState() {
-    _searchBarVisible = false;
-    _searchController = TextEditingController();
     //get font size
     context.read<CubitController>().getFontSize();
     //get user notification settings, if the user does not exists add user to db.
     context
         .read<CubitController>()
         .getUserNotificationPref(conf.AppConfig.deviceId);
+
+    //get read articles from local db
+    context.read<CubitController>().getAllReadArticles();
+
+    //get show option for read articles
+    context.read<CubitController>().getReadArticlesVisibility();
 
     //get first 15 data from server to show in listview
     if (context.read<CubitController>().articles.isEmpty) {
@@ -37,7 +39,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      bottom: false,
       child: Scaffold(
         backgroundColor: conf.backgroundColor,
         body: BlocBuilder<CubitController, AppState>(
@@ -46,7 +47,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 RefreshIndicator(
                   onRefresh: () async {
-                    context.read<CubitController>().getArticles();
+                    context.read<CubitController>().resetAndSearch();
                   },
                   child: CustomScrollView(
                     controller: conf.Session.controller,
@@ -149,46 +150,23 @@ class _HomePageState extends State<HomePage> {
         ),
         title: Align(
           alignment: Alignment.bottomLeft,
-          child: Stack(
+          child: Row(
             children: [
-              !_searchBarVisible
-                  ? Row(
-                      children: [
-                        Text(
-                          conf.readListText,
-                          style: Theme.of(context).textTheme.subtitle1,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const Spacer(),
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 400),
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _searchBarVisible = true;
-                              });
-                            },
-                            child: conf.searchIcon,
-                          ),
-                        ),
-                      ],
-                    )
-                  : Row(
-                      children: [
-                        Expanded(
-                          child: searchBar(),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _searchBarVisible = false;
-                            });
-                          },
-                          child: conf.closeIconOpened,
-                        ),
-                      ],
-                    ),
+              Text(
+                conf.readListText,
+                style: Theme.of(context).textTheme.subtitle1,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              // const Spacer(),
+              // GestureDetector(
+              //   onTap: () {
+              //     setState(() {
+              //       _searchBarVisible = true;
+              //     });
+              //   },
+              //   child: conf.searchIcon,
+              // ),
             ],
           ),
         ),
@@ -198,10 +176,10 @@ class _HomePageState extends State<HomePage> {
 
   searchBar() {
     return SizedBox(
-      height: 40,
+      height: 30,
       width: conf.searchBarWidth,
       child: TextField(
-        cursorHeight: 35,
+        cursorHeight: 25,
         cursorColor: Colors.black,
         //  controller: searchController,
         keyboardType: TextInputType.text,

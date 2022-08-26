@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/cubit/cubit_controller.dart';
 
 class SkeletonView extends StatelessWidget {
   const SkeletonView({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/cubit/cubit_controller.dart';
+import 'package:yazilar/core/cubit/cubit_controller.dart';
 import 'package:yazilar/utility/page_router.dart';
 import 'package:yazilar/view/filter/filter_screen.dart';
 import 'package:yazilar/utility/bottom_sheet.dart' as bs;
