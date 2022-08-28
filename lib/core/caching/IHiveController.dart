@@ -13,4 +13,6 @@ abstract class IHiveController {
   bool getReadArticlesVisibility();
   bool toggleReadArticlesVisibility(bool b);
   bool clearReadArticles();
+  bool addDeviceId(String id);
+  String getDeviceId();
 }

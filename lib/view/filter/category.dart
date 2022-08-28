@@ -8,8 +8,6 @@ import '../custom_widgets/custom_button.dart';
 class Category extends StatefulWidget {
   const Category({Key? key}) : super(key: key);
 
-  static const String route = '/category';
-
   @override
   State<Category> createState() => _CategoryState();
 }
@@ -29,11 +27,7 @@ class _CategoryState extends State<Category> {
       appBar: appBar(context),
       body: context.watch<CubitController>().categoriesLoading
           ? const Center(
-              child: SizedBox(
-                height: 60,
-                width: 60,
-                child: conf.indicator,
-              ),
+              child: conf.indicator,
             )
           : Padding(
               padding: const EdgeInsets.only(top: 10.0),
@@ -108,7 +102,11 @@ class _CategoryState extends State<Category> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                              bottom: 50, top: 20, left: 20, right: 20),
+                            bottom: 50,
+                            top: 20,
+                            left: 20,
+                            right: 20,
+                          ),
                           child: SizedBox(
                             width: conf.AppConfig.screenWidth,
                             height: conf.filterButtonHeight,
@@ -129,12 +127,18 @@ class _CategoryState extends State<Category> {
                         ),
                       ],
                     )
-                  : Center(
-                      child: Text(
-                        'Kategori Mevcut Değil!',
-                        style: Theme.of(context).textTheme.headline3,
-                      ),
-                    ),
+                  : !context.read<CubitController>().isConnected &&
+                          context.read<CubitController>().categories.isEmpty
+                      ? const Center(
+                          child: conf.disconnected,
+                        )
+                      : Center(
+                          child: Text(
+                            'Kategori mevcut değil!',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headline3,
+                          ),
+                        ),
             ),
     );
   }

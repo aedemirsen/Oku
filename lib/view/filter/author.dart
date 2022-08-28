@@ -8,8 +8,6 @@ import '../custom_widgets/custom_button.dart';
 class Author extends StatefulWidget {
   const Author({Key? key}) : super(key: key);
 
-  static const String route = '/author';
-
   @override
   State<Author> createState() => _AuthorState();
 }
@@ -29,11 +27,7 @@ class _AuthorState extends State<Author> {
       appBar: appBar(context),
       body: context.watch<CubitController>().authorsLoading
           ? const Center(
-              child: SizedBox(
-                height: 60,
-                width: 60,
-                child: conf.indicator,
-              ),
+              child: conf.indicator,
             )
           : Padding(
               padding: const EdgeInsets.only(top: 10.0),
@@ -126,12 +120,17 @@ class _AuthorState extends State<Author> {
                         ),
                       ],
                     )
-                  : Center(
-                      child: Text(
-                        'Yazar Mevcut Değil!',
-                        style: Theme.of(context).textTheme.headline3,
-                      ),
-                    ),
+                  : !context.read<CubitController>().isConnected &&
+                          context.read<CubitController>().authors.isEmpty
+                      ? const Center(
+                          child: conf.disconnected,
+                        )
+                      : Center(
+                          child: Text(
+                            'Yazar mevcut değil!',
+                            style: Theme.of(context).textTheme.headline3,
+                          ),
+                        ),
             ),
     );
   }

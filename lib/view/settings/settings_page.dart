@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/core/cubit/cubit_controller.dart';
 import 'package:yazilar/utility/page_router.dart';
+import 'package:yazilar/view/settings/index.dart';
 import 'package:yazilar/view/settings/share_opinion.dart';
 
 class Settings extends StatefulWidget {
@@ -58,7 +59,7 @@ class _SettingsState extends State<Settings> {
         context.read<CubitController>().toggleReadArticlesVisibility();
       },
       child: SizedBox(
-        height: 80,
+        height: 50,
         width: conf.AppConfig.screenWidth,
         child: Row(
           children: [
@@ -66,7 +67,7 @@ class _SettingsState extends State<Settings> {
               width: conf.AppConfig.screenWidth - 100,
               child: Text(
                 context.read<CubitController>().showReadArticles
-                    ? 'Okunan Yazıları Gösterme'
+                    ? 'Okunan Yazıları Gizle'
                     : 'Okunan Yazıları Göster',
                 style: Theme.of(context).textTheme.headline5,
               ),
@@ -76,7 +77,7 @@ class _SettingsState extends State<Settings> {
               padding: EdgeInsets.only(right: 25.0),
               child: FaIcon(
                 FontAwesomeIcons.eye,
-                size: 30,
+                size: 20,
                 color: Colors.black,
               ),
             )
@@ -93,7 +94,7 @@ class _SettingsState extends State<Settings> {
             context, ShareOpinion(), PageRouter.downToUp);
       },
       child: SizedBox(
-        height: 80,
+        height: 50,
         width: conf.AppConfig.screenWidth,
         child: Row(
           children: [
@@ -109,7 +110,7 @@ class _SettingsState extends State<Settings> {
               padding: EdgeInsets.only(right: 20.0),
               child: FaIcon(
                 FontAwesomeIcons.penToSquare,
-                size: 30,
+                size: 20,
                 color: Colors.black,
               ),
             )
@@ -122,16 +123,11 @@ class _SettingsState extends State<Settings> {
   TextButton index(BuildContext context) {
     return TextButton(
       onPressed: () {
-        // PageRouter.changePageWithAnimation(
-        //   context,
-        //   const ChangeView(
-        //     title: conf.changeViewTitle,
-        //   ),
-        //   PageRouter.downToUp,
-        // );
+        PageRouter.changePageWithAnimation(
+            context, const IndexPage(), PageRouter.upToDown);
       },
       child: SizedBox(
-        height: 80,
+        height: 50,
         width: conf.AppConfig.screenWidth,
         child: Row(
           children: [
@@ -147,7 +143,7 @@ class _SettingsState extends State<Settings> {
               padding: EdgeInsets.only(right: 25.0),
               child: FaIcon(
                 FontAwesomeIcons.chevronRight,
-                size: 30,
+                size: 20,
                 color: Colors.black,
               ),
             )
@@ -172,7 +168,7 @@ class _SettingsState extends State<Settings> {
         );
       },
       child: SizedBox(
-        height: 80,
+        height: 50,
         width: conf.AppConfig.screenWidth,
         child: Row(
           children: [
@@ -188,7 +184,7 @@ class _SettingsState extends State<Settings> {
               padding: EdgeInsets.only(right: 20.0),
               child: Icon(
                 Icons.share,
-                size: 30,
+                size: 20,
                 color: Colors.black,
               ),
             )

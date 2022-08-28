@@ -11,8 +11,6 @@ import 'package:yazilar/config/config.dart' as conf;
 class PageBuilder extends StatefulWidget {
   const PageBuilder({Key? key}) : super(key: key);
 
-  static const String route = '/';
-
   @override
   State<PageBuilder> createState() => _PageBuilderState();
 }
@@ -42,10 +40,22 @@ class _PageBuilderState extends State<PageBuilder> {
     }
     //init toast
     ToastContext().init(context);
-    return Scaffold(
-      backgroundColor: conf.backgroundColor,
-      body: pages[context.watch<CubitController>().pageIndex],
-      bottomNavigationBar: navigationBar(context),
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: conf.backgroundColor,
+          body: pages[context.watch<CubitController>().pageIndex],
+          bottomNavigationBar: navigationBar(context),
+        ),
+        context.watch<CubitController>().readArticleLoading
+            ? Container(
+                color: Colors.transparent.withOpacity(0.4),
+                child: const Center(
+                  child: conf.indicator,
+                ),
+              )
+            : const SizedBox.shrink(),
+      ],
     );
   }
 

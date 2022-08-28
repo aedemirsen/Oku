@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/core/cubit/cubit_controller.dart';
+import 'package:yazilar/core/network/connectivity_change.dart';
 import 'package:yazilar/view/custom_widgets/article_view.dart';
 import 'package:yazilar/view/custom_widgets/filter_sort_sliver_header.dart';
 import 'custom_widgets/skeleton_view.dart';
@@ -29,16 +30,22 @@ class _HomePageState extends State<HomePage> {
     //get show option for read articles
     context.read<CubitController>().getReadArticlesVisibility();
 
-    //get first 15 data from server to show in listview
-    if (context.read<CubitController>().articles.isEmpty) {
-      context.read<CubitController>().getArticles();
-    }
+    //first connectivity check
+    NetworkChangeManager().checkNetwork().then((value) {
+      context.read<CubitController>().updateOnConnectivity(value);
+      //get first 15 data from server to show in listview
+      if (context.read<CubitController>().articles.isEmpty) {
+        context.read<CubitController>().getArticles();
+      }
+    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      bottom: false,
       child: Scaffold(
         backgroundColor: conf.backgroundColor,
         body: BlocBuilder<CubitController, AppState>(
@@ -66,10 +73,20 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
+                if (!context.read<CubitController>().isConnected &&
+                    context.read<CubitController>().articles.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 50.0),
+                    child: Center(
+                      child: conf.disconnected,
+                    ),
+                  ),
                 state is ArticlesFail
                     ? Center(
                         child: Text(
-                          'Kayıt Bulunamadı!',
+                          'Sunucu bakımda, daha sonra tekrar deneyin.',
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
                           style: Theme.of(context).textTheme.headline3,
                         ),
                       )

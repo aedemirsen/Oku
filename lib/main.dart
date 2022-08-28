@@ -1,9 +1,6 @@
 import 'dart:io';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -11,12 +8,7 @@ import 'package:yazilar/config/config.dart';
 import 'package:yazilar/core/caching/hive_controller.dart';
 import 'package:yazilar/core/cubit/cubit_controller.dart';
 import 'package:yazilar/core/model/article.dart';
-import 'package:yazilar/core/model/user.dart';
-import 'package:yazilar/firebase_options.dart';
-import 'package:yazilar/view/filter/author.dart';
-import 'package:yazilar/view/filter/category.dart';
-import 'package:yazilar/view/filter/filter_screen.dart';
-import 'package:yazilar/view/filter/group.dart';
+import 'package:yazilar/core/network/internet_waiting.dart';
 import 'package:yazilar/view/page_builder.dart';
 import 'package:yazilar/config/config.dart' as conf;
 
@@ -66,31 +58,43 @@ Future<void> main() async {
           fontFamily: "Trebuchet MS",
           textTheme: AppTheme.appTextTheme,
         ),
-        initialRoute: PageBuilder.route,
-        routes: {
-          PageBuilder.route: (context) => const PageBuilder(),
-          FilterScreen.route: (context) => const FilterScreen(),
-          Category.route: (context) => const Category(),
-          Group.route: (context) => const Group(),
-          Author.route: (context) => const Author(),
+        builder: (context, child) {
+          return Column(
+            children: [
+              Expanded(child: child ?? const SizedBox.shrink()),
+              const InternetWaiting(),
+            ],
+          );
         },
+        home: const PageBuilder(),
+        // home: BlocBuilder<CubitController, AppState>(
+        //   builder: (context, state) {
+        //     return Stack(
+        //       alignment: AlignmentDirectional.bottomCenter,
+        //       children: [
+        //         const PageBuilder(),
+        //         state is ConnectivityFail
+        //             ? Container(
+        //                 height: 80,
+        //                 color: Colors.red,
+        //                 child: Text('İnternet Bağlantısı Bekleniyor'),
+        //               )
+        //             : const SizedBox.shrink(),
+        //       ],
+        //     );
+        //   },
+        // ),
       ),
     ),
   );
 }
 
-Future<String> _getDeviceId() async {
-  var deviceInfo = DeviceInfoPlugin();
+void setDevice() {
   if (Platform.isIOS) {
-    var iosDeviceInfo = await deviceInfo.iosInfo;
     conf.AppConfig.device = "ios";
-    return iosDeviceInfo.identifierForVendor ?? "";
   } else if (Platform.isAndroid) {
-    var androidDeviceInfo = await deviceInfo.androidInfo;
     conf.AppConfig.device = "android";
-    return androidDeviceInfo.id ?? "";
   }
-  return "";
 }
 
 Future<void> initApp() async {
@@ -98,21 +102,21 @@ Future<void> initApp() async {
   //Certificate problemi çözülmeli
   //HttpOverrides.global = MyHttpOverrides();
 
-  ///Get device id, whether it is android or ios
-  AppConfig.deviceId = await _getDeviceId();
+  ///set device
+  setDevice();
 
   ///initialize scroll controller
   Session.controller = ScrollController();
+  Session.controllerTitle = ScrollController();
 
   ///init hive - open box(table) - for local caching and library
   await Hive.initFlutter();
   Hive.registerAdapter(ArticleAdapter());
   await Hive.openBox<Article>('articles');
   await Hive.openBox<Object>('constants');
-
-  //await Hive.deleteBoxFromDisk('readArticles');
-
   await Hive.openBox<String>('readArticles');
+
+  conf.AppConfig.deviceId = HiveController().getDeviceId();
 
   //initialize firebase for cloud messaging - notifications
   // await Firebase.initializeApp(

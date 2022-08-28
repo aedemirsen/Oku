@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/core/cubit/cubit_controller.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yazilar/utility/page_router.dart';
 import 'package:yazilar/utility/toast.dart';
 import 'package:yazilar/view/custom_widgets/custom_button.dart';
 import 'package:yazilar/view/filter/author.dart';
@@ -10,7 +11,6 @@ import 'package:yazilar/view/filter/group.dart';
 
 class FilterScreen extends StatelessWidget {
   const FilterScreen({Key? key}) : super(key: key);
-  static const String route = '/filter';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +66,8 @@ class FilterScreen extends StatelessWidget {
       width: conf.AppConfig.screenWidth,
       child: TextButton(
         onPressed: () {
-          Navigator.pushNamed(context, Group.route);
+          PageRouter.changePageWithAnimation(
+              context, const Group(), PageRouter.rightToLeft);
         },
         child: Row(
           children: [
@@ -124,7 +125,8 @@ class FilterScreen extends StatelessWidget {
       width: conf.AppConfig.screenWidth,
       child: TextButton(
         onPressed: () {
-          Navigator.pushNamed(context, Category.route);
+          PageRouter.changePageWithAnimation(
+              context, const Category(), PageRouter.rightToLeft);
         },
         child: Row(
           children: [
@@ -182,7 +184,8 @@ class FilterScreen extends StatelessWidget {
       width: conf.AppConfig.screenWidth,
       child: TextButton(
         onPressed: () {
-          Navigator.pushNamed(context, Author.route);
+          PageRouter.changePageWithAnimation(
+              context, const Author(), PageRouter.rightToLeft);
         },
         child: Row(
           children: [

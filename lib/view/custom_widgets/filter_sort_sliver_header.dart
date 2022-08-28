@@ -65,7 +65,7 @@ class FilterSortSliverHeader extends SliverPersistentHeaderDelegate {
       behavior: HitTestBehavior.opaque,
       onTap: () {
         PageRouter.changePageWithAnimation(
-            context, const FilterScreen(), PageRouter.downToUp);
+            context, const FilterScreen(), PageRouter.upToDown);
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

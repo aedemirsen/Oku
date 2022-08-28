@@ -167,4 +167,22 @@ class Service extends IService {
     }
     return null;
   }
+
+  @override
+  Future<List<String>> getTitles(Map<String, dynamic> params) async {
+    try {
+      final response = await dio.get(
+        "$articlesEndpoint/titles",
+        queryParameters: params,
+      );
+      if (response.statusCode == HttpStatus.ok) {
+        return (response.data as List)
+            .map((title) => title.toString())
+            .toList();
+      }
+    } on Exception {
+      return [];
+    }
+    return [];
+  }
 }

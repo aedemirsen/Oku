@@ -6,29 +6,65 @@ import 'package:yazilar/core/caching/IHiveController.dart';
 import 'package:yazilar/core/model/article.dart';
 import 'package:yazilar/core/model/opinion.dart';
 import 'package:yazilar/core/model/user.dart';
+import 'package:yazilar/core/network/connectivity_change.dart';
 import 'package:yazilar/core/service/IService.dart';
-import 'package:yazilar/utility/page_router.dart';
 import 'package:yazilar/utility/toast.dart';
-import 'package:yazilar/view/custom_widgets/opened_view.dart';
 
 class CubitController extends Cubit<AppState> {
   //service
   final IService service;
   //hive
   final IHiveController hive;
+  //network
+  bool isConnected = false;
+  final INetworkChangeManager _networkChange = NetworkChangeManager();
 
   CubitController({required this.service, required this.hive})
       : super(InitState()) {
     conf.Session.controller!.addListener(getArticlesOnScroll);
+    conf.Session.controllerTitle!.addListener(getTitlesOnScroll);
+
+    _networkChange.handleNetworkChange((result) {
+      updateOnConnectivity(result);
+    });
   }
+
+  ///Network Listen
+  void updateOnConnectivity(NetworkResult result) {
+    if (result == NetworkResult.on) {
+      isConnected = true;
+      if (articles.isEmpty) {
+        getArticles();
+      }
+      if (allTitles.isEmpty) {
+        getTitles();
+      }
+      if (categories.isEmpty) {
+        getCategories();
+      }
+      if (groups.isEmpty) {
+        getGroups();
+      }
+      if (authors.isEmpty) {
+        getAuthors();
+      }
+      emit(ConnectivitySuccess());
+    } else {
+      isConnected = false;
+      emit(ConnectivityFail());
+    }
+  }
+
+  ///
 
   ///---------------- API related variables ----------------- ///
 
   //received data
   List<Article> articles = [];
+  List<String> allTitles = [];
 
   //selected read article
-  Article? selectedReadArticle;
+  List<Article> selectedReadArticle = [];
 
   ///favorite articles (library)
   Map<dynamic, Article> favorites = {};
@@ -54,6 +90,7 @@ class CubitController extends Cubit<AppState> {
 
   ///last reached data's id - for paging
   int cursor = -1;
+  String titlesCursor = '';
 
   ///order by id - last articles id is the biggest
   ///Default = last article show at first
@@ -61,6 +98,7 @@ class CubitController extends Cubit<AppState> {
 
   ///is there any data left to get from server?
   bool hasMoreData = true;
+  bool hasMoreTitleData = true;
 
   ///--------- END OF API RELATED VARIABLES ---------///
 
@@ -78,6 +116,7 @@ class CubitController extends Cubit<AppState> {
 
   ///data loading
   bool articlesLoading = false;
+  bool titlesLoading = false;
 
   ///read article loading
   bool readArticleLoading = false;
@@ -100,6 +139,9 @@ class CubitController extends Cubit<AppState> {
   ///scroll loading
   bool articlesLoadingScroll = false;
 
+  ///scroll loading
+  bool titlesLoadingScroll = false;
+
   ///search bar visible
   bool searchBarVisible = false;
 
@@ -115,12 +157,12 @@ class CubitController extends Cubit<AppState> {
   ///selected font color
   Color fontColor = conf.defaultFontColor;
 
-  ///--------------SERVICE CALLS------------------
+  ///--------------SERVICE / NETWORK CALLS------------------
 
   ///get user
   Future<void> getUserNotificationPref(String id) async {
     //check connectivity
-    if (isConnected()) {
+    if (isConnected) {
       var data = await service.getUser(id);
       if (data != null) {
         //get notification preference
@@ -129,17 +171,20 @@ class CubitController extends Cubit<AppState> {
       } else {
         //user does not exists, then post user
         await service.postUser(
-            User(id: conf.AppConfig.deviceId, notificationStatus: true));
+          User(
+            id: conf.AppConfig.deviceId,
+            notificationStatus: true,
+            device: conf.AppConfig.device,
+          ),
+        );
       }
-    } else {
-      emit(ConnectivityFail());
     }
   }
 
   ///get articles
   Future<void> getArticles() async {
     //check connectivity
-    if (isConnected()) {
+    if (isConnected) {
       changeArticlesLoading(true);
       final data = await service.getArticles({
         'category': selectedCategories,
@@ -160,32 +205,59 @@ class CubitController extends Cubit<AppState> {
       } else {
         emit(ArticlesFail());
       }
-    } else {
-      emit(ConnectivityFail());
+    }
+  }
+
+  ///get articles
+  Future<void> getTitles() async {
+    //check connectivity
+    if (isConnected) {
+      if (allTitles.isEmpty) {
+        changeTitlesLoading(true);
+        final data = await service.getTitles({
+          'orderby': 'asc',
+          'start': titlesCursor,
+          'limit': conf.AppConfig.titlesRequestedDataQuantity,
+        });
+        changeTitlesLoading(false);
+        if (data.isNotEmpty) {
+          allTitles.addAll(data);
+          titlesCursor = allTitles.last;
+          emit(NotifyPipe());
+          if (data.length < conf.AppConfig.titlesRequestedDataQuantity) {
+            changeMoreDataStatus(false);
+          }
+        } else {
+          emit(TitlesFail());
+        }
+      }
     }
   }
 
   ///get specified article
   Future<void> getArticle(int id) async {
     //check connectivity
-    if (isConnected()) {
-      changeReadArticlesLoading(true);
-      final data = await service.getArticle(id);
-      changeReadArticlesLoading(false);
-      if (data != null) {
-        selectedReadArticle = data;
-        emit(ArticleGetSuccess(data));
+    if (isConnected) {
+      var article =
+          selectedReadArticle.where((element) => element.id == id).toList();
+      if (article.isEmpty) {
+        changeReadArticlesLoading(true);
+        final data = await service.getArticle(id);
+        changeReadArticlesLoading(false);
+        if (data != null) {
+          selectedReadArticle.add(data);
+        } else {
+          emit(ArticlesFail());
+        }
       } else {
-        emit(ArticlesFail());
+        emit(NotifyPipe());
       }
-    } else {
-      emit(ConnectivityFail());
     }
   }
 
   ///add opinion
   Future<void> addOpinion(Opinion opinion) async {
-    if (isConnected()) {
+    if (isConnected) {
       changeOpinionLoadingState(true);
       final data = await service.postOpinion(opinion);
       if (data) {
@@ -197,7 +269,7 @@ class CubitController extends Cubit<AppState> {
 
   ///get articles on scroll
   void getArticlesOnScroll() async {
-    if (isConnected()) {
+    if (isConnected) {
       if (hasMoreData &&
           conf.Session.controller!.position.extentAfter < 300 &&
           articlesLoadingScroll == false) {
@@ -223,9 +295,34 @@ class CubitController extends Cubit<AppState> {
     } else {}
   }
 
+  ///get articles on scroll
+  void getTitlesOnScroll() async {
+    if (isConnected) {
+      if (hasMoreTitleData &&
+          conf.Session.controllerTitle!.position.extentAfter < 300 &&
+          titlesLoadingScroll == false) {
+        changeTitlesScrollLoading(true);
+        final data = await service.getTitles({
+          'orderby': 'asc',
+          'start': titlesCursor,
+          'limit': conf.AppConfig.titlesRequestedDataQuantity,
+        });
+        changeTitlesScrollLoading(false);
+        if (data.isNotEmpty) {
+          allTitles.addAll(data);
+          titlesCursor = allTitles.last;
+          emit(NotifyPipe());
+          if (data.length < conf.AppConfig.titlesRequestedDataQuantity) {
+            changeMoreDataStatusTitle(false);
+          }
+        }
+      }
+    } else {}
+  }
+
   ///get all categories - run at startup
   Future<void> getCategories() async {
-    if (isConnected()) {
+    if (isConnected) {
       changeCategoriesLoading(true);
       final data = await service.getAllCategories();
       changeCategoriesLoading(false);
@@ -237,7 +334,7 @@ class CubitController extends Cubit<AppState> {
 
   ///get all authors - run at startup
   Future<void> getAuthors() async {
-    if (isConnected()) {
+    if (isConnected) {
       changeAuthorsLoading(true);
       final data = await service.getAllAuthors();
       changeAuthorsLoading(false);
@@ -249,7 +346,7 @@ class CubitController extends Cubit<AppState> {
 
   ///get all groups - run at startup
   Future<void> getGroups() async {
-    if (isConnected()) {
+    if (isConnected) {
       changeGroupsLoading(true);
       final data = await service.getAllGroups();
       changeGroupsLoading(false);
@@ -274,11 +371,6 @@ class CubitController extends Cubit<AppState> {
     articles = [];
     hasMoreData = true;
     await getArticles();
-  }
-
-  ///check connectivity
-  bool isConnected() {
-    return true;
   }
 
   ///-------------- SERVICE CALLS END ------------------
@@ -462,6 +554,12 @@ class CubitController extends Cubit<AppState> {
     emit(HasMoreData(hasMoreData));
   }
 
+  ///change title hasMoreData property
+  void changeMoreDataStatusTitle(bool b) {
+    hasMoreTitleData = b;
+    emit(NotifyPipe());
+  }
+
   ///change search bar visibility
   void changeSearchBarVisibility() {
     searchBarVisible = !searchBarVisible;
@@ -500,6 +598,12 @@ class CubitController extends Cubit<AppState> {
   void changeArticlesLoading(bool b) {
     articlesLoading = b;
     emit(ArticlesLoadingState(articlesLoading));
+  }
+
+  ///titles loading state change
+  void changeTitlesLoading(bool b) {
+    titlesLoading = b;
+    emit(NotifyPipe());
   }
 
   ///read article loading state change
@@ -543,6 +647,12 @@ class CubitController extends Cubit<AppState> {
     articlesLoadingScroll = b;
     emit(ArticlesLoadingScrollState(articlesLoadingScroll));
   }
+
+  ///title scroll loading state change
+  void changeTitlesScrollLoading(bool b) {
+    titlesLoadingScroll = b;
+    emit(NotifyPipe());
+  }
 }
 
 abstract class AppState {}
@@ -550,6 +660,8 @@ abstract class AppState {}
 class NotifyPipe extends AppState {}
 
 class ConnectivityFail extends AppState {}
+
+class ConnectivitySuccess extends AppState {}
 
 class InitState extends AppState {}
 
@@ -621,6 +733,9 @@ class ArticleGetSuccess extends AppState {
 
 ///articles get fails
 class ArticlesFail extends AppState {}
+
+///titles get fails
+class TitlesFail extends AppState {}
 
 ///Has more data on server
 class HasMoreData extends AppState {

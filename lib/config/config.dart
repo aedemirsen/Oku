@@ -5,13 +5,15 @@ class AppConfig {
   static double screenWidth = -1, screenHeight = -1;
   static String device = '';
   static String deviceId = '';
-  static const int requestedDataQuantity = 15;
+  static const int requestedDataQuantity = 10;
+  static const int titlesRequestedDataQuantity = 40;
   static String version = "1.0";
 }
 
 class Session {
   //Scroll Controller
   static ScrollController? controller;
+  static ScrollController? controllerTitle;
 }
 
 class AppTheme {
@@ -39,8 +41,8 @@ class AppTheme {
 //api
 //const String baseUrl = "http://10.0.2.2:8080/api"; //android emulator
 //const String baseUrl = "http://192.168.1.9:8080/api";
-const String baseUrl = "http://localhost:8080/api";
-//const String baseUrl = "https://articles-service.vercel.app/api";
+//const String baseUrl = "http://localhost:8080/api";
+const String baseUrl = "https://articles-service.vercel.app/api";
 
 //AppBar titles
 const String appTitle = "Yazılar";
@@ -50,15 +52,23 @@ const String filterScreenTitle = 'Filtrele';
 const String categoryTitle = 'Kategoriler';
 const String authorTitle = 'Yazarlar';
 const String groupTitle = 'Seriler';
-const String changeViewTitle = 'Görünüm';
+const String indexTitle = 'Fihrist';
 
 //Progress indicator
-const CircularProgressIndicator indicator = CircularProgressIndicator();
+const SizedBox indicator = SizedBox(
+  height: 40,
+  width: 40,
+  child: CircularProgressIndicator(),
+);
 
 //icons
 const IconData homeIcon = FontAwesomeIcons.house;
 const IconData libIcon = FontAwesomeIcons.book;
 const IconData settingsIcon = FontAwesomeIcons.gear;
+const Icon disconnected = Icon(
+  Icons.wifi_off,
+  size: 50,
+);
 const FaIcon sort1_9 = FaIcon(
   FontAwesomeIcons.arrowDown19,
   color: Colors.black,
@@ -109,14 +119,14 @@ const String readListText = 'Okuma Listesi';
 const String homePageLabel = 'Ana Sayfa';
 const String libPageLabel = 'Kitaplığım';
 const String settingsPageLabel = 'Ayarlar';
-const String addedToFav = 'Yazı Kitaplığa Eklendi.';
-const String addedToReadArticles = 'Yazı Okunanlar Listesine Eklendi.';
-const String removeFromFav = 'Yazı Kitaplıktan Çıkarıldı.';
-const String removeFromReadArticles = 'Yazı Okunanlar Listesinden Çıkarıldı.';
+const String addedToFav = 'Yazı kitaplığa eklendi.';
+const String addedToReadArticles = 'Yazı okunanlar listesine eklendi.';
+const String removeFromFav = 'Yazı kitaplıktan çıkarıldı.';
+const String removeFromReadArticles = 'Yazı okunanlar listesinden çıkarıldı.';
 const String dontShowReadArticles =
-    'Okunmuş Yazılar Ana Sayfada Gösterilmeyecek.';
-const String showReadArticles = 'Okunmuş Yazılar Ana Sayfada Gösterilecek.';
-const String clearReadArticles = 'Okunanlar Listesini Temizle';
+    'Okunmuş yazılar ana sayfada gösterilmeyecek.';
+const String showReadArticles = 'Okunmuş yazılar ana sayfada gösterilecek.';
+const String clearReadArticles = 'Okunanlar listesini temizle';
 final double mainFrameInset = AppConfig.screenWidth / 25;
 
 const double bottomSheetElementHeight = 50;

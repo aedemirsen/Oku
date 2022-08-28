@@ -14,6 +14,8 @@ abstract class IService {
 
   Future<List<Article>> getArticles(Map<String, dynamic> params);
 
+  Future<List<String>> getTitles(Map<String, dynamic> params);
+
   Future<Article?> getArticle(int id);
 
   Future<List> getAllCategories();

@@ -8,8 +8,6 @@ import '../custom_widgets/custom_button.dart';
 class Group extends StatefulWidget {
   const Group({Key? key}) : super(key: key);
 
-  static const String route = '/group';
-
   @override
   State<Group> createState() => _GroupState();
 }
@@ -29,11 +27,7 @@ class _GroupState extends State<Group> {
       appBar: appBar(context),
       body: context.watch<CubitController>().groupsLoading
           ? const Center(
-              child: SizedBox(
-                height: 60,
-                width: 60,
-                child: conf.indicator,
-              ),
+              child: conf.indicator,
             )
           : Padding(
               padding: const EdgeInsets.only(top: 10.0),
@@ -121,12 +115,18 @@ class _GroupState extends State<Group> {
                         ),
                       ],
                     )
-                  : Center(
-                      child: Text(
-                        'Seri Mevcut Değil!',
-                        style: Theme.of(context).textTheme.headline3,
-                      ),
-                    ),
+                  : !context.read<CubitController>().isConnected &&
+                          context.read<CubitController>().groups.isEmpty
+                      ? const Center(
+                          child: conf.disconnected,
+                        )
+                      : Center(
+                          child: Text(
+                            'Seri mevcut değil!',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headline3,
+                          ),
+                        ),
             ),
     );
   }

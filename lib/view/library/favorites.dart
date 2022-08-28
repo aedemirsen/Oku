@@ -18,7 +18,8 @@ class FavoritesPage extends StatelessWidget {
       child: context.watch<CubitController>().favorites.isEmpty
           ? Center(
               child: Text(
-                'Kitaplık Boş!',
+                'Henüz beğenilen bir yazı mevcut değil!',
+                textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline3,
               ),
             )

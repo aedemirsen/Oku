@@ -1,3 +1,4 @@
+import 'package:uuid/uuid.dart';
 import 'package:yazilar/core/caching/IHiveController.dart';
 import 'package:yazilar/core/caching/boxes.dart';
 import 'package:yazilar/core/model/article.dart';
@@ -118,6 +119,30 @@ class HiveController extends IHiveController {
   bool clearReadArticles() {
     try {
       Boxes.getReadArticlesBox().clear();
+      return true;
+    } on Exception {
+      return false;
+    }
+  }
+
+  @override
+  String getDeviceId() {
+    try {
+      if (!Boxes.getConstants().containsKey('deviceId')) {
+        var uuid = const Uuid();
+        String uniqueId = '${uuid.v1()}${uuid.v4()}';
+        addDeviceId(uniqueId);
+      }
+      return Boxes.getConstants().get('deviceId') as String;
+    } on Exception {
+      return '';
+    }
+  }
+
+  @override
+  bool addDeviceId(String id) {
+    try {
+      Boxes.getConstants().put('deviceId', id);
       return true;
     } on Exception {
       return false;
