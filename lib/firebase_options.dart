@@ -48,24 +48,6 @@ class DefaultFirebaseOptions {
         );
     }
   }
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAiSKf0ARTGfWvKeApt60GGt5cvqXvXEkM',
-    appId: '1:934812301533:android:352d3000a7bfe55bd80334',
-    messagingSenderId: '934812301533',
-    projectId: 'records-a819b',
-    databaseURL: 'https://records-a819b-default-rtdb.firebaseio.com',
-    storageBucket: 'records-a819b.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCWZbqkV9AAMLQXprkSNH597rKb3dWvFUU',
-    appId: '1:934812301533:ios:345a2450cefaf363d80334',
-    messagingSenderId: '934812301533',
-    projectId: 'records-a819b',
-    databaseURL: 'https://records-a819b-default-rtdb.firebaseio.com',
-    storageBucket: 'records-a819b.appspot.com',
-    iosClientId: '934812301533-pikrgtkv9ddjtlunuhfdpmihu7b4gi0r.apps.googleusercontent.com',
-    iosBundleId: 'com.example.yazilar',
-  );
+    
+    
 }
