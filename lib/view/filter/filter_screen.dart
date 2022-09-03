@@ -273,9 +273,11 @@ class FilterScreen extends StatelessWidget {
         ),
         callback: () {
           if (context.read<CubitController>().selectedCategories.isNotEmpty ||
-              context.read<CubitController>().selectedGroups.isNotEmpty) {
+              context.read<CubitController>().selectedGroups.isNotEmpty ||
+              context.read<CubitController>().selectedAuthors.isNotEmpty) {
             context.read<CubitController>().clearCategories();
             context.read<CubitController>().clearGroups();
+            context.read<CubitController>().clearAuthors();
             context.read<CubitController>().resetAndSearch();
           }
           showToastMessage(conf.filterCleanedText);

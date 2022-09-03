@@ -91,7 +91,7 @@ class _SettingsState extends State<Settings> {
     return TextButton(
       onPressed: () {
         PageRouter.changePageWithAnimation(
-            context, ShareOpinion(), PageRouter.downToUp);
+            context, ShareOpinion(), PageRouter.upToDown);
       },
       child: SizedBox(
         height: 50,

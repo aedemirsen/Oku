@@ -56,33 +56,34 @@ class ShareOpinion extends StatelessWidget {
               'Fikir ve Görüşler',
               style: Theme.of(context).textTheme.headline5,
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 20.0),
-              child: TextField(
-                style: Theme.of(context).textTheme.headline4,
-                cursorColor: Colors.black,
-                controller: bodyController,
-                maxLines: 20,
-                keyboardType: TextInputType.multiline,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      width: 3,
-                      color: Colors.black,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 20.0),
+                child: TextField(
+                  style: Theme.of(context).textTheme.headline4,
+                  cursorColor: Colors.black,
+                  controller: bodyController,
+                  maxLines: 20,
+                  keyboardType: TextInputType.multiline,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        width: 3,
+                        color: Colors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      width: 3,
-                      color: Colors.black,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        width: 3,
+                        color: Colors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    borderRadius: BorderRadius.circular(5),
                   ),
                 ),
               ),
             ),
-            const Spacer(),
             SizedBox(
               height: conf.filterButtonHeight,
               width: conf.filterScreenWidth,
@@ -91,7 +92,8 @@ class ShareOpinion extends StatelessWidget {
                 color: conf.backgroundColor,
                 callback: () {
                   if (titleController.text.isNotEmpty &&
-                      bodyController.text.isNotEmpty) {
+                      bodyController.text.isNotEmpty &&
+                      context.read<CubitController>().isConnected) {
                     context.read<CubitController>().addOpinion(
                           Opinion(
                             title: titleController.text,
@@ -133,7 +135,7 @@ class ShareOpinion extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 50,
             ),
           ],
         ),

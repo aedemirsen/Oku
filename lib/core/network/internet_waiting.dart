@@ -18,31 +18,31 @@ class _InternetWaitingState extends State<InternetWaiting> {
           ? CrossFadeState.showFirst
           : CrossFadeState.showSecond,
       firstChild: SizedBox(
-        height: 80,
+        height: 30,
         child: Scaffold(
-          backgroundColor: Colors.amber,
+          backgroundColor: Colors.black,
           body: Center(
             child: Padding(
               padding: const EdgeInsets.only(left: 30, right: 30),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: const [
                   Flexible(
                     child: Text(
                       'İnternet Bağlantısı Bekleniyor...',
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: Theme.of(context).textTheme.headline5,
+                      style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ),
-                  const SizedBox(
-                    width: 5,
+                  SizedBox(
+                    width: 10,
                   ),
-                  const SizedBox.square(
-                    dimension: 20,
+                  SizedBox.square(
+                    dimension: 16,
                     child: CircularProgressIndicator(
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                 ],

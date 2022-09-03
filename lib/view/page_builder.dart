@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
 import 'package:yazilar/config/config.dart';
 import 'package:yazilar/core/cubit/cubit_controller.dart';
+import 'package:yazilar/core/network/connectivity_change.dart';
+import 'package:yazilar/utility/when_not_zero.dart';
 import 'package:yazilar/view/settings/settings_page.dart';
 import 'package:yazilar/view/home_page.dart';
 import 'package:yazilar/view/library/my_library.dart';
@@ -20,6 +22,9 @@ class _PageBuilderState extends State<PageBuilder> {
 
   @override
   void initState() {
+    NetworkChangeManager().checkNetwork().then((value) {
+      context.read<CubitController>().updateOnConnectivity(value);
+    });
     pages = [
       const HomePage(),
       const MyLibrary(
@@ -34,28 +39,44 @@ class _PageBuilderState extends State<PageBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    if (AppConfig.screenWidth == -1 || AppConfig.screenHeight == -1) {
-      AppConfig.screenWidth = MediaQuery.of(context).size.width;
-      AppConfig.screenHeight = MediaQuery.of(context).size.height;
-    }
     //init toast
     ToastContext().init(context);
-    return Stack(
-      children: [
-        Scaffold(
-          backgroundColor: conf.backgroundColor,
-          body: pages[context.watch<CubitController>().pageIndex],
-          bottomNavigationBar: navigationBar(context),
+    return FutureBuilder(
+      future: whenNotZero(
+        Stream<Size>.periodic(
+          const Duration(milliseconds: 50),
+          (x) => MediaQuery.of(context).size,
         ),
-        context.watch<CubitController>().readArticleLoading
-            ? Container(
-                color: Colors.transparent.withOpacity(0.4),
-                child: const Center(
-                  child: conf.indicator,
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if ((snapshot.data as Size).height > 0 &&
+              (snapshot.data as Size).width > 0) {
+            AppConfig.screenWidth = MediaQuery.of(context).size.width;
+            AppConfig.screenHeight = MediaQuery.of(context).size.height;
+            return Stack(
+              children: [
+                Scaffold(
+                  backgroundColor: conf.backgroundColor,
+                  body: pages[context.watch<CubitController>().pageIndex],
+                  bottomNavigationBar: navigationBar(context),
                 ),
-              )
-            : const SizedBox.shrink(),
-      ],
+                context.watch<CubitController>().readArticleLoading
+                    ? Container(
+                        color: Colors.transparent.withOpacity(0.4),
+                        child: const Center(
+                          child: conf.indicator,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ],
+            );
+          }
+        }
+        return const Center(
+          child: conf.indicator,
+        );
+      },
     );
   }
 

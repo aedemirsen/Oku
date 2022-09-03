@@ -21,7 +21,7 @@ class ReadArticlesPage extends StatelessWidget {
                   height: conf.filterButtonHeight,
                   child: CustomButton(
                     callback: () {
-                      context.read<CubitController>().clearReadArticles();
+                      _showMyDialog(context);
                     },
                     color: conf.backgroundColor,
                     borderColor: Colors.black,
@@ -107,6 +107,43 @@ class ReadArticlesPage extends StatelessWidget {
                 ),
               ),
             ),
+    );
+  }
+
+  Future<void> _showMyDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(conf.radius),
+          ),
+          title: const Text('Uyarı!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Tüm okunanları kaldırmak istediğinize emin misiniz?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Vazgeç'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Kaldır'),
+              onPressed: () {
+                context.read<CubitController>().clearReadArticles();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

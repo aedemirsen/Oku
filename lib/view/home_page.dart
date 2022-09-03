@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yazilar/config/config.dart' as conf;
 import 'package:yazilar/core/cubit/cubit_controller.dart';
-import 'package:yazilar/core/network/connectivity_change.dart';
 import 'package:yazilar/view/custom_widgets/article_view.dart';
 import 'package:yazilar/view/custom_widgets/filter_sort_sliver_header.dart';
 import 'custom_widgets/skeleton_view.dart';
@@ -29,15 +28,6 @@ class _HomePageState extends State<HomePage> {
 
     //get show option for read articles
     context.read<CubitController>().getReadArticlesVisibility();
-
-    //first connectivity check
-    NetworkChangeManager().checkNetwork().then((value) {
-      context.read<CubitController>().updateOnConnectivity(value);
-      //get first 15 data from server to show in listview
-      if (context.read<CubitController>().articles.isEmpty) {
-        context.read<CubitController>().getArticles();
-      }
-    });
 
     super.initState();
   }
@@ -84,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                 state is ArticlesFail
                     ? Center(
                         child: Text(
-                          'Sunucu bakımda, daha sonra tekrar deneyin.',
+                          'Kayıt bulunamadı.',
                           textAlign: TextAlign.center,
                           maxLines: 3,
                           style: Theme.of(context).textTheme.headline3,

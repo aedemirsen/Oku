@@ -16,7 +16,7 @@ class CubitController extends Cubit<AppState> {
   //hive
   final IHiveController hive;
   //network
-  bool isConnected = false;
+  bool isConnected = true;
   final INetworkChangeManager _networkChange = NetworkChangeManager();
 
   CubitController({required this.service, required this.hive})
@@ -358,10 +358,12 @@ class CubitController extends Cubit<AppState> {
 
   ///search by filter
   void resetAndSearch() async {
-    cursor = -1;
-    articles = [];
-    hasMoreData = true;
-    await getArticles();
+    if (isConnected) {
+      cursor = -1;
+      articles = [];
+      hasMoreData = true;
+      await getArticles();
+    }
   }
 
   ///change order

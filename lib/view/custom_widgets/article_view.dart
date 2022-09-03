@@ -64,7 +64,7 @@ class _ArticleViewState extends State<ArticleView> {
               : const SizedBox.shrink();
         }
       },
-      transitionDuration: const Duration(seconds: 1),
+      transitionDuration: const Duration(milliseconds: 500),
       transitionType: ContainerTransitionType.fadeThrough,
     );
   }

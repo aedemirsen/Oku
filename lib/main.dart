@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -67,23 +68,6 @@ Future<void> main() async {
           );
         },
         home: const PageBuilder(),
-        // home: BlocBuilder<CubitController, AppState>(
-        //   builder: (context, state) {
-        //     return Stack(
-        //       alignment: AlignmentDirectional.bottomCenter,
-        //       children: [
-        //         const PageBuilder(),
-        //         state is ConnectivityFail
-        //             ? Container(
-        //                 height: 80,
-        //                 color: Colors.red,
-        //                 child: Text('İnternet Bağlantısı Bekleniyor'),
-        //               )
-        //             : const SizedBox.shrink(),
-        //       ],
-        //     );
-        //   },
-        // ),
       ),
     ),
   );
@@ -98,7 +82,9 @@ void setDevice() {
 }
 
 Future<void> initApp() async {
+  await Future.delayed(const Duration(seconds: 1));
   WidgetsFlutterBinding.ensureInitialized();
+
   //Certificate problemi çözülmeli
   //HttpOverrides.global = MyHttpOverrides();
 
