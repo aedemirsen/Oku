@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:934812301533:android:352d3000a7bfe55bd80334",
+        "mobilesdk_app_id": "1:934812301533:android:9235c64cecb633bbd80334",
         "android_client_info": {
-          "package_name": "com.example.yazilar"
+          "package_name": "com.bilgimeclisi.aed.yazilar"
         }
       },
       "oauth_client": [
@@ -30,6 +30,13 @@
             {
               "client_id": "934812301533-qb5fg69dhgao49973rfmgro6epef2b40.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "934812301533-i3moociet0orcclknpv8tbat4u54t7pa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bilgimeclisi.aed.yazilar"
+              }
             }
           ]
         }

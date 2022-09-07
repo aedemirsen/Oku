@@ -36,64 +36,94 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       bottom: false,
-      child: Scaffold(
-        backgroundColor: conf.backgroundColor,
-        body: BlocBuilder<CubitController, AppState>(
-          builder: (context, state) {
-            return Stack(
-              children: [
-                RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<CubitController>().resetAndSearch();
-                  },
-                  child: CustomScrollView(
-                    controller: conf.Session.controller,
-                    slivers: <Widget>[
-                      sliverAppBar(context),
-                      SliverPersistentHeader(
-                        delegate: FilterSortSliverHeader(),
-                        pinned: true,
-                      ),
-                      const SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 15,
-                        ),
-                      ),
-                      sliverList(context),
-                    ],
-                  ),
-                ),
-                if (!context.read<CubitController>().isConnected &&
-                    context.read<CubitController>().articles.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 50.0),
-                    child: Center(
-                      child: conf.disconnected,
-                    ),
-                  ),
-                state is ArticlesFail
-                    ? Center(
-                        child: Text(
-                          'Kayıt bulunamadı.',
-                          textAlign: TextAlign.center,
-                          maxLines: 3,
-                          style: Theme.of(context).textTheme.headline3,
-                        ),
-                      )
-                    : Visibility(
-                        visible:
-                            context.watch<CubitController>().articlesLoading,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            top: conf.appBarHeight + 45,
+      child: Stack(
+        alignment: AlignmentDirectional.bottomEnd,
+        children: [
+          Scaffold(
+            backgroundColor: conf.backgroundColor,
+            body: BlocBuilder<CubitController, AppState>(
+              builder: (context, state) {
+                return Stack(
+                  children: [
+                    RefreshIndicator(
+                      onRefresh: () async {
+                        context.read<CubitController>().resetAndSearch();
+                      },
+                      child: CustomScrollView(
+                        controller: conf.Session.controller,
+                        slivers: <Widget>[
+                          sliverAppBar(context),
+                          SliverPersistentHeader(
+                            delegate: FilterSortSliverHeader(),
+                            pinned: true,
                           ),
-                          child: const SkeletonView(),
+                          const SliverToBoxAdapter(
+                            child: SizedBox(
+                              height: 15,
+                            ),
+                          ),
+                          sliverList(context),
+                        ],
+                      ),
+                    ),
+                    if (!context.read<CubitController>().isConnected &&
+                        context.read<CubitController>().articles.isEmpty)
+                      const Padding(
+                        padding: EdgeInsets.only(top: 50.0),
+                        child: Center(
+                          child: conf.disconnected,
                         ),
                       ),
-              ],
-            );
-          },
-        ),
+                    state is ArticlesFail
+                        ? Center(
+                            child: Text(
+                              'Kayıt bulunamadı.',
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
+                          )
+                        : Visibility(
+                            visible: context
+                                .watch<CubitController>()
+                                .articlesLoading,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                top: conf.appBarHeight + 45,
+                              ),
+                              child: const SkeletonView(),
+                            ),
+                          ),
+                  ],
+                );
+              },
+            ),
+          ),
+          Visibility(
+            visible: context.watch<CubitController>().upVisible,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: GestureDetector(
+                onTap: () {
+                  conf.Session.controller?.animateTo(
+                    0,
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.ease,
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(conf.radius),
+                    color: Colors.blue.shade200,
+                  ),
+                  height: 50,
+                  width: 50,
+                  child: const Icon(Icons.arrow_upward),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

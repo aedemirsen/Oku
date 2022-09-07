@@ -33,20 +33,13 @@ class _SettingsState extends State<Settings> {
       appBar: appBar(context),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Column(
+        child: ListView(
           children: [
             notifications(context),
             index(context),
             changeViewOfRead(context),
             shareApp(context),
             shareOpinion(context),
-            const Spacer(),
-            Center(
-              child: Text('Versiyon : ${conf.AppConfig.version}'),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
           ],
         ),
       ),

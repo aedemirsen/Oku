@@ -105,6 +105,9 @@ class CubitController extends Cubit<AppState> {
   ///notifications on-off
   bool notificationsOn = true;
 
+  ///up visible
+  bool upVisible = false;
+
   ///filter screen visibility
   bool isFilterScreenVisible = false;
 
@@ -196,7 +199,13 @@ class CubitController extends Cubit<AppState> {
       });
       changeArticlesLoading(false);
       if (data.isNotEmpty) {
-        articles.addAll(data);
+        var ids = articles.map((e) => e.id).toList();
+        for (var element in data) {
+          if (!ids.contains(element.id)) {
+            articles.add(element);
+          }
+        }
+        //articles.addAll(data);
         cursor = articles.last.id!;
         emit(ArticlesSuccess(data));
         if (data.length < conf.AppConfig.requestedDataQuantity) {
@@ -269,6 +278,11 @@ class CubitController extends Cubit<AppState> {
 
   ///get articles on scroll
   void getArticlesOnScroll() async {
+    if (conf.Session.controller!.position.pixels > 1000) {
+      upVisible = true;
+    } else {
+      upVisible = false;
+    }
     if (isConnected) {
       if (hasMoreData &&
           conf.Session.controller!.position.extentAfter < 300 &&
@@ -293,6 +307,7 @@ class CubitController extends Cubit<AppState> {
         }
       }
     } else {}
+    emit(NotifyPipe());
   }
 
   ///get articles on scroll

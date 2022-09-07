@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>771758996554-6008uv58tp85trg9b9o1cap9dddr3k1c.apps.googleusercontent.com</string>
+	<string>934812301533-i3moociet0orcclknpv8tbat4u54t7pa.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.771758996554-6008uv58tp85trg9b9o1cap9dddr3k1c</string>
+	<string>com.googleusercontent.apps.934812301533-i3moociet0orcclknpv8tbat4u54t7pa</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAydUeejd7iFYx1DXoyjyjgf1YVX4mKC-8</string>
+	<string>AIzaSyCWZbqkV9AAMLQXprkSNH597rKb3dWvFUU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>771758996554</string>
+	<string>934812301533</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.yazilar</string>
+	<string>com.bilgimeclisi.aed.yazilar</string>
 	<key>PROJECT_ID</key>
-	<string>flutter-articles-c10ce</string>
+	<string>records-a819b</string>
 	<key>STORAGE_BUCKET</key>
-	<string>flutter-articles-c10ce.appspot.com</string>
+	<string>records-a819b.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:771758996554:ios:42c4544b132aa3936c7ab3</string>
+	<string>1:934812301533:ios:305a4596e361848fd80334</string>
+	<key>DATABASE_URL</key>
+	<string>https://records-a819b-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

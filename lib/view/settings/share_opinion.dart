@@ -14,7 +14,6 @@ class ShareOpinion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: conf.backgroundColor,
       appBar: appBar(context),
       body: Padding(
