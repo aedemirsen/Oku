@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yazilar/core/cubit/cubit_controller.dart';
-import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/view/custom_widgets/article_view.dart';
+import 'package:Oku/core/cubit/cubit_controller.dart';
+import 'package:Oku/config/config.dart' as conf;
+import 'package:Oku/view/custom_widgets/article_view.dart';
 
 class FavoritesPage extends StatelessWidget {
   const FavoritesPage({

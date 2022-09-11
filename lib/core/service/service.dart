@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:yazilar/core/model/article.dart';
-import 'package:yazilar/core/model/opinion.dart';
-import 'package:yazilar/core/model/user.dart';
+import 'package:Oku/core/model/article.dart';
+import 'package:Oku/core/model/opinion.dart';
+import 'package:Oku/core/model/user.dart';
 import 'IService.dart';
 
 class Service extends IService {

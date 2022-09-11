@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/core/cubit/cubit_controller.dart';
-import 'package:yazilar/utility/page_router.dart';
-import 'package:yazilar/view/settings/index.dart';
-import 'package:yazilar/view/settings/share_opinion.dart';
+import 'package:Oku/config/config.dart' as conf;
+import 'package:Oku/core/cubit/cubit_controller.dart';
+import 'package:Oku/utility/page_router.dart';
+import 'package:Oku/view/settings/index.dart';
+import 'package:Oku/view/settings/share_opinion.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key, required this.title}) : super(key: key);
@@ -234,7 +234,7 @@ class _SettingsState extends State<Settings> {
   AppBar appBar(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      backgroundColor: conf.backgroundColor,
+      //backgroundColor: conf.backgroundColor,
       title: Text(
         widget.title,
         style: Theme.of(context).textTheme.headline1,

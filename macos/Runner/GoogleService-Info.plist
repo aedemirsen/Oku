@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.yazilar</string>
+	<string>com.bilgimeclisi.aed.oku</string>
 	<key>PROJECT_ID</key>
 	<string>flutter-articles-c10ce</string>
 	<key>STORAGE_BUCKET</key>

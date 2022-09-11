@@ -1,14 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/config/config.dart';
-import 'package:yazilar/core/caching/IHiveController.dart';
-import 'package:yazilar/core/model/article.dart';
-import 'package:yazilar/core/model/opinion.dart';
-import 'package:yazilar/core/model/user.dart';
-import 'package:yazilar/core/network/connectivity_change.dart';
-import 'package:yazilar/core/service/IService.dart';
-import 'package:yazilar/utility/toast.dart';
+import 'package:Oku/config/config.dart' as conf;
+import 'package:Oku/config/config.dart';
+import 'package:Oku/core/caching/IHiveController.dart';
+import 'package:Oku/core/model/article.dart';
+import 'package:Oku/core/model/opinion.dart';
+import 'package:Oku/core/model/user.dart';
+import 'package:Oku/core/network/connectivity_change.dart';
+import 'package:Oku/core/service/IService.dart';
+import 'package:Oku/utility/toast.dart';
 
 class CubitController extends Cubit<AppState> {
   //service
@@ -278,7 +278,8 @@ class CubitController extends Cubit<AppState> {
 
   ///get articles on scroll
   void getArticlesOnScroll() async {
-    if (conf.Session.controller!.position.pixels > 1000) {
+    double pos = conf.Session.controller!.position.pixels;
+    if (pos > 1000) {
       upVisible = true;
     } else {
       upVisible = false;

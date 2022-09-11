@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/core/cubit/cubit_controller.dart';
-import 'package:yazilar/core/model/article.dart';
+import 'package:Oku/config/config.dart' as conf;
+import 'package:Oku/core/cubit/cubit_controller.dart';
+import 'package:Oku/core/model/article.dart';
 
 class ClosedView extends StatelessWidget {
   const ClosedView(
@@ -21,6 +21,7 @@ class ClosedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: conf.cardColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(conf.radius),
       ),
@@ -88,16 +89,16 @@ class ClosedView extends StatelessWidget {
                         ? Padding(
                             padding: const EdgeInsets.only(left: 1.0),
                             child: Row(
-                              children: const [
+                              children: [
                                 Text(
                                   conf.alreadyRead,
                                   style: TextStyle(
                                     fontSize: 15,
-                                    color: Colors.blue,
+                                    color: conf.AppConfig.primaryColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 2,
                                 ),
                                 conf.checkIcon,

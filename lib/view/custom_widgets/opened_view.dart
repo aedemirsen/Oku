@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/core/cubit/cubit_controller.dart';
-import 'package:yazilar/core/model/article.dart';
+import 'package:Oku/config/config.dart' as conf;
+import 'package:Oku/core/cubit/cubit_controller.dart';
+import 'package:Oku/core/model/article.dart';
 
 class OpenedView extends StatelessWidget {
   const OpenedView({Key? key, required this.article}) : super(key: key);
@@ -14,13 +14,14 @@ class OpenedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: conf.cardColor,
       body: SafeArea(
         bottom: false,
         child: Stack(
           alignment: AlignmentDirectional.topCenter,
           children: [
             Container(
-              color: Colors.white,
+              color: conf.cardColor,
               child: Padding(
                 padding: EdgeInsets.all(conf.mainFrameInset),
                 child: Column(
@@ -141,7 +142,9 @@ class OpenedView extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const Divider(),
+                            const Divider(
+                              thickness: 1,
+                            ),
                             //body
                             Padding(
                               padding: const EdgeInsets.only(top: 10.0),
@@ -168,7 +171,7 @@ class OpenedView extends StatelessWidget {
                                 ? Padding(
                                     padding: const EdgeInsets.only(
                                       top: 10.0,
-                                      bottom: 20,
+                                      bottom: 30,
                                       right: 20,
                                     ),
                                     child: TextButton(
@@ -179,12 +182,12 @@ class OpenedView extends StatelessWidget {
                                                 article.title ?? '');
                                         Navigator.pop(context);
                                       },
-                                      child: const Text(
+                                      child: Text(
                                         conf.signAsRead,
                                         style: TextStyle(
                                           fontSize: 20,
-                                          color:
-                                              Color.fromARGB(255, 12, 134, 234),
+                                          fontWeight: FontWeight.bold,
+                                          color: conf.AppConfig.primaryColor,
                                         ),
                                       ),
                                     ),
@@ -192,7 +195,7 @@ class OpenedView extends StatelessWidget {
                                 : Padding(
                                     padding: const EdgeInsets.only(
                                       top: 10.0,
-                                      bottom: 20,
+                                      bottom: 30,
                                       right: 20,
                                     ),
                                     child: TextButton(
@@ -203,12 +206,12 @@ class OpenedView extends StatelessWidget {
                                                 article.id!);
                                         Navigator.pop(context);
                                       },
-                                      child: const Text(
+                                      child: Text(
                                         conf.removeFromRead,
                                         style: TextStyle(
                                           fontSize: 20,
-                                          color:
-                                              Color.fromARGB(255, 12, 134, 234),
+                                          fontWeight: FontWeight.bold,
+                                          color: conf.AppConfig.primaryColor,
                                         ),
                                       ),
                                     ),

@@ -1,4 +1,4 @@
-package com.example.yazilar
+package com.bilgimeclisi.aed.oku
 
 import io.flutter.embedding.android.FlutterActivity
 

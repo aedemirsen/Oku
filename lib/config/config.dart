@@ -8,6 +8,7 @@ class AppConfig {
   static const int requestedDataQuantity = 10;
   static const int titlesRequestedDataQuantity = 40;
   static String version = "1.0";
+  static Color primaryColor = const Color(0xff497a79);
 }
 
 class Session {
@@ -34,7 +35,10 @@ class AppTheme {
     headline5: TextStyle(fontSize: 20, color: Colors.black),
     //flexible header
     subtitle1: TextStyle(
-        fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
+      fontSize: 30,
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+    ),
   );
 }
 
@@ -112,9 +116,11 @@ const Icon dashIcon = Icon(
   size: 20,
 );
 
-final double appBarHeight = AppConfig.screenHeight / 10;
+final double appBarHeight = AppConfig.screenHeight / 6;
 const double sortFilterHeight = 40;
-final Color backgroundColor = Colors.grey.shade300;
+//final Color backgroundColor = Colors.grey.shade300;
+const Color backgroundColor = Color(0xffede7d8);
+const Color cardColor = Color(0xfff2f2f0);
 const String readListText = 'Okuma Listesi';
 const String homePageLabel = 'Ana Sayfa';
 const String libPageLabel = 'Kitaplığım';
@@ -147,7 +153,10 @@ const double filterScreenRadius = 20;
 final Color filterScreenBackgroundColor = Colors.transparent.withOpacity(0.6);
 final double elementTextLeftInset = AppConfig.screenWidth * 0.1 / 2;
 const Icon forwardIcon = Icon(Icons.arrow_forward_ios, color: Colors.black);
-const Icon checkIcon = Icon(Icons.check, color: Colors.blue);
+final Icon checkIcon = Icon(
+  Icons.check,
+  color: AppConfig.primaryColor,
+);
 
 //Articles
 const double elevation = 3;

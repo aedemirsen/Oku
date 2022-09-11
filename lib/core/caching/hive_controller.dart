@@ -1,7 +1,7 @@
 import 'package:uuid/uuid.dart';
-import 'package:yazilar/core/caching/IHiveController.dart';
-import 'package:yazilar/core/caching/boxes.dart';
-import 'package:yazilar/core/model/article.dart';
+import 'package:Oku/core/caching/IHiveController.dart';
+import 'package:Oku/core/caching/boxes.dart';
+import 'package:Oku/core/model/article.dart';
 
 class HiveController extends IHiveController {
   @override

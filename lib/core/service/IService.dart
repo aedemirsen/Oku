@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:yazilar/core/model/article.dart';
-import 'package:yazilar/core/model/opinion.dart';
-import 'package:yazilar/core/model/user.dart';
+import 'package:Oku/core/model/article.dart';
+import 'package:Oku/core/model/opinion.dart';
+import 'package:Oku/core/model/user.dart';
 
 abstract class IService {
   final Dio dio;

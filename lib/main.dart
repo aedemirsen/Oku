@@ -6,14 +6,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:yazilar/config/config.dart';
-import 'package:yazilar/core/caching/hive_controller.dart';
-import 'package:yazilar/core/cubit/cubit_controller.dart';
-import 'package:yazilar/core/model/article.dart';
-import 'package:yazilar/core/network/internet_waiting.dart';
-import 'package:yazilar/firebase_options.dart';
-import 'package:yazilar/view/page_builder.dart';
-import 'package:yazilar/config/config.dart' as conf;
+import 'package:Oku/config/config.dart';
+import 'package:Oku/core/caching/hive_controller.dart';
+import 'package:Oku/core/cubit/cubit_controller.dart';
+import 'package:Oku/core/model/article.dart';
+import 'package:Oku/core/network/internet_waiting.dart';
+import 'package:Oku/firebase_options.dart';
+import 'package:Oku/utility/build_color.dart';
+import 'package:Oku/view/page_builder.dart';
+import 'package:Oku/config/config.dart' as conf;
 
 import 'core/service/service.dart';
 
@@ -30,8 +31,10 @@ Future<void> main() async {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Colors.lightBlue[800],
-          primarySwatch: Colors.blue,
+          primaryColor: conf.AppConfig.primaryColor,
+          primarySwatch: buildMaterialColor(
+            conf.AppConfig.primaryColor,
+          ),
           fontFamily: "Trebuchet MS",
           textTheme: AppTheme.appTextTheme,
         ),
@@ -95,8 +98,8 @@ Future<void> initApp() async {
   setDevice();
 
   ///initialize scroll controller
-  Session.controller = ScrollController();
-  Session.controllerTitle = ScrollController();
+  Session.controller = ScrollController(keepScrollOffset: true);
+  Session.controllerTitle = ScrollController(keepScrollOffset: true);
 
   ///init hive - open box(table) - for local caching and library
   await Hive.initFlutter();

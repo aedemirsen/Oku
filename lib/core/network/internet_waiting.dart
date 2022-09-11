@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yazilar/core/cubit/cubit_controller.dart';
+import 'package:Oku/core/cubit/cubit_controller.dart';
 
 class InternetWaiting extends StatefulWidget {
   const InternetWaiting({super.key});

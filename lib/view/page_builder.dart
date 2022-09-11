@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
-import 'package:yazilar/config/config.dart';
-import 'package:yazilar/core/cubit/cubit_controller.dart';
-import 'package:yazilar/core/network/connectivity_change.dart';
-import 'package:yazilar/utility/when_not_zero.dart';
-import 'package:yazilar/view/settings/settings_page.dart';
-import 'package:yazilar/view/home_page.dart';
-import 'package:yazilar/view/library/my_library.dart';
+import 'package:Oku/config/config.dart';
+import 'package:Oku/core/cubit/cubit_controller.dart';
+import 'package:Oku/core/network/connectivity_change.dart';
+import 'package:Oku/utility/when_not_zero.dart';
+import 'package:Oku/view/settings/settings_page.dart';
+import 'package:Oku/view/home_page.dart';
+import 'package:Oku/view/library/my_library.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yazilar/config/config.dart' as conf;
+import 'package:Oku/config/config.dart' as conf;
 
 class PageBuilder extends StatefulWidget {
   const PageBuilder({Key? key}) : super(key: key);
@@ -82,6 +82,7 @@ class _PageBuilderState extends State<PageBuilder> {
 
   BottomNavigationBar navigationBar(BuildContext context) {
     return BottomNavigationBar(
+      backgroundColor: conf.cardColor,
       currentIndex: context.watch<CubitController>().pageIndex,
       items: const [
         BottomNavigationBarItem(
@@ -100,7 +101,7 @@ class _PageBuilderState extends State<PageBuilder> {
       onTap: (index) {
         context.read<CubitController>().changePage(index);
       },
-      fixedColor: Colors.black,
+      fixedColor: Theme.of(context).primaryColor,
     );
   }
 }

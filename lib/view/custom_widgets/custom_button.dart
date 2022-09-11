@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:yazilar/config/config.dart' as conf;
+import 'package:Oku/config/config.dart' as conf;
 
 class CustomButton extends StatelessWidget {
   const CustomButton(

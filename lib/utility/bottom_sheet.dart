@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/core/cubit/cubit_controller.dart';
+import 'package:Oku/config/config.dart' as conf;
+import 'package:Oku/core/cubit/cubit_controller.dart';
 
 Future<void> showBottomSheet(BuildContext context) {
   return showModalBottomSheet<void>(
@@ -9,7 +9,7 @@ Future<void> showBottomSheet(BuildContext context) {
     builder: (BuildContext context) {
       return Container(
         height: conf.AppConfig.screenHeight * 0.28,
-        color: Colors.white,
+        color: conf.cardColor,
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

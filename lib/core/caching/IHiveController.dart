@@ -1,4 +1,4 @@
-import 'package:yazilar/core/model/article.dart';
+import 'package:Oku/core/model/article.dart';
 
 abstract class IHiveController {
   Map<dynamic, Article> getArticles();

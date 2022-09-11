@@ -1,11 +1,11 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/core/cubit/cubit_controller.dart';
-import 'package:yazilar/core/model/article.dart';
+import 'package:Oku/config/config.dart' as conf;
+import 'package:Oku/core/cubit/cubit_controller.dart';
+import 'package:Oku/core/model/article.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yazilar/view/custom_widgets/closed_view.dart';
-import 'package:yazilar/view/custom_widgets/opened_view.dart';
+import 'package:Oku/view/custom_widgets/closed_view.dart';
+import 'package:Oku/view/custom_widgets/opened_view.dart';
 
 class ArticleView extends StatefulWidget {
   const ArticleView(this.index,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:yazilar/config/config.dart' as conf;
+import 'package:Oku/config/config.dart' as conf;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yazilar/core/cubit/cubit_controller.dart';
-import 'package:yazilar/view/library/favorites.dart';
-import 'package:yazilar/view/library/read_articles.dart';
+import 'package:Oku/core/cubit/cubit_controller.dart';
+import 'package:Oku/view/library/favorites.dart';
+import 'package:Oku/view/library/read_articles.dart';
 
 class MyLibrary extends StatefulWidget {
   const MyLibrary({Key? key, required this.title}) : super(key: key);
@@ -43,7 +43,7 @@ class _MyLibraryState extends State<MyLibrary> {
 
   AppBar appBar(BuildContext context) {
     return AppBar(
-      backgroundColor: conf.backgroundColor,
+      // backgroundColor: conf.backgroundColor,
       title: Center(
         child: Text(
           widget.title,

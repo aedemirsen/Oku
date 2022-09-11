@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yazilar/core/cubit/cubit_controller.dart';
-import 'package:yazilar/config/config.dart' as conf;
+import 'package:Oku/core/cubit/cubit_controller.dart';
+import 'package:Oku/config/config.dart' as conf;
 
 import '../custom_widgets/custom_button.dart';
 
@@ -147,7 +147,7 @@ class _CategoryState extends State<Category> {
     return AppBar(
       centerTitle: true,
       foregroundColor: Colors.black,
-      backgroundColor: conf.backgroundColor,
+      // backgroundColor: conf.backgroundColor,
       title: Text(
         conf.categoryTitle,
         style: Theme.of(context).textTheme.headline1,

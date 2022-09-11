@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/core/cubit/cubit_controller.dart';
+import 'package:Oku/config/config.dart' as conf;
+import 'package:Oku/core/cubit/cubit_controller.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yazilar/utility/page_router.dart';
-import 'package:yazilar/utility/toast.dart';
-import 'package:yazilar/view/custom_widgets/custom_button.dart';
-import 'package:yazilar/view/filter/author.dart';
-import 'package:yazilar/view/filter/category.dart';
-import 'package:yazilar/view/filter/group.dart';
+import 'package:Oku/utility/page_router.dart';
+import 'package:Oku/utility/toast.dart';
+import 'package:Oku/view/custom_widgets/custom_button.dart';
+import 'package:Oku/view/filter/author.dart';
+import 'package:Oku/view/filter/category.dart';
+import 'package:Oku/view/filter/group.dart';
 
 class FilterScreen extends StatelessWidget {
   const FilterScreen({Key? key}) : super(key: key);
@@ -24,7 +24,7 @@ class FilterScreen extends StatelessWidget {
     return AppBar(
       centerTitle: true,
       foregroundColor: Colors.black,
-      backgroundColor: conf.backgroundColor,
+      //backgroundColor: conf.backgroundColor,
       title: Text(
         conf.filterScreenTitle,
         style: Theme.of(context).textTheme.headline1,

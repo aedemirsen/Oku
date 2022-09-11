@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skeletons/skeletons.dart';
-import 'package:yazilar/config/config.dart' as conf;
+import 'package:Oku/config/config.dart' as conf;
 
 class SkeletonView extends StatelessWidget {
   const SkeletonView({
@@ -10,7 +10,7 @@ class SkeletonView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 50,
+      itemCount: 20,
       itemBuilder: (context, index) {
         return Padding(
           padding: EdgeInsets.only(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yazilar/core/cubit/cubit_controller.dart';
-import 'package:yazilar/config/config.dart' as conf;
-import 'package:yazilar/core/model/article.dart';
-import 'package:yazilar/utility/page_router.dart';
-import 'package:yazilar/view/custom_widgets/custom_button.dart';
-import 'package:yazilar/view/custom_widgets/opened_view.dart';
+import 'package:Oku/core/cubit/cubit_controller.dart';
+import 'package:Oku/config/config.dart' as conf;
+import 'package:Oku/core/model/article.dart';
+import 'package:Oku/utility/page_router.dart';
+import 'package:Oku/view/custom_widgets/custom_button.dart';
+import 'package:Oku/view/custom_widgets/opened_view.dart';
 
 class ReadArticlesPage extends StatelessWidget {
   const ReadArticlesPage({Key? key}) : super(key: key);

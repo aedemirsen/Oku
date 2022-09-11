@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:934812301533:android:9235c64cecb633bbd80334",
+        "mobilesdk_app_id": "1:934812301533:android:a54ed1e82b030027d80334",
         "android_client_info": {
-          "package_name": "com.bilgimeclisi.aed.yazilar"
+          "package_name": "com.bilgimeclisi.aed.oku"
         }
       },
       "oauth_client": [
