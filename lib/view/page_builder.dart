@@ -1,3 +1,5 @@
+import 'package:Oku/utility/page_router.dart';
+import 'package:Oku/utility/updateAlertDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
 import 'package:Oku/config/config.dart';
@@ -11,7 +13,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Oku/config/config.dart' as conf;
 
 class PageBuilder extends StatefulWidget {
-  const PageBuilder({Key? key}) : super(key: key);
+  const PageBuilder({Key? key, required this.needUpdate}) : super(key: key);
+
+  final bool needUpdate;
 
   @override
   State<PageBuilder> createState() => _PageBuilderState();
@@ -22,6 +26,8 @@ class _PageBuilderState extends State<PageBuilder> {
 
   @override
   void initState() {
+    //set need update
+    context.read<CubitController>().changeNeedUpdate(widget.needUpdate);
     NetworkChangeManager().checkNetwork().then((value) {
       context.read<CubitController>().updateOnConnectivity(value);
     });
@@ -39,6 +45,8 @@ class _PageBuilderState extends State<PageBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    //cache assets for fast opening
+    precacheImage(const AssetImage("assets/appbar.jpg"), context);
     //init toast
     ToastContext().init(context);
     return FutureBuilder(
@@ -69,6 +77,10 @@ class _PageBuilderState extends State<PageBuilder> {
                         ),
                       )
                     : const SizedBox.shrink(),
+                Visibility(
+                  visible: context.watch<CubitController>().needUpdate,
+                  child: const UpdateAlert(),
+                ),
               ],
             );
           }

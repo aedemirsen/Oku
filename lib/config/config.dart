@@ -7,8 +7,14 @@ class AppConfig {
   static String deviceId = '';
   static const int requestedDataQuantity = 10;
   static const int titlesRequestedDataQuantity = 40;
-  static String version = "1.0";
   static Color primaryColor = const Color(0xff497a79);
+  static String appName = '';
+  static String packageName = '';
+  static String version = '';
+  static String buildNumber = '';
+  static Uri appStore = Uri.parse('http://oku.bilgimeclisi.com');
+  static Uri playStore = Uri.parse(
+      'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.gameloft.android.ANMP.GloftA9HM&hl=tr&gl=US');
 }
 
 class Session {
@@ -47,6 +53,8 @@ class AppTheme {
 //const String baseUrl = "http://192.168.1.9:8080/api";
 //const String baseUrl = "http://localhost:8080/api";
 const String baseUrl = "https://articles-service.vercel.app/api";
+//website
+final Uri url = Uri.parse('http://oku.bilgimeclisi.com');
 
 //AppBar titles
 const String appTitle = "Yazılar";

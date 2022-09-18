@@ -9,6 +9,7 @@ abstract class IService {
   final String articlesEndpoint = '/articles';
   final String usersEndpoint = '/users';
   final String opinionsEndpoint = '/opinions';
+  final String versionEndpoint = '/version';
 
   IService(this.dio);
 
@@ -35,4 +36,8 @@ abstract class IService {
   Future<bool> updateUser(User user);
 
   Future<bool> postOpinion(Opinion opinion);
+
+  Future<String?> getVersion();
+
+  Future<String?> updateVersion();
 }

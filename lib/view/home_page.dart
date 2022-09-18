@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Oku/config/config.dart' as conf;
-import 'package:Oku/config/config.dart';
 import 'package:Oku/core/cubit/cubit_controller.dart';
 import 'package:Oku/utility/page_router.dart';
 import 'package:Oku/view/custom_widgets/article_view.dart';
@@ -12,6 +11,8 @@ import 'package:Oku/utility/bottom_sheet.dart' as bs;
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  static int id = 0;
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -19,6 +20,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
+    //get all articles
+    context.read<CubitController>().getArticles();
     //get font size
     context.read<CubitController>().getFontSize();
     //get user notification settings, if the user does not exists add user to db.
@@ -32,13 +35,15 @@ class _HomePageState extends State<HomePage> {
     //get show option for read articles
     context.read<CubitController>().getReadArticlesVisibility();
 
+    //set current page id
+    context.read<CubitController>().changeCurrentPage(HomePage.id);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      bottom: false,
       top: false,
       child: Stack(
         alignment: AlignmentDirectional.bottomEnd,
@@ -53,35 +58,28 @@ class _HomePageState extends State<HomePage> {
                       onRefresh: () async {
                         context.read<CubitController>().resetAndSearch();
                       },
-                      child: CustomScrollView(
-                        key: const PageStorageKey('scrollKey'),
-                        controller: conf.Session.controller,
-                        slivers: <Widget>[
-                          sliverAppBar(context),
-                          const SliverToBoxAdapter(
-                            child: SizedBox(
-                              height: 15,
-                            ),
-                          ),
-                          sliverList(context),
-                        ],
-                      ),
+                      child: scrollView(context),
                     ),
                     if (!context.read<CubitController>().isConnected &&
                         context.read<CubitController>().articles.isEmpty)
-                      const Padding(
-                        padding: EdgeInsets.only(top: 50.0),
-                        child: Center(
+                      Padding(
+                        padding: EdgeInsets.only(top: conf.appBarHeight + 100),
+                        child: const Center(
                           child: conf.disconnected,
                         ),
                       ),
                     state is ArticlesFail
                         ? Center(
-                            child: Text(
-                              'Kayıt bulunamadı.',
-                              textAlign: TextAlign.center,
-                              maxLines: 3,
-                              style: Theme.of(context).textTheme.headline3,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                top: conf.appBarHeight + 100,
+                              ),
+                              child: Text(
+                                'Kayıt bulunamadı.',
+                                textAlign: TextAlign.center,
+                                maxLines: 3,
+                                style: Theme.of(context).textTheme.headline3,
+                              ),
                             ),
                           )
                         : Visibility(
@@ -90,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                                 .articlesLoading,
                             child: Padding(
                               padding: EdgeInsets.only(
-                                top: conf.appBarHeight + 100,
+                                top: conf.appBarHeight + 115,
                               ),
                               child: const SkeletonView(),
                             ),
@@ -103,6 +101,22 @@ class _HomePageState extends State<HomePage> {
           upButton(context),
         ],
       ),
+    );
+  }
+
+  CustomScrollView scrollView(BuildContext context) {
+    return CustomScrollView(
+      key: const PageStorageKey('scrollKey'),
+      controller: conf.Session.controller,
+      slivers: <Widget>[
+        sliverAppBar(context),
+        const SliverToBoxAdapter(
+          child: SizedBox(
+            height: 15,
+          ),
+        ),
+        sliverList(context),
+      ],
     );
   }
 
@@ -215,26 +229,23 @@ class _HomePageState extends State<HomePage> {
       ),
       bottom: PreferredSize(
         preferredSize: const Size(double.infinity, 40),
-        child: Visibility(
-          visible: !context.watch<CubitController>().articlesLoading,
-          child: Material(
-            elevation: 10,
-            child: Container(
-              color: conf.backgroundColor,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 10.0, top: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    sort(context),
-                    Container(
-                      color: Colors.black,
-                      width: 0.5,
-                      height: conf.sortFilterHeight - 10,
-                    ),
-                    filter(context),
-                  ],
-                ),
+        child: Material(
+          elevation: 10,
+          child: Container(
+            color: conf.backgroundColor,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10.0, top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  sort(context),
+                  Container(
+                    color: Colors.black,
+                    width: 0.5,
+                    height: conf.sortFilterHeight - 10,
+                  ),
+                  filter(context),
+                ],
               ),
             ),
           ),

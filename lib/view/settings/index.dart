@@ -9,6 +9,8 @@ import 'package:Oku/view/custom_widgets/opened_view.dart';
 class IndexPage extends StatefulWidget {
   const IndexPage({Key? key}) : super(key: key);
 
+  static int id = 4;
+
   @override
   State<IndexPage> createState() => _IndexPageState();
 }
@@ -19,6 +21,8 @@ class _IndexPageState extends State<IndexPage> {
     super.initState();
     //get all titles
     context.read<CubitController>().getTitles();
+    //set current page id
+    context.read<CubitController>().changeCurrentPage(IndexPage.id);
   }
 
   @override
@@ -83,12 +87,7 @@ class _IndexPageState extends State<IndexPage> {
                                                     .elementAt(index) ==
                                                 ''
                                             ? '[Başlık Yok]'
-                                            : context
-                                                .watch<CubitController>()
-                                                .allTitles
-                                                .elementAt(index)
-                                                .split('*')
-                                                .first,
+                                            : '${index + 1} - ${context.watch<CubitController>().allTitles.elementAt(index).split('*').first}',
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5,

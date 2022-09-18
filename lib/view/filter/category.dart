@@ -8,6 +8,8 @@ import '../custom_widgets/custom_button.dart';
 class Category extends StatefulWidget {
   const Category({Key? key}) : super(key: key);
 
+  static int id = 1;
+
   @override
   State<Category> createState() => _CategoryState();
 }
@@ -17,6 +19,8 @@ class _CategoryState extends State<Category> {
   void initState() {
     //get all categories
     context.read<CubitController>().getCategories();
+    //set current page id
+    context.read<CubitController>().changeCurrentPage(Category.id);
     super.initState();
   }
 

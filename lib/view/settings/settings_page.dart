@@ -7,6 +7,7 @@ import 'package:Oku/core/cubit/cubit_controller.dart';
 import 'package:Oku/utility/page_router.dart';
 import 'package:Oku/view/settings/index.dart';
 import 'package:Oku/view/settings/share_opinion.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key, required this.title}) : super(key: key);
@@ -33,13 +34,38 @@ class _SettingsState extends State<Settings> {
       appBar: appBar(context),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: ListView(
+        child: Column(
           children: [
-            notifications(context),
-            index(context),
-            changeViewOfRead(context),
-            shareApp(context),
-            shareOpinion(context),
+            Expanded(
+              child: ListView(
+                children: [
+                  notifications(context),
+                  index(context),
+                  changeViewOfRead(context),
+                  shareApp(context),
+                  shareOpinion(context),
+                ],
+              ),
+            ),
+            Column(
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    if (!await launchUrl(conf.url)) {
+                      throw 'Could not launch ${conf.url}';
+                    }
+                  },
+                  child: Text(
+                    '@oku.bilgimeclisi.com',
+                    style: TextStyle(color: conf.AppConfig.primaryColor),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: Text('versiyon: ${conf.AppConfig.version}'),
+                ),
+              ],
+            ),
           ],
         ),
       ),

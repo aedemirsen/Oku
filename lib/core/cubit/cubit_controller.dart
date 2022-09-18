@@ -1,3 +1,8 @@
+import 'package:Oku/view/filter/author.dart';
+import 'package:Oku/view/filter/category.dart';
+import 'package:Oku/view/filter/group.dart';
+import 'package:Oku/view/home_page.dart';
+import 'package:Oku/view/settings/index.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:Oku/config/config.dart' as conf;
@@ -18,6 +23,11 @@ class CubitController extends Cubit<AppState> {
   //network
   bool isConnected = true;
   final INetworkChangeManager _networkChange = NetworkChangeManager();
+  //current page id -- default is home page
+  int currentPage = 0;
+
+  //need update
+  bool needUpdate = false;
 
   CubitController({required this.service, required this.hive})
       : super(InitState()) {
@@ -33,19 +43,19 @@ class CubitController extends Cubit<AppState> {
   void updateOnConnectivity(NetworkResult result) {
     if (result == NetworkResult.on) {
       isConnected = true;
-      if (articles.isEmpty) {
+      if (articles.isEmpty && currentPage == HomePage.id) {
         getArticles();
       }
-      if (allTitles.isEmpty) {
+      if (allTitles.isEmpty && currentPage == IndexPage.id) {
         getTitles();
       }
-      if (categories.isEmpty) {
+      if (categories.isEmpty && currentPage == Category.id) {
         getCategories();
       }
-      if (groups.isEmpty) {
+      if (groups.isEmpty && currentPage == Group.id) {
         getGroups();
       }
-      if (authors.isEmpty) {
+      if (authors.isEmpty && currentPage == Author.id) {
         getAuthors();
       }
       emit(ConnectivitySuccess());
@@ -184,10 +194,21 @@ class CubitController extends Cubit<AppState> {
     }
   }
 
+  ///get current version
+  Future<String> getCurrentVersion() async {
+    if (isConnected) {
+      var data = await service.getVersion();
+      if (data != null) {
+        return data;
+      }
+    }
+    return '-1';
+  }
+
   ///get articles
   Future<void> getArticles() async {
     //check connectivity
-    if (isConnected) {
+    if (isConnected && articles.isEmpty) {
       changeArticlesLoading(true);
       final data = await service.getArticles({
         'category': selectedCategories,
@@ -280,9 +301,9 @@ class CubitController extends Cubit<AppState> {
   void getArticlesOnScroll() async {
     double pos = conf.Session.controller!.position.pixels;
     if (pos > 1000) {
-      upVisible = true;
+      changeUpVisible(true);
     } else {
-      upVisible = false;
+      changeUpVisible(false);
     }
     if (isConnected) {
       if (hasMoreData &&
@@ -338,7 +359,7 @@ class CubitController extends Cubit<AppState> {
 
   ///get all categories - run at startup
   Future<void> getCategories() async {
-    if (isConnected) {
+    if (isConnected && categories.isEmpty) {
       changeCategoriesLoading(true);
       final data = await service.getAllCategories();
       changeCategoriesLoading(false);
@@ -350,7 +371,7 @@ class CubitController extends Cubit<AppState> {
 
   ///get all authors - run at startup
   Future<void> getAuthors() async {
-    if (isConnected) {
+    if (isConnected || authors.isEmpty) {
       changeAuthorsLoading(true);
       final data = await service.getAllAuthors();
       changeAuthorsLoading(false);
@@ -362,7 +383,7 @@ class CubitController extends Cubit<AppState> {
 
   ///get all groups - run at startup
   Future<void> getGroups() async {
-    if (isConnected) {
+    if (isConnected && groups.isEmpty) {
       changeGroupsLoading(true);
       final data = await service.getAllGroups();
       changeGroupsLoading(false);
@@ -375,11 +396,17 @@ class CubitController extends Cubit<AppState> {
   ///search by filter
   void resetAndSearch() async {
     if (isConnected) {
+      changeUpVisible(false);
       cursor = -1;
       articles = [];
       hasMoreData = true;
       await getArticles();
     }
+  }
+
+  void changeUpVisible(bool b) {
+    upVisible = b;
+    emit(NotifyPipe());
   }
 
   ///change order
@@ -394,6 +421,13 @@ class CubitController extends Cubit<AppState> {
   ///-------------- SERVICE CALLS END ------------------
 
   /// ------------- GUI CHANGES -------------------
+
+  ///change current page id
+  void changeCurrentPage(int id) {
+    currentPage = id;
+    emit(NotifyPipe());
+  }
+
   ///add selected category
   void addSelectedCategories(String s) {
     selectedCategories.contains(s)
@@ -610,6 +644,12 @@ class CubitController extends Cubit<AppState> {
   void changeArticleState(bool b) {
     isArticleOpen = b;
     emit(ArticleStateChanged(isArticleOpen));
+  }
+
+  ///change need update status
+  void changeNeedUpdate(bool b) {
+    needUpdate = b;
+    emit(NotifyPipe());
   }
 
   ///article loading state change

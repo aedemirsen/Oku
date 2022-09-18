@@ -8,6 +8,8 @@ import '../custom_widgets/custom_button.dart';
 class Author extends StatefulWidget {
   const Author({Key? key}) : super(key: key);
 
+  static int id = 3;
+
   @override
   State<Author> createState() => _AuthorState();
 }
@@ -17,6 +19,8 @@ class _AuthorState extends State<Author> {
   void initState() {
     //get all categories
     context.read<CubitController>().getAuthors();
+    //set current page id
+    context.read<CubitController>().changeCurrentPage(Author.id);
     super.initState();
   }
 

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:Oku/config/config.dart';
 import 'package:Oku/core/model/article.dart';
 import 'package:Oku/core/model/opinion.dart';
 import 'package:Oku/core/model/user.dart';
@@ -184,5 +185,34 @@ class Service extends IService {
       return [];
     }
     return [];
+  }
+
+  @override
+  Future<String?> getVersion() async {
+    try {
+      final response = await dio.get(
+        versionEndpoint,
+      );
+      if (response.data != false) {
+        return response.data.toString();
+      }
+    } on Exception {
+      return null;
+    }
+    return null;
+  }
+
+  @override
+  Future<String?> updateVersion() async {
+    try {
+      final response = await dio.put('$versionEndpoint/params',
+          queryParameters: {'version': AppConfig.version});
+      if (response.data == AppConfig.version) {
+        return response.data;
+      }
+    } on Exception {
+      return '-1';
+    }
+    return '-1';
   }
 }

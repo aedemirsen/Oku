@@ -8,6 +8,8 @@ import '../custom_widgets/custom_button.dart';
 class Group extends StatefulWidget {
   const Group({Key? key}) : super(key: key);
 
+  static int id = 2;
+
   @override
   State<Group> createState() => _GroupState();
 }
@@ -17,6 +19,8 @@ class _GroupState extends State<Group> {
   void initState() {
     //get all groups
     context.read<CubitController>().getGroups();
+    //set current page id
+    context.read<CubitController>().changeCurrentPage(Group.id);
     super.initState();
   }
 

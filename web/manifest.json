@@ -1,6 +1,6 @@
 {
-    "name": "yazilar",
-    "short_name": "yazilar",
+    "name": "Oku",
+    "short_name": "Oku",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
