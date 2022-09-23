@@ -14,6 +14,7 @@ import 'package:Oku/core/model/user.dart';
 import 'package:Oku/core/network/connectivity_change.dart';
 import 'package:Oku/core/service/IService.dart';
 import 'package:Oku/utility/toast.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class CubitController extends Cubit<AppState> {
   //service
@@ -40,8 +41,22 @@ class CubitController extends Cubit<AppState> {
   }
 
   ///Network Listen
-  void updateOnConnectivity(NetworkResult result) {
+  void updateOnConnectivity(NetworkResult result) async {
     if (result == NetworkResult.on) {
+      //get current version of app from firebase
+      String? currentVersion = await service.getVersion();
+
+      //get installed app info
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      AppConfig.appName = packageInfo.appName;
+      AppConfig.packageName = packageInfo.packageName;
+      AppConfig.buildNumber = packageInfo.buildNumber;
+      AppConfig.version = packageInfo.version;
+
+      if (currentVersion != AppConfig.version) {
+        changeNeedUpdate(true);
+      }
+
       isConnected = true;
       if (articles.isEmpty && currentPage == HomePage.id) {
         getArticles();

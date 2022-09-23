@@ -23,7 +23,10 @@ class UpdateAlert extends StatelessWidget {
                   child: ElevatedButton(
                     child: const Text('Şimdi Güncelle'),
                     onPressed: () async {
-                      if (!await launchUrl(AppConfig.appStore)) {
+                      if (!await launchUrl(
+                        AppConfig.appStore,
+                        mode: LaunchMode.externalApplication,
+                      )) {
                         throw 'Could not launch ${AppConfig.appStore}';
                       }
                     },
@@ -50,7 +53,10 @@ class UpdateAlert extends StatelessWidget {
                   child: ElevatedButton(
                     child: const Text('Şimdi Güncelle'),
                     onPressed: () async {
-                      if (!await launchUrl(AppConfig.playStore)) {
+                      if (!await launchUrl(
+                        AppConfig.playStore,
+                        mode: LaunchMode.externalApplication,
+                      )) {
                         throw 'Could not launch ${AppConfig.playStore}';
                       }
                     },

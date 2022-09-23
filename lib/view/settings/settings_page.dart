@@ -51,7 +51,10 @@ class _SettingsState extends State<Settings> {
               children: [
                 GestureDetector(
                   onTap: () async {
-                    if (!await launchUrl(conf.url)) {
+                    if (!await launchUrl(
+                      conf.url,
+                      mode: LaunchMode.externalApplication,
+                    )) {
                       throw 'Could not launch ${conf.url}';
                     }
                   },

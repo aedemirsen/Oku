@@ -13,9 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Oku/config/config.dart' as conf;
 
 class PageBuilder extends StatefulWidget {
-  const PageBuilder({Key? key, required this.needUpdate}) : super(key: key);
-
-  final bool needUpdate;
+  const PageBuilder({Key? key}) : super(key: key);
 
   @override
   State<PageBuilder> createState() => _PageBuilderState();
@@ -26,8 +24,6 @@ class _PageBuilderState extends State<PageBuilder> {
 
   @override
   void initState() {
-    //set need update
-    context.read<CubitController>().changeNeedUpdate(widget.needUpdate);
     NetworkChangeManager().checkNetwork().then((value) {
       context.read<CubitController>().updateOnConnectivity(value);
     });

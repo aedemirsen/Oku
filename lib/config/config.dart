@@ -13,8 +13,7 @@ class AppConfig {
   static String version = '';
   static String buildNumber = '';
   static Uri appStore = Uri.parse('http://oku.bilgimeclisi.com');
-  static Uri playStore = Uri.parse(
-      'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.gameloft.android.ANMP.GloftA9HM&hl=tr&gl=US');
+  static Uri playStore = Uri.parse('http://oku.bilgimeclisi.com');
 }
 
 class Session {

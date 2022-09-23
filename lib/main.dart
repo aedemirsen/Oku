@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:Oku/config/config.dart';
@@ -16,15 +17,14 @@ import 'package:Oku/firebase_options.dart';
 import 'package:Oku/utility/build_color.dart';
 import 'package:Oku/view/page_builder.dart';
 import 'package:Oku/config/config.dart' as conf;
-import 'package:package_info_plus/package_info_plus.dart';
 
 import 'core/service/service.dart';
 
 Future<void> main() async {
   Service service = Service(Dio(BaseOptions(baseUrl: conf.baseUrl)));
   //initialize some configurations
-  bool needUpdate = await initApp(service);
-
+  await initApp(service);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(
     BlocProvider(
       create: (context) => CubitController(
@@ -49,7 +49,7 @@ Future<void> main() async {
             ],
           );
         },
-        home: PageBuilder(needUpdate: needUpdate),
+        home: const PageBuilder(),
       ),
     ),
   );
@@ -67,33 +67,14 @@ void setDevice() {
   }
 }
 
-Future<bool> initApp(Service service) async {
-  await Future.delayed(const Duration(seconds: 1));
+Future<void> initApp(Service service) async {
+  await Future.delayed(const Duration(seconds: 2));
   WidgetsFlutterBinding.ensureInitialized();
-
-  bool needUpdate = false;
 
   ///set device
   setDevice();
 
   if (!kIsWeb) {
-    //get current version of app from firebase
-    String? currentVersion = await service.getVersion();
-
-    //get installed app info
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    AppConfig.appName = packageInfo.appName;
-    AppConfig.packageName = packageInfo.packageName;
-    AppConfig.buildNumber = packageInfo.buildNumber;
-    AppConfig.version = packageInfo.version;
-
-    if (currentVersion != AppConfig.version) {
-      needUpdate = true;
-      //redirect to store user to update app
-      if (AppConfig.device == 'android') {
-      } else if (AppConfig.device == 'ios') {}
-    }
-
     //init firebase
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
@@ -138,6 +119,4 @@ Future<bool> initApp(Service service) async {
   await Hive.openBox<String>('readArticles');
 
   conf.AppConfig.deviceId = HiveController().getDeviceId();
-
-  return needUpdate;
 }
