@@ -6,7 +6,7 @@ class AppConfig {
   static String device = '';
   static String deviceId = '';
   static const int requestedDataQuantity = 10;
-  static const int titlesRequestedDataQuantity = 40;
+  static const int titlesRequestedDataQuantity = 100;
   static Color primaryColor = const Color(0xff497a79);
   static String appName = '';
   static String packageName = '';

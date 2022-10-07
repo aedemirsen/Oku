@@ -77,51 +77,14 @@ class OpenedView extends StatelessWidget {
                                 Row(
                                   children: [
                                     (article.category ?? '').isNotEmpty
-                                        ? Row(
-                                            children: article.category!
-                                                .split(',')
-                                                .map(
-                                                  (e) => Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 5.0),
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                          color: conf
-                                                              .categoryBorderColor,
-                                                        ),
-                                                        //color: conf.categoryBadgeColor,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(
-                                                          5.0,
-                                                        ),
-                                                        child: Text(
-                                                          e,
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .headline2,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )
-                                                .toList(),
-                                          )
+                                        ? categoryBadge(context)
                                         : const SizedBox.shrink(),
                                     const SizedBox(
                                       width: 5,
                                     ),
-                                    (article.group ?? '').isNotEmpty
-                                        ? groupBadge()
-                                        : const SizedBox.shrink(),
+                                    // (article.group ?? '').isNotEmpty
+                                    //     ? groupBadge(context)
+                                    //     : const SizedBox.shrink(),
                                     const Spacer(),
                                     //date
                                     Text(
@@ -234,7 +197,25 @@ class OpenedView extends StatelessWidget {
     );
   }
 
-  GestureDetector groupBadge() {
+  Container categoryBadge(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: conf.categoryBorderColor,
+        ),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Text(
+          article.category!,
+          style: Theme.of(context).textTheme.headline2,
+        ),
+      ),
+    );
+  }
+
+  GestureDetector groupBadge(BuildContext context) {
     return GestureDetector(
       onTap: () {},
       child: Container(
@@ -244,9 +225,12 @@ class OpenedView extends StatelessWidget {
             color: conf.groupBorderColor,
           ),
         ),
-        child: const Padding(
-          padding: EdgeInsets.all(5.0),
-          child: Text('Seri'),
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Text(
+            'Seriye Git',
+            style: Theme.of(context).textTheme.headline2,
+          ),
         ),
       ),
     );

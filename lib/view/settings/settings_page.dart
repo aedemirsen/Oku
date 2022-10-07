@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -39,7 +40,7 @@ class _SettingsState extends State<Settings> {
             Expanded(
               child: ListView(
                 children: [
-                  notifications(context),
+                  kIsWeb ? const SizedBox.shrink() : notifications(context),
                   index(context),
                   changeViewOfRead(context),
                   shareApp(context),
